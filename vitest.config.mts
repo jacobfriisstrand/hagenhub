@@ -6,10 +6,5 @@ export default defineConfig({
   plugins: [tsconfigPaths(), react()],
   test: {
     environment: "jsdom",
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "lcov"],
-      reportsDirectory: "./coverage",
-    },
   },
 });
