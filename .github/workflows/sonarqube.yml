@@ -50,7 +50,3 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.projectKey=${{ secrets.SONAR_TOKEN }}
-            -Dsonar.branch.name=${{ github.ref_name }}
