@@ -53,3 +53,4 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.branch.name=${{ github.ref_name }}
