@@ -42,9 +42,6 @@ jobs:
       - name: Run Vitest & Generate Coverage
         run: npm run test
 
-      - name: Check Coverage Output
-        run: ls -la coverage/
-
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v2
         env:
