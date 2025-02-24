@@ -6,7 +6,7 @@ export const createUser = async (userData: { name: string; email: string }) => {
   }
 
   const newUser = {
-    id: Math.floor(Math.random() * 1000),
+    id: 1,
     ...userData,
   };
 
