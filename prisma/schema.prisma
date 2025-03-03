@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// *************************************************************************
+// Please install the Prisma extension for VSCode/Cursor *******************
+// https://marketplace.cursorapi.com/items?itemName=Prisma.prisma **********
+// This adds syntax highlighting, linting and auto-completion for Prisma.***
+// *************************************************************************
+
+// Follow these conventions for all models:
+
+// model User {
+//   id         String @id @db.Uuid
+//   first_name String @db.VarChar(100)
+//   last_name  String @db.VarChar(100)
+//   email      String @db.VarChar(100)
+//   password   String @db.VarChar(100)
+
+//   @@map("users")
+// }
+
+// - Model names in PascalCase - User, Product, Order, etc.
+// - Database table names in snake_case (plural) - users, products, orders, etc.
+// - Field names in snake_case - Always prefix with the table name - user_id, product_id, order_id, etc.
+// - Include created_at and updated_at timestamps - @default(now()) and @updatedAt
+// - Use explicit database types with @db
+
+// Primary key using UUID
+// Always use UUID for id fields instead of auto-increment
+
+// Personal information fields
+// Use @db.VarChar(n) for string fields with appropriate length constraints
+// Use @db.Text for large text fields
+// Use @db.Boolean for boolean fields
+// Use @db.Char for fixed-length character fields
+
+// Audit timestamps
+// created_at: Set automatically when record is created
+// updated_at: Updates automatically when record is modified
+
+// Map the model to the actual database table name
+// Convention: Use plural, snake_case for table names
+// Example: @@map("users")
+
+// to apply the changes to the database, run:
+// npx prisma db push
+
+model User {
+  id         String @id @db.Uuid
+  first_name String @db.VarChar(100)
+  last_name  String @db.VarChar(100)
+  email      String @unique @db.VarChar(100)
+  password   String @db.VarChar(100)
+
+  @@map("users")
+}

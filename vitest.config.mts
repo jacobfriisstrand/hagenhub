@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     coverage: {
-      include: ["src/app/api/**/*"], // Only track coverage for the /api folder
+      include: ["src/"], // Only track coverage for the /api folder
       exclude: ["**/node_modules/**", "**/*.test.ts", "**/*.spec.ts", "**/src/app/**", "**/*.config.ts", "**/*.mjs"],
     },
   },
