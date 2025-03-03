@@ -13,6 +13,12 @@ datasource db {
 // This adds syntax highlighting, linting and auto-completion for Prisma.***
 // *************************************************************************
 
+// TODO: Check if we can use ts-to-zod to generate zod schemas from prisma models
+// https://www.npmjs.com/package/ts-to-zod
+
+// Prisma YouTube Tutorial
+// https://www.youtube.com/watch?v=QXxy8Uv1LnQ&t=1344s
+
 // Follow these conventions for all models:
 
 // model User {
