@@ -13,8 +13,9 @@ datasource db {
 // This adds syntax highlighting, linting and auto-completion for Prisma.***
 // *************************************************************************
 
-// TODO: Check if we can use the following package to generate zod schemas from prisma models
+// TODO: Check if we can use the following packages to generate zod schemas from prisma models
 // https://github.com/CarterGrimmeisen/zod-prisma
+// https://www.npmjs.com/package/zod-prisma-types
 
 // Prisma YouTube Tutorial
 // https://www.youtube.com/watch?v=QXxy8Uv1LnQ&t=1344s
