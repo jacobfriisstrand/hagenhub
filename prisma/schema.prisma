@@ -2,6 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider = "zod-prisma-types"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -59,11 +63,17 @@ datasource db {
 // npx prisma db push
 
 model User {
-  id         String @id @db.Uuid
-  first_name String @db.VarChar(100)
-  last_name  String @db.VarChar(100)
-  email      String @unique @db.VarChar(100)
-  password   String @db.VarChar(100)
+  user_pk           String   @id @db.Uuid
+  user_first_name   String   @db.Text
+  user_last_name    String   @db.Text
+  user_email        String   @unique @db.Text
+  user_password     String   @db.Text
+  user_phone_number String   @db.Text
+  user_address      String   @db.Text
+  user_description  String   @db.Text
+  user_avatar_url   String   @db.Text
+  user_created_at   DateTime @default(now())
+  user_updated_at   DateTime @updatedAt
 
   @@map("users")
 }
