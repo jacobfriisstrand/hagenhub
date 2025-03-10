@@ -1,0 +1,27 @@
+name: Close Linked Issues on Merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  close-linked-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Linked Issues
+        id: get-link
+        run: |
+          ISSUES=$(gh pr view ${{ github.event.pull_request.number }} --json closingIssuesReferences -q '.closingIssuesReferences[].number')
+          echo "ISSUES=$ISSUES" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Close Issues
+        if: env.ISSUES != ''
+        run: |
+          for ISSUE in $ISSUES; do
+            echo "Closing issue #$ISSUE"
+            gh issue close $ISSUE --comment "Closed automatically when PR #${{ github.event.pull_request.number }} was merged."
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
