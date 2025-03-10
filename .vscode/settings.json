@@ -1,6 +1,6 @@
 {
-  "sonarlint.connectedMode.project": {
-    "connectionId": "hagenhub",
-    "projectKey": "hagenhub"
-  }
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "editor.formatOnSave": true
 }

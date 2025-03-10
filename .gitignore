@@ -10,6 +10,9 @@
 !.yarn/releases
 !.yarn/versions
 
+# project example
+/_example
+
 # testing
 /coverage
 

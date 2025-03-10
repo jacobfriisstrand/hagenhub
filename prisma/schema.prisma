@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator zod {
+  provider                = "zod-prisma-types"
+  createInputTypes        = false
+  useInstanceOfForDecimal = false
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// *************************************************************************
+// Please install the Prisma extension for VSCode/Cursor *******************
+// https://marketplace.cursorapi.com/items?itemName=Prisma.prisma **********
+// This adds syntax highlighting, linting and auto-completion for Prisma.***
+// *************************************************************************
+
+// We use zod-prisma-types to generate zod schemas from prisma models
+// https://www.npmjs.com/package/zod-prisma-types
+
+// Prisma YouTube Tutorial
+// https://www.youtube.com/watch?v=QXxy8Uv1LnQ&t=1344s
+
+// Follow these conventions for all models:
+
+// model User {
+//   id         String @id @db.Uuid
+//   first_name String @db.VarChar(100)
+//   last_name  String @db.VarChar(100)
+//   email      String @db.VarChar(100)
+//   password   String @db.VarChar(100)
+
+//   @@map("users")
+// }
+
+// - Model names in PascalCase - User, Product, Order, etc.
+// - Database table names in snake_case (plural) - users, products, orders, etc.
+// - Field names in snake_case - Always prefix with the table name - user_id, product_id, order_id, etc.
+// - Include created_at and updated_at timestamps - @default(now()) and @updatedAt
+// - Use explicit database types with @db
+
+// Primary key using UUID
+// Always use UUID for id fields instead of auto-increment
+
+// Audit timestamps
+// created_at: Set automatically when record is created
+// updated_at: Updates automatically when record is modified
+
+// Map the model to the actual database table name
+// Convention: Use plural, snake_case for table names
+// Example: @@map("users")
+
+// to apply the changes to the database, run:
+// npx prisma db push
+
+model User {
+  user_pk String @id @db.Uuid
+
+  /// @zod.string.min(3, { message: "min error" }).max(10, { message: "max error" })
+  user_first_name String @db.Text
+
+  user_last_name String @db.Text
+
+  /// @zod.string.email()
+  user_email String @unique @db.Text
+
+  user_password String @db.Text
+
+  user_phone_number String @db.Text
+
+  user_address String @db.Text
+
+  user_description String @db.Text
+
+  user_avatar_url String @db.Text
+
+  user_created_at DateTime @default(now())
+
+  user_updated_at DateTime @updatedAt
+
+  @@map("users")
+}
