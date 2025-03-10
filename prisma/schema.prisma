@@ -84,3 +84,23 @@ model User {
 
   @@map("users")
 }
+
+model Listing {
+  listing_pk          String   @id @default(uuid())
+  listing_title       String
+  listing_description String
+  listing_zip_code    Int
+  listing_street_name String
+  listing_address     String
+  listing_price       Decimal
+  listing_area        String
+  listing_type        String
+  listing_latitude    Float?
+  listing_longitude   Float?
+  listing_guests      Int
+  listing_bedrooms    Int
+  listing_created_at  DateTime @default(now())
+  listing_updated_at  DateTime @updatedAt
+
+  @@map("listings")
+}
