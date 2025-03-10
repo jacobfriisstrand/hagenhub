@@ -2,6 +2,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider                = "zod-prisma-types"
+  createInputTypes        = false
+  useInstanceOfForDecimal = false
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -13,8 +19,7 @@ datasource db {
 // This adds syntax highlighting, linting and auto-completion for Prisma.***
 // *************************************************************************
 
-// TODO: Check if we can use the following packages to generate zod schemas from prisma models
-// https://github.com/CarterGrimmeisen/zod-prisma
+// We use zod-prisma-types to generate zod schemas from prisma models
 // https://www.npmjs.com/package/zod-prisma-types
 
 // Prisma YouTube Tutorial
@@ -41,12 +46,6 @@ datasource db {
 // Primary key using UUID
 // Always use UUID for id fields instead of auto-increment
 
-// Personal information fields
-// Use @db.VarChar(n) for string fields with appropriate length constraints
-// Use @db.Text for large text fields
-// Use @db.Boolean for boolean fields
-// Use @db.Char for fixed-length character fields
-
 // Audit timestamps
 // created_at: Set automatically when record is created
 // updated_at: Updates automatically when record is modified
@@ -59,11 +58,29 @@ datasource db {
 // npx prisma db push
 
 model User {
-  id         String @id @db.Uuid
-  first_name String @db.VarChar(100)
-  last_name  String @db.VarChar(100)
-  email      String @unique @db.VarChar(100)
-  password   String @db.VarChar(100)
+  user_pk String @id @db.Uuid
+
+  /// @zod.string.min(3, { message: "min error" }).max(10, { message: "max error" })
+  user_first_name String @db.Text
+
+  user_last_name String @db.Text
+
+  /// @zod.string.email()
+  user_email String @unique @db.Text
+
+  user_password String @db.Text
+
+  user_phone_number String @db.Text
+
+  user_address String @db.Text
+
+  user_description String @db.Text
+
+  user_avatar_url String @db.Text
+
+  user_created_at DateTime @default(now())
+
+  user_updated_at DateTime @updatedAt
 
   @@map("users")
 }
