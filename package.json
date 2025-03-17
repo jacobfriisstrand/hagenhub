@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@prisma/client": "^6.4.1",
+    "@prisma/client": "^6.5.0",
     "@tailwindcss/postcss": "^4.0.8",
     "@tailwindcss/upgrade": "^4.0.6",
     "@testing-library/dom": "^10.4.0",
@@ -41,7 +41,7 @@
     "eslint-config-next": "15.1.7",
     "jsdom": "^26.0.0",
     "postcss": "^8",
-    "prisma": "^6.4.1",
+    "prisma": "^6.5.0",
     "tailwindcss": "^4.0.8",
     "typescript": "^5",
     "vite-tsconfig-paths": "^5.1.4",
