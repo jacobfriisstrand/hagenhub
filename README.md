@@ -28,7 +28,7 @@ npm install
 Start the PostgreSQL database using Docker:
 
 ```bash
-docker-compose up postgres_db -d
+docker compose -f docker-compose.yml up --build -d
 ```
 
 ### 4. Set up environment variables
