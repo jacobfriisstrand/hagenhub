@@ -1,3 +1,5 @@
+// TODO: watch the video to see how to do this
+// https://www.youtube.com/watch?v=vKJe95pqn8E
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
