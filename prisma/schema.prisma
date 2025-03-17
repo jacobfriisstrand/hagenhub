@@ -94,6 +94,8 @@ model Listing {
   /// @zod.number.min(1, { message: "Minimum 1 bedroom is required" })
   listing_bedrooms Int
 
+  listing_images ListingImage[]
+
   listing_user_fk String @db.Uuid
   listing_user    User   @relation(fields: [listing_user_fk], references: [user_pk])
 
@@ -183,4 +185,15 @@ model Booking {
   booking_review Review?
 
   @@map("bookings")
+}
+
+model ListingImage {
+  listing_image_pk String @id @default(uuid()) @db.Uuid
+
+  listing_image_url String
+
+  listing_image_listing_fk String  @db.Uuid
+  listing_image_listing    Listing @relation(fields: [listing_image_listing_fk], references: [listing_pk])
+
+  @@map("listing_images")
 }
