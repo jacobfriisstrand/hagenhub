@@ -1,3 +1,15 @@
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+
 export default function Menu() {
-  return <></>;
+  return (
+    <div className="flex items-center gap-4">
+      <Button asChild variant="outline">
+        <Link href="/signup">Sign up</Link>
+      </Button>
+      <Button asChild>
+        <Link href="/login">Login</Link>
+      </Button>
+    </div>
+  );
 }
