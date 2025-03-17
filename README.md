@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HagenHub
 
-## Getting Started
+A Next.js project with Prisma and PostgreSQL.
 
-First, run the development server:
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) (version specified in `.nvmrc`)
+- [Docker](https://www.docker.com/) and Docker Compose (for PostgreSQL database)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
+
+## Development Setup
+
+### 1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd hagenhub
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Set up the database
+
+Start the PostgreSQL database using Docker:
+
+```bash
+docker-compose up postgres_db -d
+```
+
+### 4. Set up environment variables
+
+Create a `.env` file in the root directory with the required environment variables. See `.env.example` for reference.
+
+### 5. Run database migrations
+
+```bash
+npx prisma migrate deploy
+npx prisma generate
+```
+
+Or use the npm script:
+
+```bash
+npm run db:deploy
+```
+
+### 6. Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - Start the development server with Turbopack
+- `npm run build` - Build the application for production
+- `npm run start` - Start the production server
+- `npm run lint` - Run ESLint
+- `npm run test` - Run tests with Vitest
+- `npm run db:deploy` - Deploy database migrations and generate Prisma client
 
-## Learn More
+## Database Management
 
-To learn more about Next.js, take a look at the following resources:
+You can use Prisma Studio to manage your database:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npx prisma studio
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This will start Prisma Studio at [http://localhost:5555](http://localhost:5555).
 
-## Deploy on Vercel
+## Docker
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The project includes Docker configuration for running the entire stack:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+docker-compose up
+```
+
+This will start:
+
+- PostgreSQL database
+- Next.js application
+- Prisma Studio (available at http://localhost:5555)
+
+## Project Structure
+
+- `/src` - Application source code
+- `/prisma` - Prisma schema and migrations
+- `/public` - Static assets

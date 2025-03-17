@@ -58,7 +58,7 @@ model User {
 }
 
 model Listing {
-  listing_pk String @id @default(uuid())
+  listing_pk String @id @default(uuid()) @db.Uuid
 
   /// @zod.string.min(2, { message: "Title must be at least 2 characters long" }).max(100, { message: "Title must be less than 100 characters long" })
   listing_title String
@@ -67,16 +67,16 @@ model Listing {
   listing_description String
 
   /// @zod.string.regex(/^\d{4}$/, { message: "Zip code must be exactly 4 digits" })
-  listing_zip_code Int
+  listing_zip_code String
 
   /// @zod.string.min(2, { message: "Street name must be at least 2 characters long" }).max(100, { message: "Street name must be less than 100 characters long" })
   listing_street_name String
 
   /// @zod.string.regex(/^\d+$/, { message: "Street number can only contain numbers" })
-  listing_street_number Int
+  listing_street_number String
 
-  /// @zod.number.min(0, { message: "Price must be greater than 0" })
-  listing_night_price Decimal
+  /// @zod.number.min(1, { message: "Price must be greater than 0" })
+  listing_night_price Int
 
   listing_area_fk String      @db.Uuid
   listing_area    ListingArea @relation(fields: [listing_area_fk], references: [listing_area_pk])
@@ -131,7 +131,7 @@ model ListingType {
 model Review {
   review_pk String @id @default(uuid()) @db.Uuid
 
-  /// @zod.enum([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5])
+  /// @zod.custom.use(z.number().min(1).max(5).step(0.5).refine(val => [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].includes(val), { message: "Rating must be one of: 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5" }))
   review_rating Float
 
   /// @zod.string.min(10, { message: "Review must be at least 10 characters long" }).max(500, { message: "Review must be less than 500 characters long" })
@@ -175,7 +175,7 @@ model Booking {
 
   booking_check_out DateTime
 
-  /// @zod.enum(['Pending', 'Confirmed', 'Completed', 'Cancelled'])
+  /// @zod.custom.use(z.enum(["Pending", "Confirmed", "Completed", "Cancelled"]))
   booking_status String @default("Pending")
 
   booking_created_at DateTime @default(now())
