@@ -26,6 +26,10 @@ services:
       - '3000:3000'
     stdin_open: true
     tty: true # Keeps the container running for debugging
+    command: ["npm", "run", "dev"]
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       postgres_db:
         condition: service_healthy
