@@ -22,6 +22,7 @@ type SignupInput = z.infer<typeof SignupSchema>;
 
 export async function login(unsafedata: LoginInput) {
   const { success, data } = LoginSchema.safeParse(unsafedata);
+  console.log(success, data);
   if (!success) {
     return { error: 'Invalid credentials' };
   }
