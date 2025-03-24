@@ -20,7 +20,7 @@ model User {
   user_first_name String @db.Text
 
   /// @zod.string.min(2, { message: "Last name must be at least 2 characters long" }).max(256, { message: "Last name must be less than 256 characters long" })
-  user_last_name String @db.Text
+  user_last_name String? @db.Text
 
   /// @zod.string.email({ message: "Please enter a valid email address" })
   user_email String @unique @db.Text
@@ -31,22 +31,27 @@ model User {
   /// })
   user_password String @db.Text
 
-  user_dob DateTime
+  salt String @db.Text
+
+  user_dob DateTime?
 
   /// @zod.string.regex(/^\d+$/, { message: "Phone number can only contain numbers" })
-  user_phone_number String @db.Text
+  user_phone_number String? @db.Text
 
   /// @zod.string.min(2, { message: "Address must be at least 2 characters long" }).max(100, { message: "Address must be less than 100 characters long" })
-  user_address String @db.Text
+  user_address String? @db.Text
 
   /// @zod.string.min(10, { message: "Description must be at least 10 characters long" }).max(500, { message: "Description must be less than 500 characters long" })
-  user_description String @db.Text
+  user_description String? @db.Text
 
-  user_avatar_url String @db.Text
+  user_avatar_url String? @db.Text
 
-  user_created_at DateTime @default(now())
+  /// @zod.custom.use(z.enum(["user", "admin"]))
+  user_role String @default("user") @db.Text
 
-  user_updated_at DateTime @updatedAt
+  user_created_at DateTime? @default(now())
+
+  user_updated_at DateTime? @updatedAt
 
   user_listings Listing[]
 

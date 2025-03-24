@@ -26,7 +26,7 @@ services:
       - '3000:3000'
     stdin_open: true
     tty: true # Keeps the container running for debugging
-    command: ["npm", "run", "dev"]
+    command: sh -c "npx prisma generate && npm run dev"
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules

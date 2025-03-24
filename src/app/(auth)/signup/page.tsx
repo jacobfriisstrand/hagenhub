@@ -21,6 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { UserSchema } from '@/prisma/generated/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { signup } from '../actions';
 
 const signupSchema = UserSchema.pick({
   user_first_name: true,
@@ -40,9 +41,13 @@ export default function SignupPage() {
     },
   });
 
-  function onSubmit(data: SignupFormValues) {
+  async function onSubmit(data: SignupFormValues) {
     // TODO: Implement signup logic here
-    console.log(data);
+    const error = await signup(data);
+    if (error) {
+      console.error(error);
+    }
+    console.log('submit data', data);
   }
 
   return (

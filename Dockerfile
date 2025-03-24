@@ -4,6 +4,8 @@ WORKDIR /usr/src/app
 
 COPY package.json package-lock.json ./
 
+COPY prisma ./prisma
+
 RUN apk add --no-cache python3 make g++
 
 RUN npm ci
