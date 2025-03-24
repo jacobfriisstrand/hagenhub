@@ -12,7 +12,7 @@ import type { Prisma } from '@prisma/client';
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
-export const UserScalarFieldEnumSchema = z.enum(['user_pk','user_first_name','user_last_name','user_email','user_password','user_dob','user_phone_number','user_address','user_description','user_avatar_url','user_created_at','user_updated_at']);
+export const UserScalarFieldEnumSchema = z.enum(['user_pk','user_first_name','user_last_name','user_email','user_password','salt','user_dob','user_phone_number','user_address','user_description','user_avatar_url','user_role','user_created_at','user_updated_at']);
 
 export const ListingScalarFieldEnumSchema = z.enum(['listing_pk','listing_title','listing_description','listing_zip_code','listing_street_name','listing_street_number','listing_night_price','listing_area_fk','listing_type_fk','listing_latitude','listing_longitude','listing_guest_count','listing_bedrooms','listing_user_fk','listing_created_at','listing_updated_at','listing_deleted_at']);
 
@@ -42,7 +42,7 @@ export const NullsOrderSchema = z.enum(['first','last']);
 export const UserSchema = z.object({
   user_pk: z.string().uuid(),
   user_first_name: z.string().min(3, { message: "Name must be at least 2 characters long" }).max(256, { message: "Name must be less than 256 characters long" }),
-  user_last_name: z.string().min(2, { message: "Last name must be at least 2 characters long" }).max(256, { message: "Last name must be less than 256 characters long" }),
+  user_last_name: z.string().min(2, { message: "Last name must be at least 2 characters long" }).max(256, { message: "Last name must be less than 256 characters long" }).nullable(),
   user_email: z.string().email({ message: "Please enter a valid email address" }),
   /**
    * .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).*$/, {
@@ -50,13 +50,15 @@ export const UserSchema = z.object({
    * })
    */
   user_password: z.string().min(8, { message: "Password must be at least 8 characters long" }),
-  user_dob: z.coerce.date(),
-  user_phone_number: z.string().regex(/^\d+$/, { message: "Phone number can only contain numbers" }),
-  user_address: z.string().min(2, { message: "Address must be at least 2 characters long" }).max(100, { message: "Address must be less than 100 characters long" }),
-  user_description: z.string().min(10, { message: "Description must be at least 10 characters long" }).max(500, { message: "Description must be less than 500 characters long" }),
-  user_avatar_url: z.string(),
-  user_created_at: z.coerce.date(),
-  user_updated_at: z.coerce.date(),
+  salt: z.string(),
+  user_dob: z.coerce.date().nullable(),
+  user_phone_number: z.string().regex(/^\d+$/, { message: "Phone number can only contain numbers" }).nullable(),
+  user_address: z.string().min(2, { message: "Address must be at least 2 characters long" }).max(100, { message: "Address must be less than 100 characters long" }).nullable(),
+  user_description: z.string().min(10, { message: "Description must be at least 10 characters long" }).max(500, { message: "Description must be less than 500 characters long" }).nullable(),
+  user_avatar_url: z.string().nullable(),
+  user_role: z.enum(["user", "admin"]),
+  user_created_at: z.coerce.date().nullable(),
+  user_updated_at: z.coerce.date().nullable(),
 })
 
 export type User = z.infer<typeof UserSchema>

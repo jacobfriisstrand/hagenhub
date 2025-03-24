@@ -56,6 +56,14 @@ npm run dev
 
 The application will be available at [http://localhost:3000](http://localhost:3000).
 
+### 7. Connecting to Upstash Redis
+
+If you need to connect to your Upstash Redis instance from the command line, you can use the following command:
+
+```bash
+redis-cli --tls -u "redis://default:AVnuAAIjcDEyZDA2ZmU4OWIyNDg0YjNkOTNlODQ0Zjk0NDk5YmI2ZHAxMA@model-bengal-23022.upstash.io:6379"
+```
+
 ## Available Scripts
 
 - `npm run dev` - Start the development server with Turbopack
