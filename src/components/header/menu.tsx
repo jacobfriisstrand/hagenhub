@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button/button";
 
 export default function Menu() {
   return (

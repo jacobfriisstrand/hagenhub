@@ -1,11 +1,15 @@
-'use server';
+"use server";
 
-import { UserSchema } from '@/prisma/generated/zod';
-import { z } from 'zod';
-import hashPassword, { generateSalt } from './core/passwordHasher';
-import { createUserSession } from './core/sessions';
-import { cookies } from 'next/headers';
-import { prisma } from '@/lib/prisma';
+import type { z } from "zod";
+
+import { cookies } from "next/headers";
+
+import { prisma } from "@/lib/prisma";
+import { UserSchema } from "@/prisma/generated/zod";
+
+import hashPassword, { generateSalt } from "./core/password-hasher";
+import { createUserSession } from "./core/sessions";
+
 const LoginSchema = UserSchema.pick({
   user_email: true,
   user_password: true,
@@ -24,7 +28,7 @@ export async function login(unsafedata: LoginInput) {
   const { success, data } = LoginSchema.safeParse(unsafedata);
   console.log(success, data);
   if (!success) {
-    return { error: 'Invalid credentials' };
+    return { error: "Invalid credentials" };
   }
   // TODO: Implement login logic
   // 1. Validate credentials
@@ -35,7 +39,7 @@ export async function login(unsafedata: LoginInput) {
 export async function signup(unsafedata: SignupInput) {
   const { success, data } = SignupSchema.safeParse(unsafedata);
   if (!success) {
-    return { error: 'Invalid credentials' };
+    return { error: "Invalid credentials" };
   }
 
   const existingUser = await prisma.user.findUnique({
@@ -44,7 +48,7 @@ export async function signup(unsafedata: SignupInput) {
     },
   });
   if (existingUser) {
-    return { error: 'User already exists' };
+    return { error: "User already exists" };
   }
 
   try {
@@ -60,18 +64,17 @@ export async function signup(unsafedata: SignupInput) {
       },
     });
     if (user === null) {
-      return { error: 'Failed to create user' };
+      return { error: "Failed to create user" };
     }
 
     await createUserSession(
-      { id: user.user_pk, role: user.user_role as 'user' | 'admin' },
-      await cookies()
+      { id: user.user_pk, role: user.user_role as "user" | "admin" },
+      await cookies(),
     );
-
-    return;
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error);
-    return { error: 'Failed to create user' };
+    return { error: "Failed to create user" };
   }
 }
 

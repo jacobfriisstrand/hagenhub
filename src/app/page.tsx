@@ -1,6 +1,7 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardFooter } from '@/components/ui/card';
-import Link from 'next/link';
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button/button";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 
 // First, let's create a type for our user data
 type User = {
@@ -11,7 +12,7 @@ type User = {
 export default function Home() {
   // This is where you'd normally fetch or receive the user data
   const fullUser: User = {
-    role: 'admin', // This is just for demonstration
+    role: "admin", // This is just for demonstration
   };
 
   return (
@@ -26,7 +27,7 @@ export default function Home() {
           <Link href="/private">Private Area</Link>
         </Button>
 
-        {fullUser.role === 'admin' && (
+        {fullUser.role === "admin" && (
           <Button asChild variant="secondary">
             <Link href="/admin">Admin Panel</Link>
           </Button>
