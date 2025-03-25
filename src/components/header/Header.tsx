@@ -1,6 +1,6 @@
-import Logo from './Logo';
-import SearchBar from './SearchBar';
-import Menu from './Menu';
+import Logo from "./logo";
+import Menu from "./menu";
+import SearchBar from "./search-bar";
 
 export default function Header() {
   return (

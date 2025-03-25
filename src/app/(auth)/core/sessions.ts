@@ -1,11 +1,13 @@
-import { UserSchema } from '@/prisma/generated/zod';
-import { z } from 'zod';
-import crypto from 'crypto';
-import { redisClient } from '../redis/redis';
+import crypto from "node:crypto";
+import { z } from "zod";
+
+import { UserSchema } from "@/prisma/generated/zod";
+
+import { redisClient } from "../redis/redis";
 
 // Seven days in scounds
 const SESSION_EXPIRATION_SECONDS = 7 * 24 * 60 * 60;
-const COOKIE_SESSION_KEY = 'session-id';
+const COOKIE_SESSION_KEY = "session-id";
 
 const sessionSchema = z.object({
   id: z.string(),
@@ -22,7 +24,7 @@ export type Cookies = {
     value: string,
     options: {
       secure?: boolean;
-      sameSite?: 'strict' | 'lax';
+      sameSite?: "strict" | "lax";
       expires?: number;
       httpOnly?: boolean;
     }
@@ -30,7 +32,7 @@ export type Cookies = {
 };
 
 export async function createUserSession(user: UserSession, cookies: Cookies) {
-  const sessionId = crypto.randomBytes(512).toString('hex').normalize();
+  const sessionId = crypto.randomBytes(512).toString("hex").normalize();
   await redisClient.set(`session:${sessionId}`, sessionSchema.parse(user), {
     ex: SESSION_EXPIRATION_SECONDS,
   });
@@ -38,11 +40,11 @@ export async function createUserSession(user: UserSession, cookies: Cookies) {
   setCookie(sessionId, cookies);
 }
 
-function setCookie(sessionId: string, cookies: Pick<Cookies, 'set'>) {
+function setCookie(sessionId: string, cookies: Pick<Cookies, "set">) {
   cookies.set(COOKIE_SESSION_KEY, sessionId, {
     secure: true,
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: "lax",
     expires: Date.now() + SESSION_EXPIRATION_SECONDS * 1000,
   });
 }

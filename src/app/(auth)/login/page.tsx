@@ -1,13 +1,18 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
+import type { z } from "zod";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -15,12 +20,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { UserSchema } from '@/prisma/generated/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+} from "@/components/ui/form/form";
+import { Input } from "@/components/ui/input";
+import { UserSchema } from "@/prisma/generated/zod";
 
 const loginSchema = UserSchema.pick({ user_email: true, user_password: true });
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -30,8 +32,8 @@ export default function LoginPage() {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      user_email: '',
-      user_password: '',
+      user_email: "",
+      user_password: "",
     },
   });
 
