@@ -1,16 +1,39 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import antfu from "@antfu/eslint-config";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+export default antfu(
+  {
+    type: "app",
+    typescript: true,
+    formatters: true,
+    react: true,
+    stylistic: {
+      indent: 2,
+      semi: true,
+      quotes: "double",
+    },
+    ignores: ["prisma/**", ".github/**"],
+  },
+  {
+    rules: {
+      "ts/no-redeclare": "off",
+      "ts/consistent-type-definitions": ["error", "type"],
+      "no-console": ["warn"],
+      "antfu/no-top-level-await": ["off"],
+      "node/prefer-global/process": ["off"],
+      "perfectionist/sort-imports": [
+        "error",
+        {
+          tsconfigRootDir: ".",
+        },
+      ],
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-];
-
-export default eslintConfig;
+      "unicorn/filename-case": [
+        "error",
+        {
+          case: "kebabCase",
+          ignore: ["README.md"],
+        },
+      ],
+    },
+  },
+);

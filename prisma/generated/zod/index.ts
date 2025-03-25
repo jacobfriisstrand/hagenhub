@@ -1,36 +1,34 @@
-import { z } from 'zod';
-import type { Prisma } from '@prisma/client';
+import { z } from "zod";
 
 /////////////////////////////////////////
 // HELPER FUNCTIONS
 /////////////////////////////////////////
 
-
 /////////////////////////////////////////
 // ENUMS
 /////////////////////////////////////////
 
-export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
+export const TransactionIsolationLevelSchema = z.enum(["ReadUncommitted", "ReadCommitted", "RepeatableRead", "Serializable"]);
 
-export const UserScalarFieldEnumSchema = z.enum(['user_pk','user_first_name','user_last_name','user_email','user_password','user_dob','user_phone_number','user_address','user_description','user_avatar_url','user_created_at','user_updated_at']);
+export const UserScalarFieldEnumSchema = z.enum(["user_pk", "user_first_name", "user_last_name", "user_email", "user_password", "salt", "user_dob", "user_phone_number", "user_address", "user_description", "user_avatar_url", "user_role", "user_created_at", "user_updated_at"]);
 
-export const ListingScalarFieldEnumSchema = z.enum(['listing_pk','listing_title','listing_description','listing_zip_code','listing_street_name','listing_street_number','listing_night_price','listing_area_fk','listing_type_fk','listing_latitude','listing_longitude','listing_guest_count','listing_bedrooms','listing_user_fk','listing_created_at','listing_updated_at','listing_deleted_at']);
+export const ListingScalarFieldEnumSchema = z.enum(["listing_pk", "listing_title", "listing_description", "listing_zip_code", "listing_street_name", "listing_street_number", "listing_night_price", "listing_area_fk", "listing_type_fk", "listing_latitude", "listing_longitude", "listing_guest_count", "listing_bedrooms", "listing_user_fk", "listing_created_at", "listing_updated_at", "listing_deleted_at"]);
 
-export const ListingAreaScalarFieldEnumSchema = z.enum(['listing_area_pk','listing_area_name']);
+export const ListingAreaScalarFieldEnumSchema = z.enum(["listing_area_pk", "listing_area_name"]);
 
-export const ListingTypeScalarFieldEnumSchema = z.enum(['listing_type_pk','listing_type_name']);
+export const ListingTypeScalarFieldEnumSchema = z.enum(["listing_type_pk", "listing_type_name"]);
 
-export const ReviewScalarFieldEnumSchema = z.enum(['review_pk','review_rating','review_comment','review_created_at','review_user_fk','review_listing_fk','review_booking_fk']);
+export const ReviewScalarFieldEnumSchema = z.enum(["review_pk", "review_rating", "review_comment", "review_created_at", "review_user_fk", "review_listing_fk", "review_booking_fk"]);
 
-export const BookingScalarFieldEnumSchema = z.enum(['booking_pk','booking_guest_fk','booking_listing_fk','booking_guest_count','booking_night_count','booking_check_in','booking_check_out','booking_status','booking_created_at','booking_updated_at']);
+export const BookingScalarFieldEnumSchema = z.enum(["booking_pk", "booking_guest_fk", "booking_listing_fk", "booking_guest_count", "booking_night_count", "booking_check_in", "booking_check_out", "booking_status", "booking_created_at", "booking_updated_at"]);
 
-export const ListingImageScalarFieldEnumSchema = z.enum(['listing_image_pk','listing_image_url','listing_image_listing_fk']);
+export const ListingImageScalarFieldEnumSchema = z.enum(["listing_image_pk", "listing_image_url", "listing_image_listing_fk"]);
 
-export const SortOrderSchema = z.enum(['asc','desc']);
+export const SortOrderSchema = z.enum(["asc", "desc"]);
 
-export const QueryModeSchema = z.enum(['default','insensitive']);
+export const QueryModeSchema = z.enum(["default", "insensitive"]);
 
-export const NullsOrderSchema = z.enum(['first','last']);
+export const NullsOrderSchema = z.enum(["first", "last"]);
 /////////////////////////////////////////
 // MODELS
 /////////////////////////////////////////
@@ -42,7 +40,7 @@ export const NullsOrderSchema = z.enum(['first','last']);
 export const UserSchema = z.object({
   user_pk: z.string().uuid(),
   user_first_name: z.string().min(3, { message: "Name must be at least 2 characters long" }).max(256, { message: "Name must be less than 256 characters long" }),
-  user_last_name: z.string().min(2, { message: "Last name must be at least 2 characters long" }).max(256, { message: "Last name must be less than 256 characters long" }),
+  user_last_name: z.string().min(2, { message: "Last name must be at least 2 characters long" }).max(256, { message: "Last name must be less than 256 characters long" }).nullable(),
   user_email: z.string().email({ message: "Please enter a valid email address" }),
   /**
    * .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).*$/, {
@@ -50,16 +48,18 @@ export const UserSchema = z.object({
    * })
    */
   user_password: z.string().min(8, { message: "Password must be at least 8 characters long" }),
-  user_dob: z.coerce.date(),
-  user_phone_number: z.string().regex(/^\d+$/, { message: "Phone number can only contain numbers" }),
-  user_address: z.string().min(2, { message: "Address must be at least 2 characters long" }).max(100, { message: "Address must be less than 100 characters long" }),
-  user_description: z.string().min(10, { message: "Description must be at least 10 characters long" }).max(500, { message: "Description must be less than 500 characters long" }),
-  user_avatar_url: z.string(),
-  user_created_at: z.coerce.date(),
-  user_updated_at: z.coerce.date(),
-})
+  salt: z.string(),
+  user_dob: z.coerce.date().nullable(),
+  user_phone_number: z.string().regex(/^\d+$/, { message: "Phone number can only contain numbers" }).nullable(),
+  user_address: z.string().min(2, { message: "Address must be at least 2 characters long" }).max(100, { message: "Address must be less than 100 characters long" }).nullable(),
+  user_description: z.string().min(10, { message: "Description must be at least 10 characters long" }).max(500, { message: "Description must be less than 500 characters long" }).nullable(),
+  user_avatar_url: z.string().nullable(),
+  user_role: z.enum(["user", "admin"]),
+  user_created_at: z.coerce.date().nullable(),
+  user_updated_at: z.coerce.date().nullable(),
+});
 
-export type User = z.infer<typeof UserSchema>
+export type User = z.infer<typeof UserSchema>;
 
 /////////////////////////////////////////
 // LISTING SCHEMA
@@ -83,9 +83,9 @@ export const ListingSchema = z.object({
   listing_created_at: z.coerce.date(),
   listing_updated_at: z.coerce.date(),
   listing_deleted_at: z.coerce.date().nullable(),
-})
+});
 
-export type Listing = z.infer<typeof ListingSchema>
+export type Listing = z.infer<typeof ListingSchema>;
 
 /////////////////////////////////////////
 // LISTING AREA SCHEMA
@@ -94,9 +94,9 @@ export type Listing = z.infer<typeof ListingSchema>
 export const ListingAreaSchema = z.object({
   listing_area_pk: z.string().uuid(),
   listing_area_name: z.string(),
-})
+});
 
-export type ListingArea = z.infer<typeof ListingAreaSchema>
+export type ListingArea = z.infer<typeof ListingAreaSchema>;
 
 /////////////////////////////////////////
 // LISTING TYPE SCHEMA
@@ -105,9 +105,9 @@ export type ListingArea = z.infer<typeof ListingAreaSchema>
 export const ListingTypeSchema = z.object({
   listing_type_pk: z.string().uuid(),
   listing_type_name: z.string(),
-})
+});
 
-export type ListingType = z.infer<typeof ListingTypeSchema>
+export type ListingType = z.infer<typeof ListingTypeSchema>;
 
 /////////////////////////////////////////
 // REVIEW SCHEMA
@@ -121,9 +121,9 @@ export const ReviewSchema = z.object({
   review_user_fk: z.string(),
   review_listing_fk: z.string(),
   review_booking_fk: z.string(),
-})
+});
 
-export type Review = z.infer<typeof ReviewSchema>
+export type Review = z.infer<typeof ReviewSchema>;
 
 /////////////////////////////////////////
 // BOOKING SCHEMA
@@ -140,9 +140,9 @@ export const BookingSchema = z.object({
   booking_status: z.enum(["Pending", "Confirmed", "Completed", "Cancelled"]),
   booking_created_at: z.coerce.date(),
   booking_updated_at: z.coerce.date(),
-})
+});
 
-export type Booking = z.infer<typeof BookingSchema>
+export type Booking = z.infer<typeof BookingSchema>;
 
 /////////////////////////////////////////
 // LISTING IMAGE SCHEMA
@@ -152,6 +152,6 @@ export const ListingImageSchema = z.object({
   listing_image_pk: z.string().uuid(),
   listing_image_url: z.string(),
   listing_image_listing_fk: z.string(),
-})
+});
 
-export type ListingImage = z.infer<typeof ListingImageSchema>
+export type ListingImage = z.infer<typeof ListingImageSchema>;

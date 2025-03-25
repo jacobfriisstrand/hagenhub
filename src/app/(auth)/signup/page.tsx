@@ -1,13 +1,18 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
+import type { z } from "zod";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -15,12 +20,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { UserSchema } from '@/prisma/generated/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+} from "@/components/ui/form/form";
+import { Input } from "@/components/ui/input";
+import { UserSchema } from "@/prisma/generated/zod";
+
+import { signup } from "../actions";
 
 const signupSchema = UserSchema.pick({
   user_first_name: true,
@@ -34,15 +38,19 @@ export default function SignupPage() {
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      user_first_name: '',
-      user_email: '',
-      user_password: '',
+      user_first_name: "",
+      user_email: "",
+      user_password: "",
     },
   });
 
-  function onSubmit(data: SignupFormValues) {
+  async function onSubmit(data: SignupFormValues) {
     // TODO: Implement signup logic here
-    console.log(data);
+    const error = await signup(data);
+    if (error) {
+      console.error(error);
+    }
+    console.log("submit data", data);
   }
 
   return (
