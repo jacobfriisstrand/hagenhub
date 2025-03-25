@@ -11,6 +11,7 @@ export default antfu(
       semi: true,
       quotes: "double",
     },
+    ignores: ["prisma/**", ".github/**"],
   },
   {
     rules: {
@@ -25,6 +26,7 @@ export default antfu(
           tsconfigRootDir: ".",
         },
       ],
+
       "unicorn/filename-case": [
         "error",
         {
