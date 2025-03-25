@@ -1,4 +1,4 @@
-import { AddListingForm } from '@/app/features/listings/components/AddListingForm';
+import { AddListingForm } from "@/app/features/listings/components/add-listing-form";
 
 export default function AddListingPage() {
   return (

@@ -1,12 +1,13 @@
 // TODO: watch the video to see how to do this
 // https://www.youtube.com/watch?v=vKJe95pqn8E
-'use client';
+"use client";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import type { z } from "zod";
 
-import { Button } from '@/components/ui/button';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button/button";
 import {
   Form,
   FormControl,
@@ -15,10 +16,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-
-import { ListingSchema } from '@/prisma/generated/zod';
+} from "@/components/ui/form/form";
+import { Input } from "@/components/ui/input";
+import { ListingSchema } from "@/prisma/generated/zod";
 
 const AddListingSchema = ListingSchema.pick({
   listing_title: true,
@@ -35,13 +35,13 @@ export function AddListingForm() {
   const form = useForm<AddListingFormValues>({
     resolver: zodResolver(AddListingSchema),
     defaultValues: {
-      listing_title: '',
-      listing_description: '',
+      listing_title: "",
+      listing_description: "",
       listing_night_price: 0,
-      listing_area_fk: '',
-      listing_type_fk: '',
+      listing_area_fk: "",
+      listing_type_fk: "",
       listing_bedrooms: 0,
-      listing_zip_code: '',
+      listing_zip_code: "",
     },
   });
 
