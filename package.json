@@ -28,6 +28,7 @@
     "zod-prisma-types": "^3.2.4"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^4.11.0",
     "@eslint/eslintrc": "^3",
     "@prisma/client": "^6.5.0",
     "@tailwindcss/postcss": "^4.0.8",
