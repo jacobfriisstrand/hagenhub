@@ -27,6 +27,7 @@ const SignupSchema = UserSchema.pick({
 
 type LoginInput = z.infer<typeof LoginSchema>;
 type SignupInput = z.infer<typeof SignupSchema>;
+type UserRole = z.infer<typeof UserSchema.shape.user_role>;
 
 export async function login(unsafedata: LoginInput) {
   const { success, data } = LoginSchema.safeParse(unsafedata);
@@ -64,7 +65,7 @@ export async function login(unsafedata: LoginInput) {
   }
 
   await createUserSession(
-    { id: user.user_pk, role: user.user_role as "user" | "admin" },
+    { user_pk: user.user_pk, user_role: user.user_role as UserRole },
     await cookies(),
   );
 
@@ -103,7 +104,7 @@ export async function signup(unsafedata: SignupInput) {
     }
 
     await createUserSession(
-      { id: user.user_pk, role: user.user_role as "user" | "admin" },
+      { user_pk: user.user_pk, user_role: user.user_role as UserRole },
       await cookies(),
     );
   }

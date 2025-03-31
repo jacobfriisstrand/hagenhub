@@ -7,12 +7,15 @@ import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { getCurrentUser } from "./(auth)/current-user";
 
 export default async function Home() {
-  const fullUser = await getCurrentUser();
+  const fullUser = await getCurrentUser({
+    withFullUser: true,
+    redirectIfNotFound: true,
+  });
 
   return (
     <Card className="w-[350px]">
       <CardHeader>
-        <h2 className="text-2xl font-bold">{fullUser?.id}</h2>
+        <h2 className="text-2xl font-bold">{fullUser?.user_first_name}</h2>
         <p className="text-muted-foreground">User description goes here </p>
       </CardHeader>
 
@@ -22,7 +25,7 @@ export default async function Home() {
         </Button>
         <LogoutButton />
 
-        {fullUser?.role === "admin" && (
+        {fullUser?.user_role === "admin" && (
           <>
             <Button asChild variant="secondary">
               <Link href="/admin">Admin Panel</Link>
