@@ -3,6 +3,7 @@
 import type { z } from "zod";
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
 import { UserSchema } from "@/prisma/generated/zod";
@@ -11,7 +12,7 @@ import hashPassword, {
   comparePasswords,
   generateSalt,
 } from "./core/password-hasher";
-import { createUserSession } from "./core/sessions";
+import { createUserSession, removeUserFromSession } from "./core/sessions";
 
 const LoginSchema = UserSchema.pick({
   user_email: true,
@@ -67,7 +68,7 @@ export async function login(unsafedata: LoginInput) {
     await cookies(),
   );
 
-  return { success: true };
+  redirect("/");
 }
 
 export async function signup(unsafedata: SignupInput) {
@@ -88,7 +89,6 @@ export async function signup(unsafedata: SignupInput) {
   try {
     const salt = generateSalt();
     const hashedPassword = await hashPassword(data.user_password, salt);
-    console.log(hashedPassword);
 
     const user = await prisma.user.create({
       data: {
@@ -111,10 +111,10 @@ export async function signup(unsafedata: SignupInput) {
     console.error(error);
     return { error: "Failed to create user" };
   }
+  redirect("/");
 }
 
 export async function logout() {
-  // TODO: Implement logout logic
-  // 1. Destroy session
-  // 2. Redirect to home
+  await removeUserFromSession(await cookies());
+  redirect("/");
 }

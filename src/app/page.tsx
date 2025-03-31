@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import LogoutButton from "@/components/logout-button";
 import { Button } from "@/components/ui/button/button";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 
@@ -12,19 +13,24 @@ export default async function Home() {
     <Card className="w-[350px]">
       <CardHeader>
         <h2 className="text-2xl font-bold">{fullUser?.id}</h2>
-        <p className="text-muted-foreground">User description goes here</p>
+        <p className="text-muted-foreground">User description goes here </p>
       </CardHeader>
 
       <CardFooter className="flex justify-between">
         <Button asChild>
           <Link href="/private">Private Area</Link>
         </Button>
+        <LogoutButton />
 
         {fullUser?.role === "admin" && (
-          <Button asChild variant="secondary">
-            <Link href="/admin">Admin Panel</Link>
-          </Button>
+          <>
+            <Button asChild variant="secondary">
+              <Link href="/admin">Admin Panel</Link>
+            </Button>
+            <LogoutButton />
+          </>
         )}
+
       </CardFooter>
     </Card>
   );
