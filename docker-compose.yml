@@ -37,12 +37,13 @@ services:
       - .env.prod
     networks:
       - prisma-network
+
   prisma-studio:
     image: node:lts-alpine3.17
     working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app
-    command: npx prisma studio --port 5555 --browser none
+    command: sh -c "npx prisma generate && npx prisma studio --port 5555 --browser none"
     ports:
       - "5555:5555"
     env_file:
@@ -54,6 +55,8 @@ services:
         condition: service_healthy
       server:
         condition: service_started
+    restart: always
+
 networks:
   prisma-network:
     name: prisma-network
