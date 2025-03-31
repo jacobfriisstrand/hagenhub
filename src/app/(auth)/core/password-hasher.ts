@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
 
 export default function hashPassword(
@@ -12,6 +13,23 @@ export default function hashPassword(
       resolve(hash.toString("hex").normalize());
     });
   });
+}
+
+export async function comparePasswords({
+  hashedPassword,
+  password,
+  salt,
+}: {
+  hashedPassword: string;
+  password: string;
+  salt: string;
+}) {
+  const inputHashedPassword = await hashPassword(password, salt);
+
+  return crypto.timingSafeEqual(
+    Buffer.from(inputHashedPassword, "hex"),
+    Buffer.from(hashedPassword, "hex"),
+  );
 }
 
 export function generateSalt() {

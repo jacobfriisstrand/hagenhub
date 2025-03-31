@@ -3,22 +3,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button/button";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 
-// First, let's create a type for our user data
-type User = {
-  role: string;
-  // Add other user properties you need
-};
+import { getCurrentUser } from "./(auth)/current-user";
 
-export default function Home() {
-  // This is where you'd normally fetch or receive the user data
-  const fullUser: User = {
-    role: "admin", // This is just for demonstration
-  };
+export default async function Home() {
+  const fullUser = await getCurrentUser();
 
   return (
     <Card className="w-[350px]">
       <CardHeader>
-        <h2 className="text-2xl font-bold">User Title</h2>
+        <h2 className="text-2xl font-bold">{fullUser?.id}</h2>
         <p className="text-muted-foreground">User description goes here</p>
       </CardHeader>
 
@@ -27,7 +20,7 @@ export default function Home() {
           <Link href="/private">Private Area</Link>
         </Button>
 
-        {fullUser.role === "admin" && (
+        {fullUser?.role === "admin" && (
           <Button asChild variant="secondary">
             <Link href="/admin">Admin Panel</Link>
           </Button>

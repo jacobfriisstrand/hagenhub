@@ -18,7 +18,6 @@ type UserSession = z.infer<typeof sessionSchema>;
 
 export type Cookies = {
   get: (key: string) => { name: string; value: string } | undefined;
-  delete: (key: string) => void;
   set: (
     key: string,
     value: string,
@@ -29,9 +28,21 @@ export type Cookies = {
       httpOnly?: boolean;
     }
   ) => void;
+  delete: (key: string) => void;
 };
 
-export async function createUserSession(user: UserSession, cookies: Cookies) {
+export function getUserFromSession(cookies: Pick<Cookies, "get">) {
+  const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
+  if (sessionId == null)
+    return null;
+
+  return getUserSessionById(sessionId);
+}
+
+export async function createUserSession(
+  user: UserSession,
+  cookies: Pick<Cookies, "set">,
+) {
   const sessionId = crypto.randomBytes(512).toString("hex").normalize();
   await redisClient.set(`session:${sessionId}`, sessionSchema.parse(user), {
     ex: SESSION_EXPIRATION_SECONDS,
@@ -47,4 +58,12 @@ function setCookie(sessionId: string, cookies: Pick<Cookies, "set">) {
     sameSite: "lax",
     expires: Date.now() + SESSION_EXPIRATION_SECONDS * 1000,
   });
+}
+
+async function getUserSessionById(sessionId: string) {
+  const rawUser = await redisClient.get(`session:${sessionId}`);
+
+  const { success, data: user } = sessionSchema.safeParse(rawUser);
+
+  return success ? user : null;
 }

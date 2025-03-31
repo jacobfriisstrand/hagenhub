@@ -7,7 +7,10 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { UserSchema } from "@/prisma/generated/zod";
 
-import hashPassword, { generateSalt } from "./core/password-hasher";
+import hashPassword, {
+  comparePasswords,
+  generateSalt,
+} from "./core/password-hasher";
 import { createUserSession } from "./core/sessions";
 
 const LoginSchema = UserSchema.pick({
@@ -26,14 +29,45 @@ type SignupInput = z.infer<typeof SignupSchema>;
 
 export async function login(unsafedata: LoginInput) {
   const { success, data } = LoginSchema.safeParse(unsafedata);
-  console.log(success, data);
+
   if (!success) {
     return { error: "Invalid credentials" };
   }
-  // TODO: Implement login logic
-  // 1. Validate credentials
-  // 2. Create session
-  // 3. Return user data or error
+
+  const user = await prisma.user.findUnique({
+    select: {
+      user_pk: true,
+      user_email: true,
+      user_first_name: true,
+      user_role: true,
+      salt: true,
+      user_password: true,
+    },
+    where: {
+      user_email: data.user_email,
+    },
+  });
+
+  if (!user) {
+    return { error: "User not found" };
+  }
+
+  const isCorrectPassword = await comparePasswords({
+    hashedPassword: user.user_password,
+    password: data.user_password,
+    salt: user.salt,
+  });
+
+  if (!isCorrectPassword) {
+    return { error: "Invalid credentials" };
+  }
+
+  await createUserSession(
+    { id: user.user_pk, role: user.user_role as "user" | "admin" },
+    await cookies(),
+  );
+
+  return { success: true };
 }
 
 export async function signup(unsafedata: SignupInput) {
@@ -54,6 +88,7 @@ export async function signup(unsafedata: SignupInput) {
   try {
     const salt = generateSalt();
     const hashedPassword = await hashPassword(data.user_password, salt);
+    console.log(hashedPassword);
 
     const user = await prisma.user.create({
       data: {

@@ -50,7 +50,6 @@ export default function SignupPage() {
     if (error) {
       console.error(error);
     }
-    console.log("submit data", data);
   }
 
   return (
