@@ -1,15 +1,18 @@
-FROM node:lts-alpine3.17
+FROM node:20-slim AS base
+WORKDIR /app
 
-WORKDIR /usr/src/app
+# Install Python and build dependencies
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python-is-python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
-COPY prisma ./prisma
-
-RUN apk add --no-cache python3 make g++
-
-RUN npm ci
-
+FROM base AS development
+RUN npm install
 COPY . .
-
-CMD ["sh", "-c", "npm run db:deploy && npm run dev"]
+EXPOSE 3000
+EXPOSE 5555 
