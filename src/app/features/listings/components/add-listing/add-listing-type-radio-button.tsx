@@ -23,8 +23,6 @@ export default function AddListingTypeRadioButton({ value, formLabel, icon, isCh
       <DynamicIcon
         name={icon}
         className={`m-4 transition-colors duration-200 ${isChecked ? "text-primary" : ""}`}
-        // color={isChecked ? "var(--primary)" : "var(--muted-foreground)"}
-        // size={48}
       />
       <FormLabel htmlFor={id} className="font-normal text-md absolute bottom-0 size-full left-0 right-0 p-4 cursor-pointer items-end">
         {formLabel}
