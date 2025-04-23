@@ -1,7 +1,12 @@
+import type { ImageProps } from "next/image";
+
 import Image from "next/image";
 
-export default function ResponsiveImage({ src, alt, width, height }: { src: string; alt: string; width: number; height: number }) {
+export function ResponsiveImage(props: Omit<ImageProps, "sizes">) {
   return (
-    <Image src={src} alt={alt} width={width} height={height} />
+    <Image
+      {...props}
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+    />
   );
 }
