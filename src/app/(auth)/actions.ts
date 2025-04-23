@@ -3,12 +3,16 @@
 import type { z } from "zod";
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
 import { UserSchema } from "@/prisma/generated/zod";
 
-import hashPassword, { generateSalt } from "./core/password-hasher";
-import { createUserSession } from "./core/sessions";
+import hashPassword, {
+  comparePasswords,
+  generateSalt,
+} from "./core/password-hasher";
+import { createUserSession, removeUserFromSession } from "./core/sessions";
 
 const LoginSchema = UserSchema.pick({
   user_email: true,
@@ -23,17 +27,49 @@ const SignupSchema = UserSchema.pick({
 
 type LoginInput = z.infer<typeof LoginSchema>;
 type SignupInput = z.infer<typeof SignupSchema>;
+type UserRole = z.infer<typeof UserSchema.shape.user_role>;
 
 export async function login(unsafedata: LoginInput) {
   const { success, data } = LoginSchema.safeParse(unsafedata);
-  console.log(success, data);
+
   if (!success) {
     return { error: "Invalid credentials" };
   }
-  // TODO: Implement login logic
-  // 1. Validate credentials
-  // 2. Create session
-  // 3. Return user data or error
+
+  const user = await prisma.user.findUnique({
+    select: {
+      user_pk: true,
+      user_email: true,
+      user_first_name: true,
+      user_role: true,
+      salt: true,
+      user_password: true,
+    },
+    where: {
+      user_email: data.user_email,
+    },
+  });
+
+  if (!user) {
+    return { error: "User not found" };
+  }
+
+  const isCorrectPassword = await comparePasswords({
+    hashedPassword: user.user_password,
+    password: data.user_password,
+    salt: user.salt,
+  });
+
+  if (!isCorrectPassword) {
+    return { error: "Invalid credentials" };
+  }
+
+  await createUserSession(
+    { user_pk: user.user_pk, user_role: user.user_role as UserRole },
+    await cookies(),
+  );
+
+  redirect("/");
 }
 
 export async function signup(unsafedata: SignupInput) {
@@ -68,7 +104,7 @@ export async function signup(unsafedata: SignupInput) {
     }
 
     await createUserSession(
-      { id: user.user_pk, role: user.user_role as "user" | "admin" },
+      { user_pk: user.user_pk, user_role: user.user_role as UserRole },
       await cookies(),
     );
   }
@@ -76,10 +112,10 @@ export async function signup(unsafedata: SignupInput) {
     console.error(error);
     return { error: "Failed to create user" };
   }
+  redirect("/");
 }
 
 export async function logout() {
-  // TODO: Implement logout logic
-  // 1. Destroy session
-  // 2. Redirect to home
+  await removeUserFromSession(await cookies());
+  redirect("/login");
 }
