@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
 
+import Footer from "@/components/footer";
 import HeaderBar from "@/components/header/header";
 
 const geistSans = Geist({
@@ -29,10 +30,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased grid grid-rows-[auto_1fr_auto] min-h-screen`}
       >
         <HeaderBar />
-        <main>{children}</main>
+        <main className="container mx-auto px-5 py-10">{children}</main>
+        <Footer />
       </body>
     </html>
   );
