@@ -2,8 +2,6 @@ import AddListingRoomsForm from "@/app/features/listings/components/add-listing/
 
 export default function RoomsPage() {
   return (
-    <div className="space-x-10 flex">
-      <AddListingRoomsForm />
-    </div>
+    <AddListingRoomsForm />
   );
 }
