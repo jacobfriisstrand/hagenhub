@@ -3,10 +3,9 @@
 import type { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-import { login } from "@/app/(auth)/actions";
+import { signup } from "@/app/(auth)/actions";
 import { DynamicIcon } from "@/components/dynamic-icon";
 import Modal from "@/components/modal";
 import { Button } from "@/components/ui/button/button";
@@ -21,47 +20,64 @@ import {
 import { Input } from "@/components/ui/input";
 import { UserSchema } from "@/prisma/generated/zod";
 
-const loginSchema = UserSchema.pick({ user_email: true, user_password: true });
-type LoginFormValues = z.infer<typeof loginSchema>;
+const signupSchema = UserSchema.pick({
+  user_first_name: true,
+  user_email: true,
+  user_password: true,
+});
 
-export default function LoginPage() {
-  const router = useRouter();
+type SignupFormValues = z.infer<typeof signupSchema>;
 
-  // Initialize react-hook-form with zod validation
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+export default function SignupPage() {
+  const form = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
+      user_first_name: "",
       user_email: "",
       user_password: "",
     },
   });
 
-  // Handle form submission
-  async function onSubmit(data: LoginFormValues) {
-    try {
-      const result = await login(data);
-      if (result?.error) {
-        // Handle login error (you might want to show this to the user)
-        console.error(result.error);
-      }
-      // If we get here, login was successful and the redirect will happen automatically
-    }
-    catch {
-      // If we get here, it means the redirect happened (success case)
-      // The error is expected because the redirect interrupts the normal flow
-      router.refresh();
-      router.back();
+  async function onSubmit(data: SignupFormValues) {
+    // TODO: Implement signup logic here
+    const error = await signup(data);
+    if (error) {
+      console.error(error);
     }
   }
 
   return (
-    <Modal title="Welcome back">
+    <Modal title="Sign up">
       <div className="space-y-6">
         <div>
-          <p className="text-muted-foreground">Enter your credentials to login</p>
+          <h2 className="text-2xl font-semibold">Create an account</h2>
+          <p className="text-muted-foreground">Enter your details to sign up</p>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="user_first_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <DynamicIcon
+                        name="user"
+                        className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                      />
+                      <Input
+                        placeholder="Enter your first name"
+                        className="pl-10"
+                        {...field}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="user_email"
@@ -111,7 +127,7 @@ export default function LoginPage() {
               )}
             />
             <Button type="submit" className="w-full">
-              Login
+              Sign up
             </Button>
           </form>
         </Form>

@@ -1,32 +1,29 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 import { Dialog, DialogContent, DialogOverlay, DialogTitle } from "@/components/ui/dialog";
 
-export default function Modal({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+type ModalProps = {
+  children: React.ReactNode;
+  title: string; // Make title required
+};
 
-  useEffect(() => {
-    setIsOpen(true);
-  }, []);
+export default function Modal({ children, title }: ModalProps) {
+  const router = useRouter();
 
   const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
     if (!open) {
       router.back();
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+
+    <Dialog onOpenChange={handleOpenChange} open={true}>
       <DialogOverlay />
-      <DialogContent className="overflow-y-hidden">
-        <DialogTitle>
-          Login
-        </DialogTitle>
+      <DialogContent className="overflow-y-hidden px-12 py-12">
+        <DialogTitle>{title}</DialogTitle>
         {children}
       </DialogContent>
     </Dialog>

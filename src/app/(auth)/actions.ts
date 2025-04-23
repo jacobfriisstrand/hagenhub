@@ -117,5 +117,5 @@ export async function signup(unsafedata: SignupInput) {
 
 export async function logout() {
   await removeUserFromSession(await cookies());
-  redirect("/");
+  redirect("/login");
 }

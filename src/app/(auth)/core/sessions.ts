@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import { z } from "zod";
 
 import { UserSchema } from "@/prisma/generated/zod";
@@ -56,7 +55,11 @@ export async function createUserSession(
   user: UserSession,
   cookies: Pick<Cookies, "set">,
 ) {
-  const sessionId = crypto.randomBytes(512).toString("hex").normalize();
+  // Generate a session ID using a more deterministic approach
+  const timestamp = Date.now().toString(36);
+  const random = Math.random().toString(36).substring(2, 15);
+  const sessionId = `${timestamp}-${random}`.normalize();
+
   await redisClient.set(`session:${sessionId}`, sessionSchema.parse(user), {
     ex: SESSION_EXPIRATION_SECONDS,
   });
@@ -94,11 +97,14 @@ export async function removeUserFromSession(
 }
 
 function setCookie(sessionId: string, cookies: Pick<Cookies, "set">) {
+  const expirationDate = new Date();
+  expirationDate.setSeconds(expirationDate.getSeconds() + SESSION_EXPIRATION_SECONDS);
+
   cookies.set(COOKIE_SESSION_KEY, sessionId, {
     secure: true,
     httpOnly: true,
     sameSite: "lax",
-    expires: Date.now() + SESSION_EXPIRATION_SECONDS * 1000,
+    expires: expirationDate.getTime(),
   });
 }
 

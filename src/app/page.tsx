@@ -9,8 +9,12 @@ import { getCurrentUser } from "./(auth)/current-user";
 export default async function Home() {
   const fullUser = await getCurrentUser({
     withFullUser: true,
-    redirectIfNotFound: true,
+    redirectIfNotFound: false,
   });
+
+  if (fullUser == null) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Card className="w-[350px]">
