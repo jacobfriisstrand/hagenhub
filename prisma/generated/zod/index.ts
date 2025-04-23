@@ -18,7 +18,7 @@ export const ListingScalarFieldEnumSchema = z.enum(['listing_pk','listing_title'
 
 export const ListingAreaScalarFieldEnumSchema = z.enum(['listing_area_pk','listing_area_name']);
 
-export const ListingTypeScalarFieldEnumSchema = z.enum(['listing_type_pk','listing_type_name']);
+export const ListingTypeScalarFieldEnumSchema = z.enum(['listing_type_pk','listing_type_name','listing_type_icon']);
 
 export const ReviewScalarFieldEnumSchema = z.enum(['review_pk','review_rating','review_comment','review_created_at','review_user_fk','review_listing_fk','review_booking_fk']);
 
@@ -107,6 +107,7 @@ export type ListingArea = z.infer<typeof ListingAreaSchema>
 export const ListingTypeSchema = z.object({
   listing_type_pk: z.string().uuid(),
   listing_type_name: z.string(),
+  listing_type_icon: z.string(),
 })
 
 export type ListingType = z.infer<typeof ListingTypeSchema>
