@@ -11,7 +11,8 @@
     "test": "vitest",
     "db:push": "npx prisma generate && npx prisma db push",
     "db:seed": "npx prisma db seed",
-    "prepare": "husky"
+    "prepare": "husky",
+    "di": "docker compose exec app npm install"
   },
   "prisma": {
     "seed": "ts-node --transpile-only prisma/seed.ts"
