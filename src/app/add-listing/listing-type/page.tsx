@@ -1,7 +1,9 @@
-export default function ListingTypePage() {
+import { getAllListingTypes } from "@/app/features/listings/actions/get-all-listing-types";
+import AddListingTypeForm from "@/app/features/listings/components/add-listing/add-listing-type-form";
+
+export default async function ListingTypePage() {
+  const listingTypes = await getAllListingTypes();
   return (
-    <div>
-      <h1>Listing Type</h1>
-    </div>
+    <AddListingTypeForm listingTypes={listingTypes} />
   );
 }
