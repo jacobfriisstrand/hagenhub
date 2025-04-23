@@ -3,6 +3,7 @@
 import type { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { signup } from "@/app/(auth)/actions";
@@ -29,6 +30,8 @@ const signupSchema = UserSchema.pick({
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
+  const router = useRouter();
+
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -40,17 +43,24 @@ export default function SignupPage() {
 
   async function onSubmit(data: SignupFormValues) {
     // TODO: Implement signup logic here
-    const error = await signup(data);
-    if (error) {
-      console.error(error);
+    try {
+      const result = await signup(data);
+      if (result?.error) {
+        // Handle login error (you might want to show this to the user)
+        console.error(result.error);
+      }
+      // Redirect to login page after successful signup
+      router.push("/");
+    }
+    catch {
+      router.push("/"); // Changed from router.back() to redirect to login
     }
   }
 
   return (
-    <Modal title="Sign up">
+    <Modal title="Create an account">
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-semibold">Create an account</h2>
           <p className="text-muted-foreground">Enter your details to sign up</p>
         </div>
         <Form {...form}>

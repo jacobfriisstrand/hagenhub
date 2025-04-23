@@ -21,7 +21,7 @@ export default function Modal({ children, title }: ModalProps) {
   return (
 
     <Dialog onOpenChange={handleOpenChange} open={true}>
-      <DialogOverlay />
+      <DialogOverlay className="bg-black/5" />
       <DialogContent className="overflow-y-hidden px-12 py-12">
         <DialogTitle>{title}</DialogTitle>
         {children}
