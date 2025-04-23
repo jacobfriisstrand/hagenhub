@@ -71,13 +71,12 @@ model Listing {
   /// @zod.string.min(10, { message: "Description must be at least 10 characters long" }).max(500, { message: "Description must be less than 500 characters long" })
   listing_description String
 
-  /// @zod.string.regex(/^\d{4}$/, { message: "Zip code must be exactly 4 digits" })
   listing_zip_code String
+  zip_code_relation ZipCode @relation(fields: [listing_zip_code], references: [zip_code])
 
   /// @zod.string.min(2, { message: "Street name must be at least 2 characters long" }).max(100, { message: "Street name must be less than 100 characters long" })
   listing_street_name String
 
-  /// @zod.string.regex(/^\d+$/, { message: "Street number can only contain numbers" })
   listing_street_number String
 
   /// @zod.number.min(1, { message: "Price must be greater than 0" })
@@ -97,7 +96,11 @@ model Listing {
   listing_guest_count Int
 
   /// @zod.number.min(1, { message: "Minimum 1 bedroom is required" })
+  /// @zod.number.max(10, { message: "Maximum 10 bedrooms are allowed" })
   listing_bedrooms Int
+
+  /// @zod.number.min(1, { message: "Minimum 1 guest spot is required" })
+  listing_guests Int
 
   listing_images ListingImage[]
 
@@ -202,4 +205,21 @@ model ListingImage {
   listing_image_listing    Listing @relation(fields: [listing_image_listing_fk], references: [listing_pk])
 
   @@map("listing_images")
+}
+
+model ZipCode {
+  zip_code_pk String @id @default(uuid()) @db.Uuid
+
+  /// @zod.string.regex(/^\d{4}$/, { message: "Zip code must be exactly 4 digits" })
+  zip_code String @unique
+
+  /// @zod.string.min(2, { message: "City name must be at least 2 characters long" }).max(100, { message: "City name must be less than 100 characters long" })
+  zip_code_city_name String
+
+  /// @zod.string.min(2, { message: "District name must be at least 2 characters long" }).max(100, { message: "District name must be less than 100 characters long" })
+  zip_code_district_name String
+
+  listings Listing[]
+
+  @@map("zip_codes")
 }
