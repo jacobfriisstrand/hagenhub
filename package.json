@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run db:push && npm run db:seed && next dev --turbo",
-    "build": "next build",
+    "build": "npx prisma generate && next build",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
