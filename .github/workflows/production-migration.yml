@@ -28,6 +28,10 @@ jobs:
           DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
           NODE_ENV: production
         run: |
+          # Clean up any existing Prisma processes
+          echo "Cleaning up any existing Prisma connections..."
+          npx prisma migrate reset --force --skip-seed || true
+          
           echo "Verifying migrations against production database..."
           npx prisma migrate deploy
           echo "✅ Production migrations verified successfully." 
