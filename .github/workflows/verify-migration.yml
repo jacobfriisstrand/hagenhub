@@ -10,10 +10,33 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ${{ env.DB_USER }}
+          POSTGRES_PASSWORD: ${{ env.DB_PASS }}
+          POSTGRES_DB: ${{ env.DB_NAME }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Parse database URL from .env
+        run: |
+          # Extract database details from DATABASE_URL in .env
+          DB_URL=$(grep DATABASE_URL .env | cut -d '"' -f 2)
+          echo "DB_USER=$(echo $DB_URL | cut -d '/' -f 3 | cut -d ':' -f 1)" >> $GITHUB_ENV
+          echo "DB_PASS=$(echo $DB_URL | cut -d ':' -f 3 | cut -d '@' -f 1)" >> $GITHUB_ENV
+          echo "DB_NAME=$(echo $DB_URL | cut -d '/' -f 4)" >> $GITHUB_ENV
 
       - name: Use Node.js
         uses: actions/setup-node@v4
