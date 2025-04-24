@@ -1,104 +1,117 @@
 # HagenHub
 
-A Next.js project with Prisma and PostgreSQL.
-
-## Prerequisites
-
-- [Node.js](https://nodejs.org/) (version specified in `.nvmrc`)
-- [Docker](https://www.docker.com/) and Docker Compose (for PostgreSQL database)
-- [npm](https://www.npmjs.com/) (comes with Node.js)
+A Next.js application with Prisma and PostgreSQL.
 
 ## Development Setup
 
-### 1. Clone the repository
+### Prerequisites
 
-```bash
-git clone <repository-url>
-cd hagenhub
-```
+- Node.js (v22.x)
+- Docker
+- npm
 
-### 2. Install dependencies
+### Getting Started
 
-```bash
-npm install
-```
+1. Clone the repository:
 
-### 3. Set up the database
+   ```bash
+   git clone https://github.com/jacobfriisstrand/hagenhub.git
+   cd hagenhub
+   ```
 
-Start the PostgreSQL database using Docker:
+2. Install dependencies:
 
-```bash
-docker compose up --build -d
-```
+   ```bash
+   npm install
+   ```
 
-### 4. Set up environment variables
+3. Create a `.env` file in the root directory:
 
-Create a `.env` file in the root directory with the required environment variables. See `.env.example` for reference.
+   ```env
+   DATABASE_URL="postgresql://postgres:password@localhost:5432/hagenhub"
+   NODE_ENV="development"
+   ```
 
-### 5. Run database migrations
+4. Start the development server:
 
-```bash
-npx prisma migrate deploy
-npx prisma generate
-```
+   ```bash
+   npm run dev
+   ```
 
-Or use the npm script:
+   This will:
 
-```bash
-npm run db:deploy
-```
+   - Start the PostgreSQL database in Docker
+   - Apply any pending migrations
+   - Start Prisma Studio (available at http://localhost:5555)
+   - Start the Next.js development server
 
-### 6. Start the development server
+The application will be available at `http://localhost:3000`.
 
-```bash
-npm run dev
-```
+### Database Management
 
-The application will be available at [http://localhost:3000](http://localhost:3000).
+#### Viewing Database
 
-### 7. Connecting to Upstash Redis
-
-If you need to connect to your Upstash Redis instance from the command line, you can use the following command:
-
-```bash
-redis-cli --tls -u "redis://default:AVnuAAIjcDEyZDA2ZmU4OWIyNDg0YjNkOTNlODQ0Zjk0NDk5YmI2ZHAxMA@model-bengal-23022.upstash.io:6379"
-```
-
-## Available Scripts
-
-- `npm run dev` - Start the development server with Turbopack
-- `npm run build` - Build the application for production
-- `npm run start` - Start the production server
-- `npm run lint` - Run ESLint
-- `npm run test` - Run tests with Vitest
-- `npm run db:deploy` - Deploy database migrations and generate Prisma client
-
-## Database Management
-
-You can use Prisma Studio to manage your database:
+To inspect your database using Prisma Studio:
 
 ```bash
 npx prisma studio
 ```
 
-This will start Prisma Studio at [http://localhost:5555](http://localhost:5555).
+#### Creating Migrations
 
-## Docker
-
-The project includes Docker configuration for running the entire stack:
+When you make changes to the schema (`prisma/schema.prisma`):
 
 ```bash
-docker-compose up
+npx prisma migrate dev --name your_migration_name
 ```
 
-This will start:
+#### Reset Database
 
-- PostgreSQL database
-- Next.js application
-- Prisma Studio (available at http://localhost:5555)
+To reset the database and re-apply all migrations:
 
-## Project Structure
+```bash
+npx prisma migrate reset
+```
 
-- `/src` - Application source code
-- `/prisma` - Prisma schema and migrations
-- `/public` - Static assets
+This will also run the seed script automatically.
+
+#### Manual Seeding
+
+To manually run the seed script:
+
+```bash
+npx prisma db seed
+```
+
+### Development Workflow
+
+1. Create a new branch from `develop`
+2. Make your changes
+3. If you update the schema, create a migration:
+   ```bash
+   npx prisma migrate dev --name your_migration_name
+   ```
+4. Test your changes locally
+5. Create a PR to the `develop` branch
+6. The GitHub Actions workflow will automatically verify your migrations
+
+### Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+DATABASE_URL="postgresql://postgres:password@localhost:5432/hagenhub"
+NODE_ENV="development"
+```
+
+## Contributing
+
+1. Branch from `develop`
+2. Make your changes
+3. Create a pull request to `develop`
+
+The GitHub Actions workflow will automatically verify:
+
+- Schema changes have corresponding migrations
+- Migrations can be applied successfully
+- Seeding works with your changes
