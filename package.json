@@ -12,6 +12,7 @@
     "db:push": "npx prisma generate && npx prisma db push",
     "db:seed": "npx prisma db seed",
     "prepare": "husky",
+    "postinstall": "chmod +x ./scripts/check-schema.sh",
     "check:schema": "bash ./scripts/check-schema.sh"
   },
   "prisma": {
