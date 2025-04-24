@@ -12,7 +12,7 @@
     "db:push": "npx prisma generate && npx prisma db push",
     "db:seed": "npx prisma db seed",
     "prepare": "husky",
-    "check:schema": "if git diff --cached --name-only | grep -q 'prisma/schema.prisma'; then npx prisma format > /dev/null 2>&1 || (echo '\nError: Schema changes detected. Please run \"npx prisma migrate dev\" before committing\n' && exit 1); fi"
+    "check:schema": "bash -c 'if [ -n \"$(git diff --cached --name-only prisma/schema.prisma)\" ]; then npx prisma format >/dev/null 2>&1 || (echo \"\\nError: Schema changes detected. Please run \\\"npx prisma migrate dev\\\" before committing\\n\" && exit 1); fi'"
   },
   "prisma": {
     "seed": "ts-node --transpile-only prisma/seed.ts"
