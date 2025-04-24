@@ -19,8 +19,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22.x'
-
-      - name: Check if schema was changed without a migration
+          
+      - name: Install dependencies
+        run: npm ci
+          
+      - name: Check schema and migrations
         run: |
           set -e
           
@@ -42,6 +45,15 @@ jobs:
             echo "Changes found in schema.prisma but no corresponding migration file exists."
             echo "👉 Please run: npx prisma migrate dev --name your-feature-name"
             exit 1
-          else
-            echo "✅ Schema and migration check passed."
           fi
+          
+          # Validate that schema matches migrations
+          echo "Validating schema against migrations..."
+          if ! npx prisma migrate reset --force --skip-generate --skip-seed; then
+            echo "❌ Schema validation failed! Your migrations don't match your schema."
+            echo "This usually means your migrations don't properly reflect your schema changes."
+            echo "👉 Try running: npx prisma migrate reset to see the specific errors"
+            exit 1
+          fi
+          
+          echo "✅ Schema and migration check passed."
