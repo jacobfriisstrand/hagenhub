@@ -1,51 +1,22 @@
 services:
-  postgres:
+  db:
     image: postgres:15
-    environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: prisma
+    container_name: local-postgres
+    restart: unless-stopped
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: hagenhub
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: [CMD-SHELL, /usr/lib/postgresql/15/bin/pg_isready -U postgres]
-      interval: 5s
-      timeout: 2s
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "mydb"]
+      interval: 10s
       retries: 5
-
-  app:
-    build:
-      context: .
-      target: development
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    env_file:
-      - .env
-    depends_on:
-      postgres:
-        condition: service_healthy
-    command: sh -c "npx prisma generate && npx prisma db push && npm run dev"
-
-  prisma-studio:
-    build:
-      context: .
-      target: development
-    ports:
-      - "5555:5555"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    env_file:
-      - .env
-    depends_on:
-      postgres:
-        condition: service_healthy
-    command: npx prisma studio --port 5555 --hostname 0.0.0.0
+      timeout: 5s
+      start_period: 5s
 
 volumes:
-  postgres_data:
+  pgdata:

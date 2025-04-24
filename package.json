@@ -3,16 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm run db:push && npm run db:seed && next dev --turbo",
-    "build": "npx prisma generate && next build",
+    "dev": "docker-compose up -d && concurrently \"next dev\" \"npx prisma studio\"",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest",
     "db:push": "npx prisma generate && npx prisma db push",
     "db:seed": "npx prisma db seed",
-    "prepare": "husky",
-    "di": "docker compose exec app npm install"
+    "prepare": "husky"
   },
   "prisma": {
     "seed": "ts-node --transpile-only prisma/seed.ts"
@@ -52,6 +51,7 @@
     "@types/socket.io": "^3.0.1",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/coverage-v8": "^3.0.6",
+    "concurrently": "^9.1.2",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
     "eslint-plugin-format": "^1.0.1",

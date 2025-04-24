@@ -12,6 +12,7 @@ export default antfu(
       quotes: "double",
     },
     ignores: ["prisma/**", ".github/**"],
+    yaml: false,
   },
   {
     rules: {
