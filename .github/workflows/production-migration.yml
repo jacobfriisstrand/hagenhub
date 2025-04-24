@@ -1,0 +1,40 @@
+name: Deploy Production Database Migrations
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy migrations to production
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
+          NODE_ENV: production
+        run: |
+          echo "Deploying migrations to production database..."
+          npx prisma migrate deploy
+          
+          # Verify migrations are in sync with schema
+          echo "Verifying migrations..."
+          if ! npx prisma migrate status | grep -q "Database schema is up to date"; then
+            echo "❌ Migration verification failed!"
+            echo "The schema and migrations are not in sync in production."
+            exit 1
+          fi
+          
+          echo "✅ Production database migrations deployed successfully." 
