@@ -31,11 +31,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create env file
-        run: |
-          echo "DATABASE_URL=\"postgresql://postgres:password@localhost:5432/hagenhub\"" > .env
-          echo "NODE_ENV=\"development\"" >> .env
-
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -53,6 +48,7 @@ jobs:
       - name: Check schema and migrations
         env:
           DATABASE_URL: postgresql://postgres:password@localhost:5432/hagenhub
+          NODE_ENV: development
         run: |
           set -e
           
