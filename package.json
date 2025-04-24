@@ -13,7 +13,8 @@
     "db:seed": "npx prisma db seed",
     "prepare": "husky",
     "postinstall": "chmod +x ./scripts/check-schema.sh",
-    "check:schema": "bash ./scripts/check-schema.sh"
+    "check:schema": "bash ./scripts/check-schema.sh",
+    "migrate:branch": "npx prisma migrate dev --name $(git branch --show-current | sed -e 's/[\\/\\_]/-/g')"
   },
   "prisma": {
     "seed": "ts-node --transpile-only prisma/seed.ts"
