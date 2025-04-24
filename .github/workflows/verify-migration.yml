@@ -1,4 +1,4 @@
-name: Check Prisma Migration on PR to Develop
+name: Check Prisma migration on PR to develop
 
 on:
   pull_request:
@@ -24,35 +24,18 @@ jobs:
         run: |
           set -e
           
-          # For testing with act, we'll check if we're in a test environment
-          if [ -z "${{ github.base_ref }}" ]; then
-            # Check if schema exists
-            if [ -f "prisma/schema.prisma" ]; then
-              SCHEMA_DIFF="exists"
-            else
-              SCHEMA_DIFF=""
-            fi
-            
-            # Check for migrations
-            if [ -d "prisma/migrations" ] && [ "$(ls -A prisma/migrations 2>/dev/null)" ]; then
-              MIGRATIONS_EXIST="true"
-            else
-              MIGRATIONS_EXIST=""
-            fi
+          # Fetch the base branch
+          git fetch origin ${{ github.base_ref }}
+          
+          # Check if schema.prisma exists in base branch
+          if git cat-file -e origin/${{ github.base_ref }}:prisma/schema.prisma 2>/dev/null; then
+            SCHEMA_DIFF=$(git diff origin/${{ github.base_ref }}...HEAD -- prisma/schema.prisma || true)
           else
-            # Fetch the base branch
-            git fetch origin ${{ github.base_ref }}
-            
-            # Check if schema.prisma exists in base branch
-            if git cat-file -e origin/${{ github.base_ref }}:prisma/schema.prisma 2>/dev/null; then
-              SCHEMA_DIFF=$(git diff origin/${{ github.base_ref }}...HEAD -- prisma/schema.prisma || true)
-            else
-              SCHEMA_DIFF="new_file"
-            fi
-            
-            # Check for migration files in this PR
-            MIGRATIONS_EXIST=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep 'prisma/migrations/' || true)
+            SCHEMA_DIFF="new_file"
           fi
+          
+          # Check for migration files in this PR
+          MIGRATIONS_EXIST=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep 'prisma/migrations/' || true)
           
           if [ ! -z "$SCHEMA_DIFF" ] && [ -z "$MIGRATIONS_EXIST" ]; then
             echo "❌ Schema changes detected but no migration was created!"
