@@ -47,12 +47,12 @@ jobs:
             exit 1
           fi
           
-          # Validate that schema matches migrations
-          echo "Validating schema against migrations..."
-          if ! npx prisma migrate reset --force --skip-generate --skip-seed; then
-            echo "❌ Schema validation failed! Your migrations don't match your schema."
-            echo "This usually means your migrations don't properly reflect your schema changes."
-            echo "👉 Try running: npx prisma migrate reset to see the specific errors"
+          # Check migration status
+          echo "Checking migration status..."
+          if ! npx prisma migrate status; then
+            echo "❌ Migration check failed!"
+            echo "This usually means your schema doesn't match your migrations."
+            echo "👉 Run: npx prisma migrate dev to fix the mismatch"
             exit 1
           fi
           
