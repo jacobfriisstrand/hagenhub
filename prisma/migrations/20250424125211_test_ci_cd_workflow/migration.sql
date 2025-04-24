@@ -1,7 +1,14 @@
 -- CreateTable
+CREATE TABLE "PhoneNumber" (
+    "phone_number_pk" UUID NOT NULL,
+    "phone_number" TEXT NOT NULL,
+
+    CONSTRAINT "PhoneNumber_pkey" PRIMARY KEY ("phone_number_pk")
+);
+
+-- CreateTable
 CREATE TABLE "users" (
     "user_pk" UUID NOT NULL,
-    "user_test" TEXT NOT NULL,
     "user_first_name" TEXT NOT NULL,
     "user_last_name" TEXT,
     "user_email" TEXT NOT NULL,

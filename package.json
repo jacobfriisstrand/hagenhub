@@ -11,7 +11,10 @@
     "test": "vitest",
     "db:push": "npx prisma generate && npx prisma db push",
     "db:seed": "npx prisma db seed",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "chmod +x ./scripts/check-schema.sh",
+    "check:schema": "bash ./scripts/check-schema.sh",
+    "migrate:branch": "npx prisma migrate dev --name $(git branch --show-current | sed -e 's/[\\/\\_]/-/g')"
   },
   "prisma": {
     "seed": "ts-node --transpile-only prisma/seed.ts"
@@ -68,6 +71,7 @@
     "vitest": "^3.0.6"
   },
   "lint-staged": {
-    "*": "npm run lint"
+    "*.{ts,tsx,js,jsx}": "npm run lint",
+    "prisma/schema.prisma": "npm run check:schema"
   }
 }
