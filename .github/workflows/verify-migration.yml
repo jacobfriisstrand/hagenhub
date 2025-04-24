@@ -31,8 +31,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Load env file
-        run: cat .env >> $GITHUB_ENV
+      - name: Parse database URL from .env
+        run: |
+          # Extract database details from DATABASE_URL in .env
+          DB_URL=$(grep DATABASE_URL .env | cut -d '"' -f 2)
+          echo "DB_USER=$(echo $DB_URL | cut -d '/' -f 3 | cut -d ':' -f 1)" >> $GITHUB_ENV
+          echo "DB_PASS=$(echo $DB_URL | cut -d ':' -f 3 | cut -d '@' -f 1)" >> $GITHUB_ENV
+          echo "DB_NAME=$(echo $DB_URL | cut -d '/' -f 4)" >> $GITHUB_ENV
 
       - name: Use Node.js
         uses: actions/setup-node@v4
