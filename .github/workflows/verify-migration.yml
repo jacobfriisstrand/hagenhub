@@ -76,12 +76,20 @@ jobs:
             exit 1
           fi
           
-          # Check migration status
-          echo "Checking migration status..."
-          if ! npx prisma migrate status; then
-            echo "❌ Migration check failed!"
-            echo "This usually means your schema doesn't match your migrations."
-            echo "👉 Run: npx prisma migrate dev to fix the mismatch"
+          # Reset database, apply migrations, and seed
+          echo "Resetting database and applying migrations..."
+          npx prisma migrate reset --force --skip-seed
+          
+          echo "Seeding the database..."
+          npx prisma db seed
+          
+          # Verify migrations are in sync with schema
+          echo "Verifying migrations..."
+          if ! npx prisma migrate status | grep -q "Database schema is up to date"; then
+            echo "❌ Migration verification failed!"
+            echo "The schema and migrations are not in sync."
+            echo "Please ensure your migrations match your schema changes."
+            echo "👉 Run: npx prisma migrate dev locally to fix any issues"
             exit 1
           fi
           
