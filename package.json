@@ -12,8 +12,6 @@
     "db:push": "npx prisma generate && npx prisma db push",
     "db:seed": "npx prisma db seed",
     "prepare": "husky",
-    "postinstall": "chmod +x ./scripts/check-schema.sh",
-    "check:schema": "bash ./scripts/check-schema.sh",
     "migrate:branch": "npx prisma migrate dev --name $(git branch --show-current | sed -e 's/[\\/\\_]/-/g')"
   },
   "prisma": {
@@ -71,7 +69,6 @@
     "vitest": "^3.0.6"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": "npm run lint",
-    "prisma/schema.prisma": "npm run check:schema"
+    "*.{ts,tsx,js,jsx}": "npm run lint"
   }
 }

@@ -25,9 +25,12 @@ jobs:
 
       - name: Verify migrations
         env:
-          DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
-          NODE_ENV: production
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DATABASE_URL }}  # Use same URL but will be modified to use port 5432
         run: |
+          # Modify DIRECT_URL to use port 5432 instead of 6543
+          export DIRECT_URL=$(echo $DIRECT_URL | sed 's/:6543/:5432/')
+          
           echo "Checking migration status..."
           if npx prisma migrate status | grep -q "Following migration have failed:"; then
             # Extract failed migration name and mark it as applied
