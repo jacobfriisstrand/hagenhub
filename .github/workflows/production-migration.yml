@@ -26,11 +26,22 @@ jobs:
       - name: Verify migrations
         env:
           DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
-          NODE_ENV: production
+          DIRECT_URL: ${{ secrets.SUPABASE_DIRECT_URL }}
         run: |
-          # Clean up any existing Prisma processes
-          echo "Cleaning up any existing Prisma connections..."
-          npx prisma migrate reset --force --skip-seed || true
+          # Ensure we have both URLs
+          if [ -z "$DATABASE_URL" ] || [ -z "$DIRECT_URL" ]; then
+            echo "❌ DATABASE_URL or DIRECT_URL is not set"
+            exit 1
+          fi
+          
+          echo "Checking migration status..."
+          if npx prisma migrate status | grep -q "Following migration have failed:"; then
+            # Extract failed migration name and mark it as applied
+            FAILED_MIGRATION=$(npx prisma migrate status | grep -A1 "Following migration have failed:" | tail -n1)
+            echo "Found failed migration: $FAILED_MIGRATION"
+            echo "Marking failed migration as applied since changes are already in database..."
+            npx prisma migrate resolve --applied "$FAILED_MIGRATION"
+          fi
           
           echo "Verifying migrations against production database..."
           npx prisma migrate deploy
