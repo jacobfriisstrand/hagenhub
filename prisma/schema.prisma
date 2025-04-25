@@ -13,11 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model PhoneNumber {
-  phone_number_pk String @id @default(uuid()) @db.Uuid
-  phone_number    String @db.Text
-}
-
 model User {
   user_pk String @id @default(uuid()) @db.Uuid
 
