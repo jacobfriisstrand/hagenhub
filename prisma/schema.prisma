@@ -21,6 +21,7 @@ model PhoneNumber {
   @@map("phone_numbers")
 }
 
+
 model User {
   user_pk           String    @id @default(uuid()) @db.Uuid
   /// @zod.string.min(3, { message: "Name must be at least 2 characters long" }).max(256, { message: "Name must be less than 256 characters long" })
