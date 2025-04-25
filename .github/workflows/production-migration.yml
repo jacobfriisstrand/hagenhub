@@ -26,22 +26,13 @@ jobs:
       - name: Verify migrations
         env:
           DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.SUPABASE_DIRECT_URL }}
         run: |
           # Ensure we have both URLs
-          if [ -z "$DATABASE_URL" ]; then
-            echo "❌ DATABASE_URL is not set"
+          if [ -z "$DATABASE_URL" ] || [ -z "$DIRECT_URL" ]; then
+            echo "❌ DATABASE_URL or DIRECT_URL is not set"
             exit 1
           fi
-          
-          # Create DIRECT_URL by replacing pooler with direct connection and adding required parameters
-          export DIRECT_URL=$(echo $DATABASE_URL | \
-            sed 's/pooler\.supabase\.com/db.supabase.com/' | \
-            sed 's/?pgbouncer=true//' | \
-            sed 's/$/?connection_timeout=300\&pool_timeout=300\&socket_timeout=300/')
-          
-          # Add connection parameters to DATABASE_URL
-          export DATABASE_URL="$DATABASE_URL?connection_timeout=300&pool_timeout=300&socket_timeout=300"
           
           echo "Checking migration status..."
           if npx prisma migrate status | grep -q "Following migration have failed:"; then
