@@ -12,9 +12,7 @@ import type { Prisma } from '@prisma/client';
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
-export const PhoneNumberScalarFieldEnumSchema = z.enum(['phone_number_pk','phone_number']);
-
-export const UserScalarFieldEnumSchema = z.enum(['user_pk','user_first_name','user_last_name','user_email','user_password','salt','user_dob','user_phone_number','user_address','user_description','user_avatar_url','user_role','user_created_at','user_updated_at']);
+export const UserScalarFieldEnumSchema = z.enum(['user_pk','user_first_name','user_last_name','user_email','user_password','salt','user_dob','user_phone_number','user_address','user_description','user_avatar_url','user_role','user_verified','user_created_at','user_updated_at']);
 
 export const ListingScalarFieldEnumSchema = z.enum(['listing_pk','listing_title','listing_description','listing_zip_code','listing_street_name','listing_street_number','listing_night_price','listing_area_fk','listing_type_fk','listing_latitude','listing_longitude','listing_guest_count','listing_bedrooms','listing_user_fk','listing_created_at','listing_updated_at','listing_deleted_at']);
 
@@ -38,17 +36,6 @@ export const NullsOrderSchema = z.enum(['first','last']);
 /////////////////////////////////////////
 
 /////////////////////////////////////////
-// PHONE NUMBER SCHEMA
-/////////////////////////////////////////
-
-export const PhoneNumberSchema = z.object({
-  phone_number_pk: z.string().uuid(),
-  phone_number: z.string(),
-})
-
-export type PhoneNumber = z.infer<typeof PhoneNumberSchema>
-
-/////////////////////////////////////////
 // USER SCHEMA
 /////////////////////////////////////////
 
@@ -70,6 +57,7 @@ export const UserSchema = z.object({
   user_description: z.string().min(10, { message: "Description must be at least 10 characters long" }).max(500, { message: "Description must be less than 500 characters long" }).nullable(),
   user_avatar_url: z.string().nullable(),
   user_role: z.enum(["user", "admin"]),
+  user_verified: z.boolean(),
   user_created_at: z.coerce.date().nullable(),
   user_updated_at: z.coerce.date().nullable(),
 })
