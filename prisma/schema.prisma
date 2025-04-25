@@ -49,8 +49,6 @@ model User {
   /// @zod.custom.use(z.enum(["user", "admin"]))
   user_role String @default("user") @db.Text
 
-  user_verified Boolean @default(false)
-
   user_created_at DateTime? @default(now())
 
   user_updated_at DateTime? @updatedAt
