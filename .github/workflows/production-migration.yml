@@ -26,10 +26,18 @@ jobs:
       - name: Verify migrations
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DATABASE_URL }}  # Use same URL but will be modified to use port 5432
+          DIRECT_URL: ${{ secrets.DATABASE_URL }}  # Start with same URL but will be modified
         run: |
-          # Modify DIRECT_URL to use port 5432 instead of 6543
-          export DIRECT_URL=$(echo $DIRECT_URL | sed 's/:6543/:5432/')
+          # Ensure we have both URLs
+          if [ -z "$DATABASE_URL" ]; then
+            echo "❌ DATABASE_URL is not set"
+            exit 1
+          fi
+          
+          # Create DIRECT_URL by replacing port 6543 with 5432
+          export DIRECT_URL=$(echo $DATABASE_URL | sed 's/:6543/:5432/')
+          # Remove pgbouncer flag from DIRECT_URL if present
+          export DIRECT_URL=$(echo $DIRECT_URL | sed 's/?pgbouncer=true//')
           
           echo "Checking migration status..."
           if npx prisma migrate status | grep -q "Following migration have failed:"; then
