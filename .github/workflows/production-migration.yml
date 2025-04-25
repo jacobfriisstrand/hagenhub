@@ -25,8 +25,8 @@ jobs:
 
       - name: Verify migrations
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DATABASE_URL }}  # Start with same URL but will be modified
+          DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.SUPABASE_DATABASE_URL }}  # Start with same URL but will be modified
         run: |
           # Ensure we have both URLs
           if [ -z "$DATABASE_URL" ]; then
