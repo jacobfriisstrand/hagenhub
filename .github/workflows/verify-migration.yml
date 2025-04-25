@@ -47,7 +47,8 @@ jobs:
           
       - name: Check schema and migrations
         env:
-          DATABASE_URL: postgresql://postgres:password@localhost:5432/hagenhub
+          DATABASE_URL: postgresql://postgres:password@localhost:6543/hagenhub?pgbouncer=true
+          DIRECT_URL: postgresql://postgres:password@localhost:5432/hagenhub
           NODE_ENV: development
         run: |
           set -e
@@ -75,7 +76,9 @@ jobs:
             # Get branch name and sanitize it for the migration name
             BRANCH_NAME=$(echo ${GITHUB_HEAD_REF#refs/heads/} | sed -e 's/[\/\_]/-/g')
             
-            # Create the migration
+            # Create the migration using DIRECT_URL for schema changes
+            # Temporarily set DATABASE_URL to DIRECT_URL for migration creation
+            export DATABASE_URL="$DIRECT_URL"
             npx prisma migrate dev --name "$BRANCH_NAME" --create-only
             
             # Stage and commit the new migration
@@ -90,6 +93,8 @@ jobs:
           
           # Reset database, apply migrations, and seed
           echo "Resetting database and applying migrations..."
+          # Use DIRECT_URL for migrations
+          export DATABASE_URL="$DIRECT_URL"
           npx prisma migrate reset --force --skip-seed
           
           echo "Seeding the database..."
