@@ -13,7 +13,7 @@ export default async function Home() {
   });
 
   if (fullUser == null) {
-    return <div>Loading...</div>;
+    return <div>Loading....</div>;
   }
 
   return (
