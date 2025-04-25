@@ -26,7 +26,7 @@ jobs:
       - name: Verify migrations
         env:
           DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.SUPABASE_DATABASE_URL }}  # Start with same URL but will be modified
+          DIRECT_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
         run: |
           # Ensure we have both URLs
           if [ -z "$DATABASE_URL" ]; then
@@ -34,10 +34,14 @@ jobs:
             exit 1
           fi
           
-          # Create DIRECT_URL by replacing port 6543 with 5432
-          export DIRECT_URL=$(echo $DATABASE_URL | sed 's/:6543/:5432/')
-          # Remove pgbouncer flag from DIRECT_URL if present
-          export DIRECT_URL=$(echo $DIRECT_URL | sed 's/?pgbouncer=true//')
+          # Create DIRECT_URL by replacing pooler with direct connection and adding required parameters
+          export DIRECT_URL=$(echo $DATABASE_URL | \
+            sed 's/pooler\.supabase\.com/db.supabase.com/' | \
+            sed 's/?pgbouncer=true//' | \
+            sed 's/$/?connection_timeout=300\&pool_timeout=300\&socket_timeout=300/')
+          
+          # Add connection parameters to DATABASE_URL
+          export DATABASE_URL="$DATABASE_URL?connection_timeout=300&pool_timeout=300&socket_timeout=300"
           
           echo "Checking migration status..."
           if npx prisma migrate status | grep -q "Following migration have failed:"; then
