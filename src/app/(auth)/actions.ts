@@ -4,6 +4,7 @@ import type { z } from "zod";
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { toast } from "sonner";
 
 import { prisma } from "@/lib/prisma";
 import { UserSchema } from "@/prisma/generated/zod";
@@ -51,7 +52,7 @@ export async function login(unsafedata: LoginInput) {
   });
 
   if (!user) {
-    return { error: "User not found" };
+    return { error: "Invalid email or password. Please try again." };
   }
 
   const isCorrectPassword = await comparePasswords({
@@ -61,6 +62,7 @@ export async function login(unsafedata: LoginInput) {
   });
 
   if (!isCorrectPassword) {
+    toast.error("Invalid email or password. Please try again.");
     return { error: "Invalid credentials" };
   }
 
@@ -84,7 +86,7 @@ export async function signup(unsafedata: SignupInput) {
     },
   });
   if (existingUser) {
-    return { error: "User already exists" };
+    return { error: "Unable to create account. Please try again." };
   }
 
   try {

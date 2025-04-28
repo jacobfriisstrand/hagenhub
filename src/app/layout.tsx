@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 
 import { Geist, Geist_Mono } from "next/font/google";
 
+import HeaderBar from "@/components/header/header";
+
 import "./globals.css";
 
-import Footer from "@/components/footer";
-import HeaderBar from "@/components/header/header";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,8 +35,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased grid grid-rows-[auto_1fr_auto] min-h-screen`}
       >
         <HeaderBar />
-        <main className="container mx-auto px-5 py-10">{children}</main>
-        <Footer />
+        {modal}
+        <main>{children}</main>
+        <Toaster />
       </body>
     </html>
   );
