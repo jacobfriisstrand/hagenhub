@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 
 import { Geist, Geist_Mono } from "next/font/google";
 
-import HeaderBar from "@/components/header/header";
+import Footer from "@/components/footer";
 
 import "./globals.css";
 
+import HeaderBar from "@/components/header/header";
 import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
   modal: React.ReactNode;
@@ -36,8 +38,9 @@ export default function RootLayout({
       >
         <HeaderBar />
         {modal}
-        <main>{children}</main>
+        <main className="container mx-auto px-5 py-10">{children}</main>
         <Toaster />
+        <Footer />
       </body>
     </html>
   );
