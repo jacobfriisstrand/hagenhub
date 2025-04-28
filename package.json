@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "docker-compose up -d && concurrently \"next dev\" \"npx prisma studio\"",
+    "dev": "docker compose up -d && concurrently \"next dev\" \"npx prisma studio\"",
     "build": "npx prisma generate && next build",
     "start": "next start",
     "lint": "eslint .",
