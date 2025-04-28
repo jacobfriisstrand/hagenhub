@@ -5,6 +5,7 @@ import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { login } from "@/app/(auth)/actions";
 import { DynamicIcon } from "@/components/dynamic-icon";
@@ -42,7 +43,7 @@ export default function LoginPage() {
       const result = await login(data);
       if (result?.error) {
         // Handle login error (you might want to show this to the user)
-        console.error(result.error);
+        toast.error(result.error);
       }
       // If we get here, login was successful and the redirect will happen automatically
     }
