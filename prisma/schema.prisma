@@ -50,62 +50,37 @@ model User {
 model Listing {
   listing_pk            String         @id @default(uuid()) @db.Uuid
   /// @zod.string.min(2, { message: "Title must be at least 2 characters long" }).max(100, { message: "Title must be less than 100 characters long" })
-
   listing_title         String
   /// @zod.string.min(10, { message: "Description must be at least 10 characters long" }).max(500, { message: "Description must be less than 500 characters long" })
-
   listing_description   String
   /// @zod.string.regex(/^\d{4}$/, { message: "Zip code must be exactly 4 digits" })
-  
   listing_zip_code      String
-  
-  zip_code_relation ZipCode @relation(fields: [listing_zip_code], references: [zip_code])
-
   /// @zod.string.min(2, { message: "Street name must be at least 2 characters long" }).max(100, { message: "Street name must be less than 100 characters long" })
   listing_street_name   String
-
   listing_street_number String
-  
   /// @zod.number.min(1, { message: "Price must be greater than 0" })
   listing_night_price   Int
-  
   listing_area_fk       String         @db.Uuid
-  
   listing_type_fk       String         @db.Uuid
-  
   listing_latitude      Float
-  
   listing_longitude     Float
-  
   /// @zod.number.min(1, { message: "Minimum 1 guest spot is required" })
   listing_guest_count   Int
-  
   /// @zod.number.min(1, { message: "Minimum 1 bedroom is required" })
   listing_bedrooms      Int
-  
   listing_user_fk       String         @db.Uuid
-  
   listing_created_at    DateTime       @default(now())
-  
   listing_updated_at    DateTime       @updatedAt
-  
   listing_deleted_at    DateTime?
-  
-  listing_bookings      Booking[]
-  
-  listing_area          ListingArea    @relation(fields: [listing_area_fk], references: [listing_area_pk])
-  
-  listing_type          ListingType    @relation(fields: [listing_type_fk], references: [listing_type_pk])
-  
-  listing_user          User           @relation(fields: [listing_user_fk], references: [user_pk])
-  
-  listing_reviews       Review[]
-
-
   /// @zod.number.min(1, { message: "Minimum 1 guest spot is required" })
-  listing_guests Int
-
-  listing_images ListingImage[]
+  listing_guests        Int
+  listing_bookings      Booking[]
+  listing_images        ListingImage[]
+  listing_area          ListingArea    @relation(fields: [listing_area_fk], references: [listing_area_pk])
+  listing_type          ListingType    @relation(fields: [listing_type_fk], references: [listing_type_pk])
+  listing_user          User           @relation(fields: [listing_user_fk], references: [user_pk])
+  zip_code_relation     ZipCode        @relation(fields: [listing_zip_code], references: [zip_code])
+  listing_reviews       Review[]
 
   @@map("listings")
 }
@@ -175,18 +150,14 @@ model ListingImage {
 }
 
 model ZipCode {
-  zip_code_pk String @id @default(uuid()) @db.Uuid
-
+  zip_code_pk            String    @id @default(uuid()) @db.Uuid
   /// @zod.string.regex(/^\d{4}$/, { message: "Zip code must be exactly 4 digits" })
-  zip_code String @unique
-
+  zip_code               String    @unique
   /// @zod.string.min(2, { message: "City name must be at least 2 characters long" }).max(100, { message: "City name must be less than 100 characters long" })
-  zip_code_city_name String
-
+  zip_code_city_name     String
   /// @zod.string.min(2, { message: "District name must be at least 2 characters long" }).max(100, { message: "District name must be less than 100 characters long" })
   zip_code_district_name String
-
-  listings Listing[]
+  listings               Listing[]
 
   @@map("zip_codes")
 }
