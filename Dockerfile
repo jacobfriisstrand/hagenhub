@@ -1,18 +1,23 @@
-FROM node:20-slim AS base
+FROM node:20-alpine AS base
 WORKDIR /app
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 
-# Install Python and build dependencies
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python-is-python3 \
-    make \
-    g++ \
-    && rm -rf /var/lib/apt/lists/*
+# Install dependencies only when needed
+FROM base AS deps
+# Add Python and other build dependencies
+RUN apk add --no-cache python3 make g++ gcc git
 
 COPY package*.json ./
-
-FROM base AS development
 RUN npm install
+
+# Development image
+FROM base AS development
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
 EXPOSE 3000
-EXPOSE 5555 
+CMD ["npm", "run", "dev"] 

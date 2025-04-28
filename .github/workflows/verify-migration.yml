@@ -1,0 +1,113 @@
+name: Check Prisma migration on PR to develop
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: hagenhub
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --health-start-period 10s
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for PostgreSQL
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          timeout 30s bash -c 'until pg_isready -h localhost -p 5432; do sleep 1; done'
+          echo "PostgreSQL is ready!"
+          
+      - name: Check schema and migrations
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:6543/hagenhub?pgbouncer=true
+          DIRECT_URL: postgresql://postgres:password@localhost:5432/hagenhub
+          NODE_ENV: development
+        run: |
+          set -e
+          
+          # Configure Git
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          
+          # Fetch the base branch
+          git fetch origin ${{ github.base_ref }}
+          
+          # Check if schema.prisma exists in base branch
+          if git cat-file -e origin/${{ github.base_ref }}:prisma/schema.prisma 2>/dev/null; then
+            SCHEMA_DIFF=$(git diff origin/${{ github.base_ref }}...HEAD -- prisma/schema.prisma || true)
+          else
+            SCHEMA_DIFF="new_file"
+          fi
+          
+          # Check for migration files in this PR
+          MIGRATIONS_EXIST=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep 'prisma/migrations/' || true)
+          
+          if [ ! -z "$SCHEMA_DIFF" ] && [ -z "$MIGRATIONS_EXIST" ]; then
+            echo "Schema changes detected but no migration exists. Creating migration..."
+            
+            # Get branch name and sanitize it for the migration name
+            BRANCH_NAME=$(echo ${GITHUB_HEAD_REF#refs/heads/} | sed -e 's/[\/\_]/-/g')
+            
+            # Create the migration using DIRECT_URL for schema changes
+            # Temporarily set DATABASE_URL to DIRECT_URL for migration creation
+            export DATABASE_URL="$DIRECT_URL"
+            npx prisma migrate dev --name "$BRANCH_NAME" --create-only
+            
+            # Stage and commit the new migration
+            git add prisma/migrations/
+            git commit -m "chore(db): add migration for $BRANCH_NAME"
+            
+            # Push the changes back to the PR branch
+            git push origin HEAD:$GITHUB_HEAD_REF
+            
+            echo "✅ Created and pushed new migration."
+          fi
+          
+          # Reset database, apply migrations, and seed
+          echo "Resetting database and applying migrations..."
+          # Use DIRECT_URL for migrations
+          export DATABASE_URL="$DIRECT_URL"
+          npx prisma migrate reset --force --skip-seed
+          
+          echo "Seeding the database..."
+          npx prisma db seed
+          
+          # Verify migrations are in sync with schema
+          echo "Verifying migrations..."
+          if ! npx prisma migrate status | grep -q "Database schema is up to date"; then
+            echo "❌ Migration verification failed!"
+            echo "The schema and migrations are not in sync."
+            echo "Please ensure your migrations match your schema changes."
+            echo "👉 Run: npx prisma migrate dev locally to fix any issues"
+            exit 1
+          fi
+          
+          echo "✅ Schema and migration check passed."

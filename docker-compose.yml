@@ -1,51 +1,40 @@
 services:
-  postgres:
+  db:
+    platform: linux/arm64
     image: postgres:15
+    container_name: local-postgres
+    restart: unless-stopped
+    # Remove external port exposure, only accessible within Docker network
+    # ports:
+    #   - "5432:5432"
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: prisma
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-hagenhub}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: [CMD-SHELL, /usr/lib/postgresql/15/bin/pg_isready -U postgres]
-      interval: 5s
-      timeout: 2s
+      test: ["CMD", "pg_isready", "-U", "${DB_USER:-postgres}", "-d", "${DB_NAME:-hagenhub}"]
+      interval: 10s
       retries: 5
+      timeout: 5s
+      start_period: 5s
 
-  app:
-    build:
-      context: .
-      target: development
+  pgbouncer:
+    image: bitnami/pgbouncer:1.18.0
     ports:
-      - "3000:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    env_file:
-      - .env
+      - "5432:6432"
+    environment:
+      - POSTGRESQL_USERNAME=${DB_USER:-postgres}
+      - POSTGRESQL_PASSWORD=${DB_PASSWORD:-password}
+      - POSTGRESQL_HOST=db
+      - POSTGRESQL_DATABASE=${DB_NAME:-hagenhub}
+      - PGBOUNCER_POOL_MODE=transaction
+      - PGBOUNCER_MAX_CLIENT_CONNECTIONS=100
+      - PGBOUNCER_DEFAULT_POOL_SIZE=20
+      - PGBOUNCER_PORT=6432
     depends_on:
-      postgres:
-        condition: service_healthy
-    command: sh -c "npx prisma generate && npx prisma db push && npm run dev"
-
-  prisma-studio:
-    build:
-      context: .
-      target: development
-    ports:
-      - "5555:5555"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    env_file:
-      - .env
-    depends_on:
-      postgres:
-        condition: service_healthy
-    command: npx prisma studio --port 5555 --hostname 0.0.0.0
+      - db
 
 volumes:
-  postgres_data:
+  pgdata:
