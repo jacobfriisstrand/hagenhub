@@ -5,6 +5,7 @@ import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { signup } from "@/app/(auth)/actions";
 import { DynamicIcon } from "@/components/dynamic-icon";
@@ -47,7 +48,7 @@ export default function SignupPage() {
       const result = await signup(data);
       if (result?.error) {
         // Handle login error (you might want to show this to the user)
-        console.error(result.error);
+        toast.error(result.error);
       }
       // Redirect to login page after successful signup
       router.push("/");

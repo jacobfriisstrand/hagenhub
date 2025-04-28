@@ -4,6 +4,7 @@ import type { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button/button";
 import {
@@ -43,7 +44,7 @@ export default function LoginPage() {
   async function onSubmit(data: LoginFormValues) {
     const result = await login(data);
     if (result.error) {
-      console.error(result.error);
+      toast.error(result.error);
     }
   }
 

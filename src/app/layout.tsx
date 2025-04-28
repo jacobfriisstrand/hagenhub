@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 
 import { Geist, Geist_Mono } from "next/font/google";
 
+import HeaderBar from "@/components/header/header";
+
 import "./globals.css";
 
-import HeaderBar from "@/components/header/header";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +39,7 @@ export default function RootLayout({
         <HeaderBar />
         {modal}
         <main>{children}</main>
+        <Toaster />
       </body>
     </html>
   );
