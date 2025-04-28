@@ -8,7 +8,7 @@ type FormGroupProps = {
 
 export function FormGroup({ title, description, children }: FormGroupProps) {
   return (
-    <fieldset>
+    <fieldset className="h-full">
       <legend className="sr-only">
         {title}
       </legend>
