@@ -33,7 +33,7 @@ export default function AddListingTypeForm({ listingTypes }: { listingTypes: Lis
 
   function onSubmit(data: AddListingTypeFormValues) {
     // TODO: Implement form submission logic
-    console.log(data);
+    console.error(data);
     router.push("/add-listing/bedrooms");
   }
 

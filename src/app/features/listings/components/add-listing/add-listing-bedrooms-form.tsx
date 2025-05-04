@@ -44,7 +44,7 @@ export default function AddListingBedroomsForm() {
 
   function onSubmit(data: AddListingBedroomsFormValues) {
     // TODO: Implement form submission logic
-    console.log(data);
+    console.error(data);
     router.push("/add-listing/guests");
   }
 
