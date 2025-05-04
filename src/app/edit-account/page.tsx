@@ -11,12 +11,11 @@ import { getCurrentUser } from "../(auth)/current-user";
 import EditPhoneForm from "../features/users/components/edit-account/edit-phone";
 import EditUserAddress from "../features/users/components/edit-account/edit-user-address";
 
-const fullUser = await getCurrentUser({
-  withFullUser: true,
-  redirectIfNotFound: true,
-});
-
-export default function EditAccount() {
+export default async function EditAccount() {
+  const fullUser = await getCurrentUser({
+    withFullUser: true,
+    redirectIfNotFound: true,
+  });
   return (
     <>
       <Accordion type="single" collapsible>
