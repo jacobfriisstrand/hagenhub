@@ -46,7 +46,7 @@ export function AddListingForm() {
   });
 
   function onSubmit(data: AddListingFormValues) {
-    console.log(data);
+    console.error(data);
   }
 
   return (
