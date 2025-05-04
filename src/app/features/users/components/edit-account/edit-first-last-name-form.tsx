@@ -41,7 +41,7 @@ export default function FirstLastNameForm({ firstName, lastName, user_pk }: Edit
       toast.error(result.error);
     }
     else {
-      toast.success("Konto opdateret");
+      toast.success("Kontoen er opdateret");
     }
   };
 
