@@ -1,7 +1,5 @@
+import AddListingLocationForm from "@/app/features/listings/components/add-listing/add-listing-location-form";
+
 export default function LocationPage() {
-  return (
-    <div>
-      <h1>Location</h1>
-    </div>
-  );
+  return <AddListingLocationForm />;
 }

@@ -14,51 +14,45 @@ import { Button } from "@/components/ui/button/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form/form";
 import { FormGroup } from "@/components/ui/form/form-group";
 import { NumberInput } from "@/components/ui/number-input";
-import { ListingSchema } from "@/prisma/generated/zod";
 
-// Extract validation rules from the Zod schema
-const bedroomsValidation = ListingSchema.shape.listing_bedrooms._def.checks;
-const MIN_BEDROOMS = bedroomsValidation.find(check => check.kind === "min")?.value ?? 1;
-const MAX_BEDROOMS = bedroomsValidation.find(check => check.kind === "max")?.value ?? 10;
-
-const addListingBedroomsSchema = AddListingSchema.pick({
-  listing_bedrooms: true,
+const addListingGuestsSchema = AddListingSchema.pick({
+  listing_guests: true,
 });
 
-type AddListingBedroomsFormValues = z.infer<typeof addListingBedroomsSchema>;
+type AddListingGuestsFormValues = z.infer<typeof addListingGuestsSchema>;
 
-export default function AddListingBedroomsForm() {
+export default function AddListingGuestsForm() {
   const router = useRouter();
   const { formData, setFormData } = useListingStore();
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<AddListingBedroomsFormValues>({
-    resolver: zodResolver(addListingBedroomsSchema),
+  const form = useForm<AddListingGuestsFormValues>({
+    resolver: zodResolver(addListingGuestsSchema),
     defaultValues: {
-      listing_bedrooms: formData.listing_bedrooms || 1,
+      listing_guests: formData.listing_guests || 1,
     },
     mode: "onTouched",
   });
 
-  function onSubmit(data: AddListingBedroomsFormValues) {
+  function onSubmit(data: AddListingGuestsFormValues) {
     setIsLoading(true);
     setFormData(data);
-    router.push("/add-listing/guests");
+    router.push("/add-listing/location");
   }
 
   return (
-    <FormWrapper title="Bedrooms" icon="bed" currentStep="/add-listing/bedrooms">
+    <FormWrapper title="Guests" icon="users" currentStep="/add-listing/guests">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col justify-between h-full gap-10">
           <FormField
             control={form.control}
-            name="listing_bedrooms"
+            name="listing_guests"
             render={({ field }) => (
-              <FormGroup title="Number of Bedrooms" description="How many bedrooms does your place have?">
+              <FormGroup title="Guest Capacity" description="How many guests can sleep in your place?">
                 <FormItem className="gap-10">
-                  <FormLabel className="text-lg font-medium sr-only">Bedrooms</FormLabel>
+                  <FormLabel className="text-lg font-medium sr-only">Guests</FormLabel>
                   <FormControl>
-                    <NumberInput field={field} min={MIN_BEDROOMS} max={MAX_BEDROOMS} />
+                    <NumberInput field={field} min={0} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -69,7 +63,7 @@ export default function AddListingBedroomsForm() {
             <Button
               variant="outline"
               type="button"
-              onClick={() => router.push("/add-listing/type")}
+              onClick={() => router.push("/add-listing/bedrooms")}
               className="w-full"
               disabled={isLoading}
             >

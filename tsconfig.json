@@ -8,7 +8,8 @@
     "moduleResolution": "bundler",
     "paths": {
       "@/*": ["./src/*"],
-      "@/prisma/generated/zod": ["./prisma/generated/zod"]
+      "@/prisma/generated/zod": ["./prisma/generated/zod"],
+      "@/public/*": ["./public/*"]
     },
     "resolveJsonModule": true,
     "allowJs": true,
