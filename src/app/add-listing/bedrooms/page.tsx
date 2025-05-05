@@ -1,7 +1,5 @@
-import AddListingRoomsForm from "@/app/features/listings/components/add-listing/add-listing-bedrooms-form";
+import AddListingBedroomsForm from "@/app/features/listings/components/add-listing/add-listing-bedrooms-form";
 
-export default function RoomsPage() {
-  return (
-    <AddListingRoomsForm />
-  );
+export default function BedroomsPage() {
+  return <AddListingBedroomsForm />;
 }

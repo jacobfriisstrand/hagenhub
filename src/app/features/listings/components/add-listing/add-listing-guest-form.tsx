@@ -4,8 +4,10 @@ import type { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { useListingStore } from "@/app/add-listing/store";
 import FormWrapper from "@/app/features/listings/components/add-listing/add-listing-form-wrapper";
 import { AddListingSchema } from "@/app/features/listings/schemas/add-listing-schema";
 import { Button } from "@/components/ui/button/button";
@@ -21,22 +23,25 @@ type AddListingGuestsFormValues = z.infer<typeof addListingGuestsSchema>;
 
 export default function AddListingGuestsForm() {
   const router = useRouter();
+  const { formData, setFormData } = useListingStore();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<AddListingGuestsFormValues>({
     resolver: zodResolver(addListingGuestsSchema),
     defaultValues: {
-      listing_guests: 0,
+      listing_guests: formData.listing_guests || 1,
     },
+    mode: "onTouched",
   });
 
   function onSubmit(data: AddListingGuestsFormValues) {
-    // TODO: Implement form submission logic
-    console.log(data);
+    setIsLoading(true);
+    setFormData(data);
     router.push("/add-listing/location");
   }
 
   return (
-    <FormWrapper title="Guests" icon="users">
+    <FormWrapper title="Guests" icon="users" currentStep="/add-listing/guests">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col justify-between h-full gap-10">
           <FormField
@@ -58,18 +63,17 @@ export default function AddListingGuestsForm() {
             <Button
               variant="outline"
               type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                router.back();
-              }}
+              onClick={() => router.push("/add-listing/bedrooms")}
               className="w-full"
+              disabled={isLoading}
             >
               Back
             </Button>
             <Button
               type="submit"
               className="w-full"
-              disabled={!form.formState.isValid || form.formState.isSubmitting || form.getValues().listing_guests === 0}
+              isLoading={isLoading}
+              disabled={!form.formState.isValid || form.formState.isSubmitting}
             >
               Next
             </Button>

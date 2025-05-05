@@ -8,6 +8,7 @@ async function main() {
   console.log('Clearing existing records...')
   await prisma.listingType.deleteMany()
   await prisma.zipCode.deleteMany()
+  await prisma.listingArea.deleteMany()
 
   console.log('Creating listing types...')
   const apartmentType = await prisma.listingType.create({
@@ -30,6 +31,27 @@ async function main() {
       listing_type_icon: "door-open",
     },
   })
+
+  console.log('Creating listing areas...')
+  const areas = [
+    "Copenhagen K",
+    "Copenhagen V",
+    "Copenhagen Ø",
+    "Copenhagen N",
+    "Copenhagen S",
+    "Copenhagen NV",
+    "Copenhagen SV",
+    "Frederiksberg C",
+    "Frederiksberg"
+  ]
+
+  for (const areaName of areas) {
+    await prisma.listingArea.create({
+      data: {
+        listing_area_name: areaName,
+      },
+    })
+  }
 
   console.log('Creating Copenhagen zip codes...')
   const copenhagenZipCodes = [

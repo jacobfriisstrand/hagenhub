@@ -8,12 +8,12 @@ type FormGroupProps = {
 
 export function FormGroup({ title, description, children }: FormGroupProps) {
   return (
-    <fieldset className="h-full">
+    <fieldset className="h-full flex flex-col gap-4">
       <legend className="sr-only">
         {title}
       </legend>
       {description && (
-        <p className="text-sm text-muted-foreground mb-4">
+        <p className="text-sm text-muted-foreground">
           {description}
         </p>
       )}
