@@ -6,12 +6,14 @@ import UserDescription from "@/app/features/users/components/profile/user-descri
 import { prisma } from "@/lib/prisma"; // Adjust the import path to your prisma client
 
 type ProfilePageProps = {
-  params: { user_pk: string };
+  params: Promise<{ user_pk: string }>;
 };
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
+  const resolvedParams = await params;
+
   // Fetch user data from the database
-  const user_pk = await params;
+  const user_pk = resolvedParams;
 
   const [user, listings] = await Promise.all([
     prisma.user.findUnique({
