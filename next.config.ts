@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
       {
         hostname: "uwbkhikfqsmduccfxhuw.supabase.co",
       },
+      {
+        hostname: "picsum.photos",
+      },
     ],
   },
   experimental: {
