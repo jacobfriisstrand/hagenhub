@@ -58,7 +58,12 @@ export const UserSchema = z.object({
   user_zip_code: z.string().regex(/^\d{4}$/, { message: "Zip code must be exactly 4 digits" }).nullable(),
   user_street_name: z.string().min(2, { message: "Street name must be at least 2 characters long" }).max(100, { message: "Street name must be less than 100 characters long" }).nullable(),
   user_street_number: z.string().regex(/^[A-Za-zÆØÅæøå0-9, ]{1,15}$/, { message: "Street number can only contain letters, numbers, comma, space, max 15 characters" }).nullable(),
-  user_description: z.string().min(10, { message: "Description must be at least 10 characters long" }).max(500, { message: "Description must be less than 500 characters long" }).nullable(),
+  /**
+   * .min(10, { message: "Description must be at least 10 characters long" })
+   * .max(500, { message: "Description must be less than 500 characters long" })
+   * .regex(/^[A-Za-zÆØÅæøå0-9.,!?"'()\-:;@#&%/\s]+$/, { message: "Description contains invalid characters" })
+   */
+  user_description: z.string().nullable(),
   user_avatar_url: z.string().nullable(),
   user_role: z.enum(["user", "admin"]),
   user_created_at: z.coerce.date().nullable(),

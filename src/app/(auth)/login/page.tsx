@@ -3,6 +3,7 @@
 import type { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -31,6 +32,8 @@ const loginSchema = UserSchema.pick({ user_email: true, user_password: true });
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  const router = useRouter();
+
   // Initialize react-hook-form with zod validation
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -46,6 +49,8 @@ export default function LoginPage() {
     if (result.error) {
       toast.error(result.error);
     }
+    router.refresh();
+    router.back();
   }
 
   return (

@@ -37,7 +37,10 @@ model User {
   user_street_name   String?
   /// @zod.string.regex(/^[A-Za-zÆØÅæøå0-9, ]{1,15}$/, { message: "Street number can only contain letters, numbers, comma, space, max 15 characters" })
   user_street_number String?
-  /// @zod.string.min(10, { message: "Description must be at least 10 characters long" }).max(500, { message: "Description must be less than 500 characters long" })
+  /// @zod.string
+  ///   .min(10, { message: "Description must be at least 10 characters long" })
+  ///   .max(500, { message: "Description must be less than 500 characters long" })
+  ///   .regex(/^[A-Za-zÆØÅæøå0-9.,!?"'()\-:;@#&%/\s]+$/, { message: "Description contains invalid characters" })
   user_description  String?
   user_avatar_url   String?
   /// @zod.custom.use(z.enum(["user", "admin"]))

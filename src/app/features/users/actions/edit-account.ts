@@ -19,11 +19,15 @@ const addressSchema = UserSchema.pick({
   user_street_name: true,
   user_street_number: true,
 });
+const descriptionSchema = UserSchema.pick({
+  user_description: true,
+});
 
 type FirstLastNameFormValues = z.infer<typeof FirstLastNameSchema>;
 type EmailFormValues = z.infer<typeof emailSchema>;
 type PhoneFormValues = z.infer<typeof phoneSchema>;
 type AddressFormValues = z.infer<typeof addressSchema>;
+type DescriptionFormValues = z.infer<typeof descriptionSchema>;
 
 export async function editFirstLastName(unsafedata: FirstLastNameFormValues, user_pk: string) {
   const { success, data } = FirstLastNameSchema.safeParse(unsafedata);
@@ -74,5 +78,17 @@ export async function editAddress(unsafedata: AddressFormValues, user_pk: string
   await prisma.user.update({
     where: { user_pk },
     data: { user_zip_code: data.user_zip_code, user_street_name: data.user_street_name, user_street_number: data.user_street_number },
+  });
+}
+
+export async function editDescription(unsafedata: DescriptionFormValues, user_pk: string) {
+  const { success, data } = descriptionSchema.safeParse(unsafedata);
+  if (!success) {
+    return { error: "Invalid credentials" };
+  }
+
+  await prisma.user.update({
+    where: { user_pk },
+    data: { user_description: data.user_description },
   });
 }

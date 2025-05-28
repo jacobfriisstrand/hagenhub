@@ -46,6 +46,8 @@ export default function LoginPage() {
         toast.error(result.error);
       }
       // If we get here, login was successful and the redirect will happen automatically
+      router.refresh();
+      router.back();
     }
     catch {
       // If we get here, it means the redirect happened (success case)
