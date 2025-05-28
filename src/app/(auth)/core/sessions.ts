@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
 import { UserSchema } from "@/prisma/generated/zod";
@@ -55,10 +56,8 @@ export async function createUserSession(
   user: UserSession,
   cookies: Pick<Cookies, "set">,
 ) {
-  // Generate a session ID using a more deterministic approach
-  const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 15);
-  const sessionId = `${timestamp}-${random}`.normalize();
+  // Generate a session ID using UUID v4
+  const sessionId = uuidv4();
 
   await redisClient.set(`session:${sessionId}`, sessionSchema.parse(user), {
     ex: SESSION_EXPIRATION_SECONDS,

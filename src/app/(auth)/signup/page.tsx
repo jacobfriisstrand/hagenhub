@@ -3,7 +3,9 @@
 import type { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button/button";
 import {
@@ -35,6 +37,8 @@ const signupSchema = UserSchema.pick({
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
+  const router = useRouter();
+
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -46,10 +50,11 @@ export default function SignupPage() {
 
   async function onSubmit(data: SignupFormValues) {
     // TODO: Implement signup logic here
-    const error = await signup(data);
-    if (error) {
-      console.error(error);
+    const result = await signup(data);
+    if (result?.error) {
+      toast.error(result.error);
     }
+    router.push("/");
   }
 
   return (

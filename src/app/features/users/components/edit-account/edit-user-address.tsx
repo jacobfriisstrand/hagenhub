@@ -51,7 +51,7 @@ export default function EditUserAddress({ user_zip_code, user_street_name, user_
   return (
     <Form {...form}>
       <p className="text-sm text-gray-500">
-        Brug en permanent adresse, hvor du kan modtage post.
+        Use a permanent address, where you can receive mail.
       </p>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="py-4">
@@ -60,10 +60,10 @@ export default function EditUserAddress({ user_zip_code, user_street_name, user_
             name="user_street_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Vejnavn</FormLabel>
+                <FormLabel>Street name</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Indtast vejnavnet"
+                    placeholder="Enter the street name"
                     type="string"
                     {...field}
                     value={field.value ?? ""}
@@ -79,10 +79,10 @@ export default function EditUserAddress({ user_zip_code, user_street_name, user_
               name="user_street_number"
               render={({ field }) => (
                 <FormItem className="w-full md:w-1/2">
-                  <FormLabel>Vejnummer</FormLabel>
+                  <FormLabel>Street number</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Indtast vejnummeret"
+                      placeholder="Enter the street number"
                       type="string"
                       {...field}
                       value={field.value ?? ""}
@@ -97,10 +97,10 @@ export default function EditUserAddress({ user_zip_code, user_street_name, user_
               name="user_zip_code"
               render={({ field }) => (
                 <FormItem className="w-full md:w-1/2">
-                  <FormLabel>Postnummer</FormLabel>
+                  <FormLabel>Postal code</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Indtast postnummeret"
+                      placeholder="Enter the postal code"
                       type="string"
                       {...field}
                       value={field.value ?? ""}
@@ -112,7 +112,7 @@ export default function EditUserAddress({ user_zip_code, user_street_name, user_
             />
           </div>
         </div>
-        <Button type="submit">Gem</Button>
+        <Button type="submit">Save</Button>
       </form>
     </Form>
   );

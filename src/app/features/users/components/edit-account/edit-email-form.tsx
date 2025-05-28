@@ -38,7 +38,7 @@ export default function EditEmailForm({ user_email, user_pk }: EditEmailFormProp
       toast.error(result.error);
     }
     else {
-      toast.success("E-mail opdateret");
+      toast.success("E-mail updated");
     }
   };
 
@@ -46,7 +46,7 @@ export default function EditEmailForm({ user_email, user_pk }: EditEmailFormProp
     <>
       <Form {...form}>
         <p className="text-sm text-gray-500 pb-4">
-          Brug en adresse, du altid har adgang til.
+          Use an address you always have access to.
         </p>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -54,10 +54,10 @@ export default function EditEmailForm({ user_email, user_pk }: EditEmailFormProp
             name="user_email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>E-mail</FormLabel>
+                <FormLabel>E-mail address</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Indtast din e-mail"
+                    placeholder="Enter your e-mail"
                     type="email"
                     {...field}
                   />
@@ -66,7 +66,7 @@ export default function EditEmailForm({ user_email, user_pk }: EditEmailFormProp
               </FormItem>
             )}
           />
-          <Button type="submit">Gem</Button>
+          <Button type="submit">Save</Button>
         </form>
       </Form>
     </>
