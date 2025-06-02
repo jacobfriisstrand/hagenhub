@@ -3,7 +3,8 @@
 import type { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -26,7 +27,17 @@ const loginSchema = UserSchema.pick({ user_email: true, user_password: true });
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<Modal title="Loading..."><div>Loading...</div></Modal>}>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const message = searchParams.get("message");
 
   // Initialize react-hook-form with zod validation
   const form = useForm<LoginFormValues>({
@@ -56,7 +67,7 @@ export default function LoginPage() {
   }
 
   return (
-    <Modal title="Welcome back">
+    <Modal title={message || "Welcome back"}>
       <div className="space-y-6">
         <div>
           <p className="text-muted-foreground">Enter your credentials to login</p>

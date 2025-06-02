@@ -6,6 +6,7 @@ async function main() {
   
   // Clear existing records
   console.log('Clearing existing records...')
+  await prisma.booking.deleteMany()
   await prisma.listingImage.deleteMany()
   await prisma.listing.deleteMany()
   await prisma.user.deleteMany()
