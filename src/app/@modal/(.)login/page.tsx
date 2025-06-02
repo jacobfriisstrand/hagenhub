@@ -3,7 +3,9 @@
 import type { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -20,12 +22,14 @@ import {
   FormMessage,
 } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { UserSchema } from "@/prisma/generated/zod";
 
 const loginSchema = UserSchema.pick({ user_email: true, user_password: true });
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   // Initialize react-hook-form with zod validation
@@ -39,8 +43,10 @@ export default function LoginPage() {
 
   // Handle form submission
   async function onSubmit(data: LoginFormValues) {
+    setIsLoading(true);
     try {
       const result = await login(data);
+
       if (result?.error) {
         // Handle login error (you might want to show this to the user)
         toast.error(result.error);
@@ -114,11 +120,18 @@ export default function LoginPage() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" isLoading={isLoading}>
               Login
             </Button>
           </form>
         </Form>
+        <Separator />
+        <div className="flex flex-row items-center justify-between">
+          <p className="text-muted-foreground">Don't have an account?</p>
+          <Link href="/signup" className="text-primary hover:underline">
+            Sign up
+          </Link>
+        </div>
       </div>
     </Modal>
   );
