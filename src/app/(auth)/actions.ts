@@ -114,10 +114,8 @@ export async function signup(unsafedata: SignupInput) {
     console.error(error);
     return { error: "Failed to create user" };
   }
-  redirect("/");
 }
 
 export async function logout() {
   await removeUserFromSession(await cookies());
-  redirect("/login");
 }
