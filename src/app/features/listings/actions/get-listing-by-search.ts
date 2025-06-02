@@ -1,0 +1,28 @@
+import { prisma } from "@/lib/prisma";
+
+export default async function getListingBySearch(search: string) {
+  const searchListings = await prisma.listing.findMany({
+    where: {
+      OR: [
+        {
+          listing_title: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          listing_description: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
+    },
+    include: {
+      listing_images: true,
+      listing_type: true,
+      listing_area: true,
+    },
+  });
+  return searchListings;
+}

@@ -6,12 +6,12 @@ import { prisma } from "@/lib/prisma";
 
 import { getUserFromSession } from "./core/sessions";
 
-type FullUser = Exclude<
+export type FullUser = Exclude<
   Awaited<ReturnType<typeof getUserFromDb>>,
   undefined | null
 >;
 
-type User = Exclude<
+export type User = Exclude<
   Awaited<ReturnType<typeof getUserFromSession>>,
   undefined | null
 >;

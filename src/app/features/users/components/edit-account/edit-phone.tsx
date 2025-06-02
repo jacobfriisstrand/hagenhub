@@ -38,7 +38,7 @@ export default function EditPhoneForm({ user_phone, user_pk }: EditPhoneFormProp
       toast.error(result.error);
     }
     else {
-      toast.success("Telefonnummer opdateret");
+      toast.success("Phone number updated");
     }
   };
 
@@ -46,7 +46,7 @@ export default function EditPhoneForm({ user_phone, user_pk }: EditPhoneFormProp
     <>
       <Form {...form}>
         <p className="text-sm text-gray-500 pb-4">
-          Tilføj et nummer, så bekræftede gæster og Hagenhub kan kontakte dig.
+          Add a number, so confirmed guests and Hagenhub can contact you.
         </p>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -54,10 +54,10 @@ export default function EditPhoneForm({ user_phone, user_pk }: EditPhoneFormProp
             name="user_phone_number"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Telefonnummer</FormLabel>
+                <FormLabel>Phone number</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Indtast dit telefonnummer"
+                    placeholder="Enter your phone number"
                     type="tel"
                     {...field}
                     value={field.value ?? ""}
@@ -67,7 +67,7 @@ export default function EditPhoneForm({ user_phone, user_pk }: EditPhoneFormProp
               </FormItem>
             )}
           />
-          <Button type="submit">Gem</Button>
+          <Button type="submit">Save</Button>
         </form>
       </Form>
     </>

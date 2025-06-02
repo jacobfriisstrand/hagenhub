@@ -41,14 +41,14 @@ export default function FirstLastNameForm({ firstName, lastName, user_pk }: Edit
       toast.error(result.error);
     }
     else {
-      toast.success("Kontoen er opdateret");
+      toast.success("Account updated");
     }
   };
 
   return (
     <Form {...form}>
       <p className="text-sm text-gray-500">
-        Sørg for, at det stemmer overens med navnet på dit myndighedsudstedte id.
+        Make sure it matches the name on your government-issued ID.
       </p>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
@@ -60,10 +60,10 @@ export default function FirstLastNameForm({ firstName, lastName, user_pk }: Edit
             name="user_first_name"
             render={({ field }) => (
               <FormItem className="w-full md:w-1/2">
-                <FormLabel>Fornavn</FormLabel>
+                <FormLabel>First name</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Indtast dit fornavn"
+                    placeholder="Enter your first name"
                     type="string"
                     {...field}
                     value={field.value ?? ""}
@@ -78,10 +78,10 @@ export default function FirstLastNameForm({ firstName, lastName, user_pk }: Edit
             name="user_last_name"
             render={({ field }) => (
               <FormItem className="w-full md:w-1/2">
-                <FormLabel>Efternavn</FormLabel>
+                <FormLabel>Last name</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Indtast dit efternavn"
+                    placeholder="Enter your last name"
                     type="text"
                     {...field}
                     value={field.value ?? ""}
@@ -92,7 +92,7 @@ export default function FirstLastNameForm({ firstName, lastName, user_pk }: Edit
             )}
           />
         </div>
-        <Button type="submit">Gem</Button>
+        <Button type="submit">Save</Button>
       </form>
     </Form>
   );

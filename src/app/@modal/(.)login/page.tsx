@@ -3,8 +3,9 @@
 import type { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -21,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { UserSchema } from "@/prisma/generated/zod";
 
 const loginSchema = UserSchema.pick({ user_email: true, user_password: true });
@@ -38,6 +40,7 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const message = searchParams.get("message");
+  const [isLoading, setIsLoading] = useState(false);
 
   // Initialize react-hook-form with zod validation
   const form = useForm<LoginFormValues>({
@@ -50,17 +53,22 @@ function LoginContent() {
 
   // Handle form submission
   async function onSubmit(data: LoginFormValues) {
+    setIsLoading(true);
     try {
       const result = await login(data);
+
       if (result?.error) {
         // Handle login error (you might want to show this to the user)
         toast.error(result.error);
       }
       // If we get here, login was successful and the redirect will happen automatically
+      router.refresh();
+      router.back();
     }
     catch {
       // If we get here, it means the redirect happened (success case)
       // The error is expected because the redirect interrupts the normal flow
+
       router.refresh();
       router.back();
     }
@@ -122,11 +130,18 @@ function LoginContent() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" isLoading={isLoading}>
               Login
             </Button>
           </form>
         </Form>
+        <Separator />
+        <div className="flex flex-row items-center justify-between">
+          <p className="text-muted-foreground">Don't have an account?</p>
+          <Link href="/signup" className="text-primary hover:underline">
+            Sign up
+          </Link>
+        </div>
       </div>
     </Modal>
   );
