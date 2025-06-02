@@ -14,6 +14,7 @@ export default function Modal({ children, title }: ModalProps) {
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
+      router.refresh();
       router.back();
     }
   };

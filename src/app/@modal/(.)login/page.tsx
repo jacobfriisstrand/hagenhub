@@ -52,6 +52,7 @@ export default function LoginPage() {
     catch {
       // If we get here, it means the redirect happened (success case)
       // The error is expected because the redirect interrupts the normal flow
+
       router.refresh();
       router.back();
     }

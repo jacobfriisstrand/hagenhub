@@ -51,10 +51,12 @@ export default function SignupPage() {
         toast.error(result.error);
       }
       // Redirect to login page after successful signup
-      router.push("/");
+      router.refresh();
+      router.back();
     }
     catch {
-      router.push("/"); // Changed from router.back() to redirect to login
+      router.refresh();
+      router.back();
     }
   }
 

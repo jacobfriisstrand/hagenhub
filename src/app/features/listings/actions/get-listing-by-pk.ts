@@ -2,10 +2,10 @@ import type { FullListing } from "@/app/features/listings/types";
 
 import { prisma } from "@/lib/prisma";
 
-export async function getListingByPk(pk: string): Promise<FullListing | null> {
+export async function getListingByPk(listing_pk: string): Promise<FullListing | null> {
   const listing = await prisma.listing.findUnique({
     where: {
-      listing_pk: pk,
+      listing_pk,
     },
     include: {
       listing_images: true,
