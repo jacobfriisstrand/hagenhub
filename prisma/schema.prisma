@@ -14,13 +14,6 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Test {
-  test_pk String @id @default(uuid()) @db.Uuid
-  test_name String
-  test_created_at DateTime @default(now())
-  test_updated_at DateTime @updatedAt
-}
-
 model User {
   user_pk           String    @id @default(uuid()) @db.Uuid
   /// @zod.string.regex(/^[A-Za-zÆØÅæøå]+$/, { message: "Name can only contain letters (A-Z, a-z, ÆØÅ, æøå)" }).min(3, { message: "Name must be at least 3 characters long" }).max(256, { message: "Name must be less than 256 characters long" })
