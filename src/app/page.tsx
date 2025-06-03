@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { getCurrentUser } from "@/app/(auth)/current-user";
-import { getAllListings } from "@/app/features/listings/actions/get-all-listings";
+import { getAllListings } from "@/app/features/listings/actions/add-listing/get-all-listings";
 import ListingList from "@/app/features/listings/components/listing-list";
 import LogoutButton from "@/components/logout-button";
 import { Button } from "@/components/ui/button/button";

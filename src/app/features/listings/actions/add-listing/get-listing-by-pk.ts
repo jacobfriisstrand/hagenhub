@@ -1,4 +1,4 @@
-import type { FullListing } from "@/app/features/listings/types";
+import type { FullListing } from "@/app/features/listings/types/full-listing-type";
 
 import { prisma } from "@/lib/prisma";
 
