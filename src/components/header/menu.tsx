@@ -2,11 +2,14 @@ import Link from "next/link";
 
 import type { User } from "@/app/(auth)/current-user";
 
+import { hasListings } from "@/app/features/users/actions/has-listings";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 import LogoutButton from "../logout-button";
 
-export default function Menu({ user }: { user: User | null }) {
+export default async function Menu({ user }: { user: User | null }) {
+  const userHasListings = user ? await hasListings(user.user_pk) : false;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,6 +35,13 @@ export default function Menu({ user }: { user: User | null }) {
                     Create Listing
                   </DropdownMenuItem>
                 </Link>
+                {userHasListings && (
+                  <Link href="/private/my-listings">
+                    <DropdownMenuItem>
+                      My Listings
+                    </DropdownMenuItem>
+                  </Link>
+                )}
                 <Link href={`/bookings/${user.user_pk}`}>
                   <DropdownMenuItem>
                     Bookings

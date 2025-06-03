@@ -31,7 +31,7 @@ export function NumberInput({ field, min = 0, max = Infinity, readOnly = false }
         type="button"
         onClick={decrement}
         disabled={field.value <= min || readOnly}
-        className="rounded-r-none h-full"
+        className="rounded-r-none h-full hover:shadow-none"
         aria-label="Decrease value"
       >
         <Minus className="h-4 w-4" />
@@ -50,7 +50,7 @@ export function NumberInput({ field, min = 0, max = Infinity, readOnly = false }
         size="icon"
         onClick={increment}
         disabled={field.value >= max || readOnly}
-        className="rounded-l-none h-full"
+        className="rounded-l-none h-full hover:shadow-none"
         aria-label="Increase value"
       >
         <Plus className="h-4 w-4" />
