@@ -180,7 +180,7 @@ export default function BookListingForm({ price, guestCount, listingId }: Bookin
                             booked: date => isDateBooked(date),
                           }}
                           modifiersClassNames={{
-                            booked: "group bg-red-200 text-red-800",
+                            booked: "group bg-red-200 text-red-800 hover:bg-red-200 hover:text-red-800",
                           }}
                         />
                         <div className="flex justify-end mt-4">
