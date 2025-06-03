@@ -1,14 +1,13 @@
-import Link from "next/link";
-
 import type { User } from "@/app/(auth)/current-user";
 
+import LogoutButton from "@/components/logout-button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-import LogoutButton from "../logout-button";
+import LinkWithIcon from "../link-with-icon";
 
 export default function Menu({ user }: { user: User | null }) {
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <div className="inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 px-2 py-2 ">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-align-justify-icon lucide-align-justify">
@@ -19,31 +18,30 @@ export default function Menu({ user }: { user: User | null }) {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <Link href="/">
-          <DropdownMenuItem>
+        <DropdownMenuItem>
+          <LinkWithIcon href="/" icon="house">
             Listings
-          </DropdownMenuItem>
-        </Link>
+          </LinkWithIcon>
+        </DropdownMenuItem>
         {user
           ? (
               <>
-                <Link href="/add-listing">
-                  <DropdownMenuItem>
-                    Create Listing
-                  </DropdownMenuItem>
-                </Link>
-                <Link href={`/bookings/${user.user_pk}`}>
-                  <DropdownMenuItem>
+                <DropdownMenuItem>
+                  <LinkWithIcon href="/add-listing" icon="plus">
+                    Add Listing
+                  </LinkWithIcon>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <LinkWithIcon href={`/bookings/${user.user_pk}`} icon="calendar">
                     Bookings
-                  </DropdownMenuItem>
-                </Link>
-                <Link href="/edit-account">
-                  <DropdownMenuItem>
+                  </LinkWithIcon>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <LinkWithIcon href="/edit-account" icon="user">
                     Edit Account
-                  </DropdownMenuItem>
-                </Link>
+                  </LinkWithIcon>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-
                 <LogoutButton />
 
               </>
@@ -51,16 +49,16 @@ export default function Menu({ user }: { user: User | null }) {
           : (
               <>
                 <DropdownMenuSeparator />
-                <Link href="/login" className="cursor-pointer">
-                  <DropdownMenuItem>
+                <DropdownMenuItem>
+                  <LinkWithIcon href="/login" icon="log-in">
                     Login
-                  </DropdownMenuItem>
-                </Link>
-                <Link href="/signup" className="cursor-pointer text-blue-600">
-                  <DropdownMenuItem>
+                  </LinkWithIcon>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <LinkWithIcon href="/signup" icon="user-plus">
                     Sign up
-                  </DropdownMenuItem>
-                </Link>
+                  </LinkWithIcon>
+                </DropdownMenuItem>
               </>
             )}
       </DropdownMenuContent>
