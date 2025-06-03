@@ -30,13 +30,13 @@ export default async function Menu({ user }: { user: User | null }) {
               <>
                 <DropdownMenuItem>
                   <LinkWithIcon href="/add-listing" icon="plus">
-                    Create Listing
+                    Create listing
                   </LinkWithIcon>
                 </DropdownMenuItem>
                 {userHasListings && (
                   <DropdownMenuItem>
                     <LinkWithIcon href="/private/my-listings" icon="list">
-                      My Listings
+                      My listings
                     </LinkWithIcon>
                   </DropdownMenuItem>
                 )}
@@ -47,7 +47,7 @@ export default async function Menu({ user }: { user: User | null }) {
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <LinkWithIcon href="/edit-account" icon="user">
-                    Edit Account
+                    Edit account
                   </LinkWithIcon>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
