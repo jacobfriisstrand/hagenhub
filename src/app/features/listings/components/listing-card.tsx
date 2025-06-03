@@ -12,7 +12,9 @@ import EditListingModal from "@/app/features/listings/components/edit-listing/ed
 =======
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
+import type { User } from "@/app/(auth)/current-user";
 import type { FullListing } from "@/app/features/listings/types/full-listing-type";
 
 >>>>>>> bf51935 (32-fe-booklistingform (#142))

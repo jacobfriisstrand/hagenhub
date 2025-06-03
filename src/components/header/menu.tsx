@@ -1,13 +1,10 @@
 import type { User } from "@/app/(auth)/current-user";
 
-import LogoutButton from "@/components/logout-button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import LogoutButton from "@/components/logout-button";
 
-import LinkWithIcon from "../link-with-icon";
-
+import LinkWithIcon from "@/components/link-with-icon";
 import { hasListings } from "@/app/features/users/actions/has-listings";
-
-
 
 export default async function Menu({ user }: { user: User | null }) {
   const userHasListings = user ? await hasListings(user.user_pk) : false;
@@ -34,7 +31,7 @@ export default async function Menu({ user }: { user: User | null }) {
               <>
                 <DropdownMenuItem>
                   <LinkWithIcon href="/add-listing" icon="plus">
-                    Add Listing
+                    Create Listing
                   </LinkWithIcon>
                 </DropdownMenuItem>
                 {userHasListings && (
@@ -56,7 +53,6 @@ export default async function Menu({ user }: { user: User | null }) {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <LogoutButton />
-
               </>
             )
           : (
