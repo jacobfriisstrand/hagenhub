@@ -1,10 +1,10 @@
-import AddListingHeroImage from "@/public/listings/add-listing-hero.jpg";
 import Link from "next/link";
 
 import { DynamicIcon } from "@/components/dynamic-icon";
 import { ResponsiveImage } from "@/components/responsive-image";
 import { Button } from "@/components/ui/button/button";
 import { Card } from "@/components/ui/card";
+import AddListingHeroImage from "@/public/listings/add-listing-hero.jpg";
 
 export default function AddListingHero() {
   return (

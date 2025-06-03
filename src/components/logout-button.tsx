@@ -3,9 +3,8 @@
 import { useRouter } from "next/navigation";
 
 import { logout } from "@/app/(auth)/actions";
-import { Button } from "@/components/ui/button/button";
-
 import { DynamicIcon } from "@/components/dynamic-icon";
+import { Button } from "@/components/ui/button/button";
 
 export default function LogoutButton() {
   const router = useRouter();
