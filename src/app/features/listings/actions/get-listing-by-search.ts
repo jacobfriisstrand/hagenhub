@@ -16,6 +16,22 @@ export default async function getListingBySearch(search: string) {
             mode: "insensitive",
           },
         },
+        {
+          listing_type: {
+            listing_type_name: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          listing_area: {
+            listing_area_name: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        },
       ],
     },
     include: {
