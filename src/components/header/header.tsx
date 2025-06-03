@@ -1,13 +1,33 @@
+import { getCurrentUser } from "@/app/(auth)/current-user";
+
 import Logo from "./logo";
 import Menu from "./menu";
+import Profile from "./profile-image";
 import SearchBar from "./search-bar";
 
-export default function Header() {
+export default async function Header() {
+  const user = await getCurrentUser({
+    withFullUser: false,
+    redirectIfNotFound: false,
+  });
+  const fullUser = await getCurrentUser({
+    withFullUser: true,
+    redirectIfNotFound: false,
+  });
   return (
-    <header>
-      <Logo />
-      <SearchBar />
-      <Menu />
+    <header className="flex flex-col gap-4 py-2 px-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex items-center justify-between">
+        <Logo />
+        <div className="flex items-center gap-4 md:hidden">
+          <Profile fullUser={fullUser} />
+          <Menu user={user} />
+        </div>
+      </div>
+      <SearchBar className="w-full md:w-1/2" />
+      <div className="hidden md:flex md:flex-row md:items-center md:justify-end md:gap-4">
+        <Profile fullUser={fullUser} />
+        <Menu user={user} />
+      </div>
     </header>
   );
 }

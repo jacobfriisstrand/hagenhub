@@ -3,8 +3,11 @@
 import type { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { signup } from "@/app/(auth)/actions";
 import { DynamicIcon } from "@/components/dynamic-icon";
@@ -19,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { UserSchema } from "@/prisma/generated/zod";
 
 const signupSchema = UserSchema.pick({
@@ -30,6 +34,7 @@ const signupSchema = UserSchema.pick({
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const form = useForm<SignupFormValues>({
@@ -42,18 +47,20 @@ export default function SignupPage() {
   });
 
   async function onSubmit(data: SignupFormValues) {
-    // TODO: Implement signup logic here
+    setIsLoading(true);
     try {
       const result = await signup(data);
       if (result?.error) {
         // Handle login error (you might want to show this to the user)
-        console.error(result.error);
+        toast.error(result.error);
       }
       // Redirect to login page after successful signup
-      router.push("/");
+      router.refresh();
+      router.back();
     }
     catch {
-      router.push("/"); // Changed from router.back() to redirect to login
+      router.refresh();
+      router.back();
     }
   }
 
@@ -136,11 +143,18 @@ export default function SignupPage() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" isLoading={isLoading}>
               Sign up
             </Button>
           </form>
         </Form>
+        <Separator />
+        <div className="flex flex-row items-center justify-between">
+          <p className="text-muted-foreground">Already have an account?</p>
+          <Link href="/login" className="text-primary hover:underline">
+            Login
+          </Link>
+        </div>
       </div>
     </Modal>
   );

@@ -6,12 +6,12 @@ import { prisma } from "@/lib/prisma";
 
 import { getUserFromSession } from "./core/sessions";
 
-type FullUser = Exclude<
+export type FullUser = Exclude<
   Awaited<ReturnType<typeof getUserFromDb>>,
   undefined | null
 >;
 
-type User = Exclude<
+export type User = Exclude<
   Awaited<ReturnType<typeof getUserFromSession>>,
   undefined | null
 >;
@@ -67,6 +67,13 @@ async function getUserFromDb(id: string) {
       user_pk: true,
       user_email: true,
       user_first_name: true,
+      user_last_name: true,
+      user_zip_code: true,
+      user_street_name: true,
+      user_street_number: true,
+      user_phone_number: true,
+      user_description: true,
+      user_avatar_url: true,
       user_role: true,
     },
     where: {
