@@ -18,7 +18,6 @@ export default function LogoutButton() {
       variant="ghost"
     >
       <DynamicIcon name="log-out" className="w-4 h-4" />
-      <DynamicIcon name="log-out" className="w-4 h-4" />
       Logout
     </Button>
   );
