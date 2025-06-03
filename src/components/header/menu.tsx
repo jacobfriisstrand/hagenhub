@@ -1,14 +1,13 @@
 import type { User } from "@/app/(auth)/current-user";
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import LogoutButton from "@/components/logout-button";
-
-import LinkWithIcon from "@/components/link-with-icon";
 import { hasListings } from "@/app/features/users/actions/has-listings";
+import LinkWithIcon from "@/components/link-with-icon";
+import LogoutButton from "@/components/logout-button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default async function Menu({ user }: { user: User | null }) {
   const userHasListings = user ? await hasListings(user.user_pk) : false;
-  
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>

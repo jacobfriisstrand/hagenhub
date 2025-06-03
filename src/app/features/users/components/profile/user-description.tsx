@@ -1,14 +1,10 @@
-import type { FullListing } from "@/app/features/listings/types/full-listing-type";
-
-import ListingList from "@/app/features/listings/components/listing-list";
 import { prisma } from "@/lib/prisma";
 
 type UserDescriptionProps = {
   user_pk: string;
-  listings: FullListing[];
 };
 
-export default async function UserDescription({ user_pk, listings }: UserDescriptionProps) {
+export default async function UserDescription({ user_pk }: UserDescriptionProps) {
   const user = await prisma.user.findUnique({
     where: { user_pk },
   });
@@ -36,7 +32,6 @@ export default async function UserDescription({ user_pk, listings }: UserDescrip
           {" "}
           Listings
         </h2>
-        <ListingList listings={listings} />
       </div>
     </div>
   );

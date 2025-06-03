@@ -5,7 +5,7 @@ import ListingCard from "@/app/features/listings/components/listing-card";
 
 type ListingListProps = {
   listings: FullListing[];
-  user: User | null;
+  user?: User | null;
 };
 
 export default function ListingList({ listings, user }: ListingListProps) {

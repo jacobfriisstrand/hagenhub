@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 "use client";
 
 import { ArrowRight, Pencil } from "lucide-react";
@@ -9,15 +8,6 @@ import type { User } from "@/app/(auth)/current-user";
 import type { FullListing } from "@/app/features/listings/types/full-listing-type";
 
 import EditListingModal from "@/app/features/listings/components/edit-listing/edit-listing-modal";
-=======
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-
-import type { User } from "@/app/(auth)/current-user";
-import type { FullListing } from "@/app/features/listings/types/full-listing-type";
-
->>>>>>> bf51935 (32-fe-booklistingform (#142))
 import ListingBadgeList from "@/app/features/listings/components/listing-badge-list";
 import ListingImageCarousel from "@/app/features/listings/components/listing-image-carousel";
 import { Button } from "@/components/ui/button/button";
@@ -29,10 +19,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-<<<<<<< HEAD
 type ListingCardProps = {
   listing: FullListing;
-  user: User | null;
+  user?: User | null;
 };
 
 export default function ListingCard({ listing, user }: ListingCardProps) {
@@ -96,40 +85,5 @@ export default function ListingCard({ listing, user }: ListingCardProps) {
         />
       )}
     </>
-=======
-export default function ListingCard({ listing }: { listing: FullListing }) {
-  return (
-    <Card as="article" className="p-0 pb-6 gap-2 grid-rows-subgrid justify-between shadow-sm">
-      <ListingImageCarousel className="h-48 w-full overflow-hidden rounded-t-xl" images={listing.listing_images} />
-      <CardHeader className="gap-3 px-4">
-        <ListingBadgeList listing={listing} />
-        <div>
-          <h3 className="text-base md:text-lg font-bold">{listing.listing_title}</h3>
-          <p className="text-sm text-muted-foreground">{listing.listing_area.listing_area_name}</p>
-        </div>
-      </CardHeader>
-      <CardContent className="flex justify-between items-center px-4">
-        <p className="text-sm font-medium">
-          {listing.listing_night_price}
-          {" "}
-          DKK per night
-        </p>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="icon" size="icon" asChild>
-                <Link href={`/listing/${listing.listing_pk}`}>
-                  <ArrowRight className="text-primary" size={20} />
-                </Link>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>View listing</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </CardContent>
-    </Card>
->>>>>>> bf51935 (32-fe-booklistingform (#142))
   );
 }

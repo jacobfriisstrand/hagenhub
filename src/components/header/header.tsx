@@ -15,11 +15,8 @@ export default async function Header() {
     redirectIfNotFound: false,
   });
   return (
-<<<<<<< HEAD
+
     <header className="flex flex-col gap-4 py-4 px-8 md:flex-row md:items-center md:justify-between sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
-=======
-    <header className="flex flex-col gap-4 py-2 px-4 md:flex-row md:items-center md:justify-between">
->>>>>>> bf51935 (32-fe-booklistingform (#142))
       <div className="flex items-center justify-between">
         <Logo />
         <div className="flex items-center gap-4 md:hidden">
