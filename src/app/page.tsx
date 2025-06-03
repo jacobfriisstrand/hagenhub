@@ -1,4 +1,4 @@
-import { getAllListings } from "@/app/features/listings/actions/get-all-listings";
+import { getAllListings } from "@/app/features/listings/actions/add-listing/get-all-listings";
 import ListingList from "@/app/features/listings/components/listing-list";
 import HeroSection from "@/components/hero-section";
 
