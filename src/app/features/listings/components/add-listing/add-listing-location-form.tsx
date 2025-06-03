@@ -8,8 +8,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useListingStore } from "@/app/add-listing/store";
-import { getListingArea } from "@/app/features/listings/actions/get-listing-area";
-import { getZipCodeInfo } from "@/app/features/listings/actions/get-zip-code-info";
+import { getListingArea } from "@/app/features/listings/actions/add-listing/get-listing-area";
+import { getZipCodeInfo } from "@/app/features/listings/actions/add-listing/get-zip-code-info";
 import FormWrapper from "@/app/features/listings/components/add-listing/add-listing-form-wrapper";
 import { Button } from "@/components/ui/button/button";
 import {

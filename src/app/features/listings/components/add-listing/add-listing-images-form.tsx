@@ -8,8 +8,8 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { useListingStore } from "@/app/add-listing/store";
-import { createListing } from "@/app/features/listings/actions/create-listing";
-import { uploadListingImages } from "@/app/features/listings/actions/upload-listing-images";
+import { createListing } from "@/app/features/listings/actions/add-listing/create-listing";
+import { uploadListingImages } from "@/app/features/listings/actions/add-listing/upload-listing-images";
 import FormWrapper from "@/app/features/listings/components/add-listing/add-listing-form-wrapper";
 import { Button } from "@/components/ui/button/button";
 import {

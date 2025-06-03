@@ -31,17 +31,20 @@ function Button({
       disabled={disabled || isLoading}
       {...props}
     >
-      {isLoading && (
-        <DynamicIcon
-          name="loader-circle"
-          className={cn(
-            "text-muted absolute animate-spin",
-            // Used for conditional styling when button is loading
-            "loading",
+      {isLoading
+        ? (
+            <DynamicIcon
+              name="loader-circle"
+              className={cn(
+                "text-muted absolute animate-spin",
+                // Used for conditional styling when button is loading
+                "loading",
+              )}
+            />
+          )
+        : (
+            <Slottable>{children}</Slottable>
           )}
-        />
-      )}
-      <Slottable>{children}</Slottable>
     </Comp>
   );
 }

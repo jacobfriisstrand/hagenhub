@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 
 import { logout } from "@/app/(auth)/actions";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 
 import { DynamicIcon } from "./dynamic-icon";
 
