@@ -1,4 +1,5 @@
 import type { User } from "@/app/(auth)/current-user";
+
 import LogoutButton from "@/components/logout-button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
