@@ -16,6 +16,7 @@ export default async function getListingBySearch(search: string) {
             mode: "insensitive",
           },
         },
+<<<<<<< HEAD
         {
           listing_type: {
             listing_type_name: {
@@ -32,6 +33,8 @@ export default async function getListingBySearch(search: string) {
             },
           },
         },
+=======
+>>>>>>> bf51935 (32-fe-booklistingform (#142))
       ],
     },
     include: {
