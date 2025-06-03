@@ -4,13 +4,14 @@ import type { DateRange } from "react-day-picker";
 import type { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addDays, differenceInDays, format } from "date-fns";
+import { differenceInDays, format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { createBooking } from "@/app/features/bookings/actions/create-booking";
+import { getListingBookings } from "@/app/features/bookings/actions/get-listing-bookings";
 import { bookingSchema } from "@/app/features/bookings/schemas/book-listing-schema";
 import { BookingError } from "@/app/features/bookings/types/booking-errors";
 import { Button } from "@/components/ui/button/button";
@@ -31,13 +32,34 @@ type BookingFormValues = z.infer<typeof bookingSchema>;
 
 export default function BookListingForm({ price, guestCount, listingId }: BookingFormProps) {
   const router = useRouter();
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(() => ({
-    from: new Date(),
-    to: addDays(new Date(), 3),
-  }));
-  const [guests, setGuests] = useState("3");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [guests, setGuests] = useState("1");
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bookedDates, setBookedDates] = useState<{ from: Date; to: Date }[]>([]);
+
+  useEffect(() => {
+    const fetchBookedDates = async () => {
+      const bookings = await getListingBookings(listingId);
+      setBookedDates(bookings.map(booking => ({
+        from: new Date(booking.booking_check_in),
+        to: new Date(booking.booking_check_out),
+      })));
+    };
+    fetchBookedDates();
+  }, [listingId]);
+
+  const isDateBooked = (date: Date) => {
+    return bookedDates.some((booking) => {
+      const startDate = new Date(booking.from);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(booking.to);
+      endDate.setHours(0, 0, 0, 0);
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      return checkDate >= startDate && checkDate <= endDate;
+    });
+  };
 
   const nights = dateRange?.from && dateRange?.to ? differenceInDays(dateRange.to, dateRange.from) : 0;
   const total = price * nights;
@@ -149,7 +171,17 @@ export default function BookListingForm({ price, guestCount, listingId }: Bookin
                           onSelect={handleDateSelect}
                           numberOfMonths={2}
                           className="rounded-md"
-                          disabled={{ before: new Date() }}
+                          disabled={(date) => {
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            return date < today || isDateBooked(date);
+                          }}
+                          modifiers={{
+                            booked: date => isDateBooked(date),
+                          }}
+                          modifiersClassNames={{
+                            booked: "group bg-red-200 text-red-800",
+                          }}
                         />
                         <div className="flex justify-end mt-4">
                           <Button
@@ -211,8 +243,6 @@ export default function BookListingForm({ price, guestCount, listingId }: Bookin
             </Button>
           </form>
         </Form>
-
-        <p className="text-center text-sm text-muted-foreground mt-2">You will not be charged yet</p>
 
         {nights > 0 && (
           <div className="space-y-3 pt-4">

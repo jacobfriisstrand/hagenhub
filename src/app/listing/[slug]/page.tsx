@@ -33,7 +33,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
         <ListingBadgeList size="text-sm md:text-md" listing={listing} />
       </div>
       <Separator className="my-5 md:my-10" />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_0.5fr]">
         <p className="md:text-lg">{listing.listing_description}</p>
         <BookListingForm
           price={listing.listing_night_price}

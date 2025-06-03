@@ -249,9 +249,9 @@ function AccommodationCard({ booking }: { booking: NonNullable<FullBooking> }) {
                   {booking_listing.listing_street_number}
                   ,
                   {" "}
-                  {booking_listing.listing_area.listing_area_name}
-                  {" "}
                   {booking_listing.listing_zip_code}
+                  {" "}
+                  {booking_listing.listing_area.listing_area_name}
                 </span>
               </div>
               <p className="text-gray-600 text-sm leading-relaxed">{booking_listing.listing_description}</p>
@@ -279,7 +279,7 @@ function NextStepsCard({ booking }: { booking: NonNullable<FullBooking> }) {
           description="Your booking request has been sent to the host. They will review and accept your booking soon."
         />
         <Link href={`/bookings/${booking.booking_guest.user_pk}`}>
-          <Button>View all bookings</Button>
+          <Button>View your bookings</Button>
         </Link>
       </CardContent>
     </Card>

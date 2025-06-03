@@ -50,6 +50,44 @@ export async function createBooking(data: z.infer<typeof bookingSchema>): Promis
       };
     }
 
+    // Check for overlapping bookings
+    const overlappingBooking = await prisma.booking.findFirst({
+      where: {
+        booking_listing_fk: data.booking_listing_fk,
+        booking_status: {
+          in: ["Pending", "Confirmed"],
+        },
+        OR: [
+          {
+            AND: [
+              { booking_check_in: { lte: data.booking_check_in } },
+              { booking_check_out: { gt: data.booking_check_in } },
+            ],
+          },
+          {
+            AND: [
+              { booking_check_in: { lt: data.booking_check_out } },
+              { booking_check_out: { gte: data.booking_check_out } },
+            ],
+          },
+          {
+            AND: [
+              { booking_check_in: { gte: data.booking_check_in } },
+              { booking_check_out: { lte: data.booking_check_out } },
+            ],
+          },
+        ],
+      },
+    });
+
+    if (overlappingBooking) {
+      return {
+        success: false,
+        error: BookingError.DATES_NOT_AVAILABLE,
+        message: "These dates are not available. Please select different dates.",
+      };
+    }
+
     const booking = await prisma.booking.create({
       data: {
         ...data,
