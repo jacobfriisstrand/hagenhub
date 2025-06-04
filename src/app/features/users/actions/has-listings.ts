@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function hasListings(user_pk: string) {
   const count = await prisma.listing.count({

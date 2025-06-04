@@ -31,22 +31,26 @@ export default function ListingCard({ listing, user }: ListingCardProps) {
 
   return (
     <>
-      <Card as="article" className="p-0 pb-6 gap-2 grid-rows-subgrid justify-between shadow-sm">
-        <ListingImageCarousel className="h-48 w-full overflow-hidden rounded-t-xl" images={listing.listing_images} />
-        <CardHeader className="gap-3 px-4">
-          <ListingBadgeList listing={listing} />
-          <div>
-            <h3 className="text-base md:text-lg font-bold">{listing.listing_title}</h3>
-            <p className="text-sm text-muted-foreground">{listing.listing_area.listing_area_name}</p>
-          </div>
-        </CardHeader>
+      <Card as="article" className="p-0 pb-4 gap-2 grid-rows-subgrid justify-between shadow-sm">
+        <div>
+          <ListingImageCarousel className="h-48 w-full overflow-hidden rounded-t-xl" images={listing.listing_images} />
+          <CardHeader className="gap-3 px-4">
+            <ListingBadgeList listing={listing} />
+            <div>
+              <h3 className="text-base md:text-lg font-bold">{listing.listing_title}</h3>
+              <p className="text-sm text-muted-foreground">{listing.listing_area.listing_area_name}</p>
+            </div>
+          </CardHeader>
+        </div>
         <CardContent className="flex justify-between items-center px-4">
           <p className="text-sm font-medium">
             {listing.listing_night_price}
             {" "}
-            DKK per night
+            kr
+            {" "}
+            <span className="text-sm font-normal text-muted-foreground">/night</span>
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-1">
             {isOwner && (
               <>
                 <TooltipProvider>

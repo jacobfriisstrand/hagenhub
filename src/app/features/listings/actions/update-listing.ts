@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { getCurrentUser } from "@/app/(auth)/current-user";
 import { EditListingSchema } from "@/app/features/listings/schemas/edit-listing-schema";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function updateListing(listing_pk: string, data: z.infer<typeof EditListingSchema>) {
   try {

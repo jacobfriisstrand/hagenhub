@@ -23,7 +23,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
   return (
     <section className="space-y-5 md:space-y-10">
-      <ListingImageCarousel priority className="rounded-lg overflow-hidden shadow-lg" images={listing.listing_images} />
+      <ListingImageCarousel priority className="rounded-lg overflow-hidden shadow-lg max-h-[600px]" images={listing.listing_images} />
       <div className="space-y-5">
         <div className="flex flex-col gap-1 md:flex-row md:justify-between md:items-center">
           <PageTitle as="h1">{listing.listing_title}</PageTitle>

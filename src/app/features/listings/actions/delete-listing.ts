@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { getCurrentUser } from "@/app/(auth)/current-user";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function deleteListing(listing_pk: string) {
   try {

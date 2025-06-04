@@ -170,6 +170,7 @@ export default function BookListingForm({ price, guestCount, listingId }: Bookin
                           selected={dateRange}
                           onSelect={handleDateSelect}
                           numberOfMonths={1}
+                          weekStartsOn={1}
                           className="rounded-md"
                           disabled={(date) => {
                             const today = new Date();
