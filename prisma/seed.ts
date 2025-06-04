@@ -280,17 +280,22 @@ async function main() {
     )
   }
 
-  // Create bookings (200 bookings)
+  // Create bookings (2-10 per listing)
   console.log('Creating bookings...')
-  const createdBookings = await Promise.all(
-    Array.from({ length: 200 }, () => {
-      const guest = getRandomElement(createdUsers)
-      const listing = getRandomElement(createdListings)
-      return generateRandomBooking(guest.user_pk, listing.listing_pk)
-    }).map(bookingData =>
-      prisma.booking.create({ data: bookingData })
+  const createdBookings = []
+  
+  for (const listing of createdListings) {
+    const numBookings = getRandomNumber(2, 10)
+    const listingBookings = await Promise.all(
+      Array.from({ length: numBookings }, () => {
+        const guest = getRandomElement(createdUsers)
+        return generateRandomBooking(guest.user_pk, listing.listing_pk)
+      }).map(bookingData =>
+        prisma.booking.create({ data: bookingData })
+      )
     )
-  )
+    createdBookings.push(...listingBookings)
+  }
 
   // Create reviews for completed bookings
   console.log('Creating reviews...')
