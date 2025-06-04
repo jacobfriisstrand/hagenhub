@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { getListingsByUserPk } from "@/app/features/users/actions/get-listings-by-user-pk";
 import UserAvatarCard from "@/app/features/users/components/profile/user-avatar-card";
 import UserDescription from "@/app/features/users/components/profile/user-description";
-import { prisma } from "@/lib/prisma"; // Adjust the import path to your prisma client
 
 type ProfilePageProps = {
   params: Promise<{ user_pk: string }>;
@@ -15,12 +14,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   // Fetch user data from the database
   const user_pk = resolvedParams;
 
-  const [user, listings] = await Promise.all([
-    prisma.user.findUnique({
-      where: { user_pk: user_pk.user_pk },
-    }),
-    getListingsByUserPk(user_pk.user_pk),
-  ]);
+  const { user, listings } = await getListingsByUserPk(user_pk.user_pk);
 
   if (!user) {
     // If user not found, show 404 page

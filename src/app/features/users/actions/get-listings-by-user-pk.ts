@@ -1,6 +1,10 @@
 import { prisma } from "@/lib/prisma";
 
 export async function getListingsByUserPk(user_pk: string) {
+  const user = await prisma.user.findUnique({
+    where: { user_pk },
+  });
+
   const listings = await prisma.listing.findMany({
     include: {
       listing_images: true,
@@ -12,5 +16,5 @@ export async function getListingsByUserPk(user_pk: string) {
       listing_user_fk: user_pk,
     },
   });
-  return listings;
+  return { user, listings };
 }
