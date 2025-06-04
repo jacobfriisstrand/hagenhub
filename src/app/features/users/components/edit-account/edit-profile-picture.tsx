@@ -58,7 +58,7 @@ export default function EditProfilePicture({ user_pk }: EditProfilePictureProps)
           name="avatar"
           render={({ field: { onChange, value, ...field } }) => (
             <FormItem>
-              <FormLabel>Profile picture</FormLabel>
+              <FormLabel className="sr-only">Profile picture</FormLabel>
               <FormControl>
                 <Input
                   type="file"
@@ -76,7 +76,7 @@ export default function EditProfilePicture({ user_pk }: EditProfilePictureProps)
             </FormItem>
           )}
         />
-        <Button type="submit">Update</Button>
+        <Button type="submit" isLoading={form.formState.isSubmitting}>Update</Button>
       </form>
     </FormProvider>
   );

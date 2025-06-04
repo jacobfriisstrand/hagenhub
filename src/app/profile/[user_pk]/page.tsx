@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getListingsByUserPk } from "@/app/features/users/actions/get-listings-by-user-pk";
 import UserAvatarCard from "@/app/features/users/components/profile/user-avatar-card";
 import UserDescription from "@/app/features/users/components/profile/user-description";
-import { prisma } from "@/lib/prisma"; // Adjust the import path to your prisma client
+import prisma from "@/lib/prisma"; // Adjust the import path to your prisma client
 
 type ProfilePageProps = {
   params: Promise<{ user_pk: string }>;

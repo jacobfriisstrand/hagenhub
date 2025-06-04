@@ -1,4 +1,4 @@
-const { PrismaClient } = require('@prisma/client')
+import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
@@ -156,9 +156,13 @@ async function main() {
 
   // Create the listings with the test user and add images
   for (const listingData of listings) {
+    const area = await prisma.listingArea.findFirst({ where: { listing_area_name: listingData.listing_area_fk } });
+    if (!area) throw new Error(`Area not found for listing: ${listingData.listing_title}`);
+    
     const listing = await prisma.listing.create({
       data: {
         ...listingData,
+        listing_area_fk: area.listing_area_pk,
         listing_user_fk: testUser.user_pk
       }
     })

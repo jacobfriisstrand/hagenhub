@@ -7,7 +7,7 @@ import type { BookingResult } from "@/app/features/bookings/types/booking-errors
 
 import { getCurrentUser } from "@/app/(auth)/current-user";
 import { BookingError } from "@/app/features/bookings/types/booking-errors";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function createBooking(data: z.infer<typeof bookingSchema>): Promise<BookingResult> {
   try {

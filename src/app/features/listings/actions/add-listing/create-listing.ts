@@ -3,7 +3,7 @@
 import type { AddListingFormValues } from "@/app/features/listings/schemas/add-listing-schema";
 
 import { getCurrentUser } from "@/app/(auth)/current-user";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function createListing(data: AddListingFormValues) {
   try {
