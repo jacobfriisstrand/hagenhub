@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function getListingsByUserPk(user_pk: string) {
   const listings = await prisma.listing.findMany({

@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/app/(auth)/current-user";
 import Logo from "@/components/header/logo";
 import LinkWithIcon from "@/components/link-with-icon";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export default async function Footer() {
   const user = await getCurrentUser({

@@ -92,7 +92,7 @@ export default function FirstLastNameForm({ firstName, lastName, user_pk }: Edit
             )}
           />
         </div>
-        <Button type="submit">Save</Button>
+        <Button type="submit" isLoading={form.formState.isSubmitting}>Save</Button>
       </form>
     </Form>
   );

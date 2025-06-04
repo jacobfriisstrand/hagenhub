@@ -1,6 +1,6 @@
 import type { VariantProps } from "class-variance-authority";
 
-import { Slot, Slottable } from "@radix-ui/react-slot";
+import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
 
 import { DynamicIcon } from "@/components/dynamic-icon";
@@ -27,24 +27,24 @@ function Button({
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className, loading: isLoading }))}
+      className={cn("group data-[loading=true]:grid data-[loading=true]:place-items-center", buttonVariants({ variant, size, className, loading: isLoading }))}
       disabled={disabled || isLoading}
+      data-loading={isLoading}
       {...props}
     >
-      {isLoading
-        ? (
+      <div className="group-data-[loading=true]:grid group-data-[loading=true]:place-items-center">
+        <span className="group-data-[loading=false]:flex group-data-[loading=false]:gap-1 group-data-[loading=false]:items-center group-data-[loading=true]:[grid-area:1/1] group-data-[loading=true]:invisible">
+          {children}
+        </span>
+        {isLoading && (
+          <span className="group-data-[loading=true]:[grid-area:1/1] group-data-[loading=true]:visible invisible">
             <DynamicIcon
               name="loader-circle"
-              className={cn(
-                "text-muted absolute animate-spin",
-                // Used for conditional styling when button is loading
-                "loading",
-              )}
+              className="text-muted animate-spin"
             />
-          )
-        : (
-            <Slottable>{children}</Slottable>
-          )}
+          </span>
+        )}
+      </div>
     </Comp>
   );
 }

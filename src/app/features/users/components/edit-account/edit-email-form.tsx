@@ -54,7 +54,7 @@ export default function EditEmailForm({ user_email, user_pk }: EditEmailFormProp
             name="user_email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>E-mail address</FormLabel>
+                <FormLabel className="sr-only">E-mail address</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Enter your e-mail"
@@ -66,7 +66,7 @@ export default function EditEmailForm({ user_email, user_pk }: EditEmailFormProp
               </FormItem>
             )}
           />
-          <Button type="submit">Save</Button>
+          <Button type="submit" isLoading={form.formState.isSubmitting}>Save</Button>
         </form>
       </Form>
     </>

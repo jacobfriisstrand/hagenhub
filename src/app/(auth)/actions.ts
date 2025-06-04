@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { UserSchema } from "@/prisma/generated/zod";
 
 import hashPassword, {

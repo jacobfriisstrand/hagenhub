@@ -1,6 +1,6 @@
 # HagenHub
 
-A Next.js application with Prisma and PostgreSQL.
+A Next.js application with Prisma and PostgreSQL
 
 ## Development Setup
 

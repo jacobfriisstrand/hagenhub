@@ -1,7 +1,7 @@
 "use server";
 import type { z } from "zod";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { UserSchema } from "@/prisma/generated/zod";
 
 const FirstLastNameSchema = UserSchema.pick({

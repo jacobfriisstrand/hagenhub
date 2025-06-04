@@ -1,7 +1,7 @@
 "use server";
 
 import { getZipCodeInfo } from "@/app/features/listings/actions/add-listing/get-zip-code-info";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function getListingArea(zipCode: string): Promise<string | null> {
   try {

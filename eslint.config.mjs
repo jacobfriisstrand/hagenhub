@@ -11,7 +11,7 @@ export default antfu(
       semi: true,
       quotes: "double",
     },
-    ignores: ["prisma/**", ".github/**"],
+    ignores: ["prisma/**", ".github/**", "src/lib/prisma.ts"],
     yaml: false,
   },
   {

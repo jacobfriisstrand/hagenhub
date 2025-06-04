@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
+import prisma from "@/lib/prisma";
 
 type UserAvatarCardProps = {
   user_pk: string;

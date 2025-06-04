@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 import { getUserFromSession } from "./core/sessions";
 
