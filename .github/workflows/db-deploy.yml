@@ -6,6 +6,12 @@ on:
       - main
       - develop
   workflow_dispatch:
+    inputs:
+      db_flag:
+        description: 'Special database flag to use'
+        required: false
+        type: string
+        default: ''
 
 jobs:
   deploy:
@@ -27,5 +33,9 @@ jobs:
           DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
           DIRECT_URL: ${{ secrets.PROD_DIRECT_URL }}
           NODE_ENV: production
+          DB_FLAG: ${{ inputs.db_flag }}
         run: |
-          npx prisma db push 
+          if [ -n "$DB_FLAG" ]; then
+            npx prisma db push --$DB_FLAG
+          else
+            npx prisma db push 
