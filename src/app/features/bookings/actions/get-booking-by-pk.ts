@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 import { getCurrentUser } from "@/app/(auth)/current-user";
 import { getListingByPk } from "@/app/features/listings/actions/add-listing/get-listing-by-pk";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function getBookingByPk(bookingId: string) {
   const user = await getCurrentUser({

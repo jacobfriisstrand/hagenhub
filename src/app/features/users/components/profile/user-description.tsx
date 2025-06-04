@@ -1,7 +1,7 @@
 import type { FullListing } from "@/app/features/listings/types/full-listing-type";
 
 import ListingList from "@/app/features/listings/components/listing-list";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 type UserDescriptionProps = {
   user_pk: string;
