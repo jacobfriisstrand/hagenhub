@@ -11,13 +11,13 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { search } = await searchParams;
   const searchListings = await getListingBySearch(search);
   return (
-    <section className="space-y-10">
-      <PageTitle as="h1">
-        Search results for "
+    <>
+      <PageTitle as="h1" className="text-md font-bold tracking-tight sm:text-xl md:text-xl mb-4 flex justify-start">
+        Search Results for
+        {" "}
         {search}
-        "
       </PageTitle>
       <ListingList listings={searchListings} />
-    </section>
+    </>
   );
 }
