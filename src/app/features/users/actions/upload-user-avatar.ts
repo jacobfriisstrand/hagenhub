@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import supabase from "@/lib/supabase";
 
 const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp"];

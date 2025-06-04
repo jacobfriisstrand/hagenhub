@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function getListingBookings(listingId: string) {
   const bookings = await prisma.booking.findMany({
