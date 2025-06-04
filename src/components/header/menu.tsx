@@ -21,7 +21,7 @@ export default async function Menu({ user }: { user: User | null }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem>
-          <LinkWithIcon href="/" icon="house">
+          <LinkWithIcon href="/" icon="house" className="py-1.5 px-2">
             See all listings
           </LinkWithIcon>
         </DropdownMenuItem>
@@ -29,25 +29,25 @@ export default async function Menu({ user }: { user: User | null }) {
           ? (
               <>
                 <DropdownMenuItem>
-                  <LinkWithIcon href="/add-listing" icon="plus">
-                    Create listing
+                  <LinkWithIcon href="/add-listing" icon="plus" className="py-1.5 px-2">
+                    Add Listing
                   </LinkWithIcon>
                 </DropdownMenuItem>
                 {userHasListings && (
                   <DropdownMenuItem>
-                    <LinkWithIcon href="/private/my-listings" icon="list">
+                    <LinkWithIcon href="/private/my-listings" icon="list" className="py-1.5 px-2">
                       My listings
                     </LinkWithIcon>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem>
-                  <LinkWithIcon href={`/bookings/${user.user_pk}`} icon="calendar">
+                  <LinkWithIcon href={`/bookings/${user.user_pk}`} icon="calendar" className="py-1.5 px-2">
                     Bookings
                   </LinkWithIcon>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <LinkWithIcon href="/edit-account" icon="user">
-                    Edit account
+                  <LinkWithIcon href="/edit-account" icon="user" className="py-1.5 px-2">
+                    Edit Account
                   </LinkWithIcon>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -57,13 +57,13 @@ export default async function Menu({ user }: { user: User | null }) {
           : (
               <>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LinkWithIcon href="/login" icon="log-in">
+                <DropdownMenuItem className="p-0">
+                  <LinkWithIcon href="/login" icon="log-in" className="py-1.5 px-2">
                     Login
                   </LinkWithIcon>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <LinkWithIcon href="/signup" icon="user-plus">
+                <DropdownMenuItem className="p-0">
+                  <LinkWithIcon href="/signup" icon="user-plus" className="py-1.5 px-2">
                     Sign up
                   </LinkWithIcon>
                 </DropdownMenuItem>

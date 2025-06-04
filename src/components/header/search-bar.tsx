@@ -37,7 +37,7 @@ export default function SearchBar({ className = "" }: SearchBarProps) {
       <Input
         type="search"
         placeholder={isError ? "Please enter a search term" : "Search for a listing"}
-        className={`w-full ${isError ? "placeholder:text-red-700" : "placeholder:text-muted-foreground"}`}
+        className={`w-full bg-white ${isError ? "placeholder:text-red-700" : "placeholder:text-muted-foreground"}`}
         defaultValue={search}
         onKeyDown={handleKeyDown}
       />
