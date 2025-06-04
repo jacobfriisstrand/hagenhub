@@ -112,7 +112,7 @@ export default function EditUserAddress({ user_zip_code, user_street_name, user_
             />
           </div>
         </div>
-        <Button type="submit">Save</Button>
+        <Button type="submit" isLoading={form.formState.isSubmitting}>Save</Button>
       </form>
     </Form>
   );

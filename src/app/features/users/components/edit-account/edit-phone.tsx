@@ -54,7 +54,7 @@ export default function EditPhoneForm({ user_phone, user_pk }: EditPhoneFormProp
             name="user_phone_number"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone number</FormLabel>
+                <FormLabel className="sr-only">Phone number</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Enter your phone number"
@@ -67,7 +67,7 @@ export default function EditPhoneForm({ user_phone, user_pk }: EditPhoneFormProp
               </FormItem>
             )}
           />
-          <Button type="submit">Save</Button>
+          <Button type="submit" isLoading={form.formState.isSubmitting}>Save</Button>
         </form>
       </Form>
     </>

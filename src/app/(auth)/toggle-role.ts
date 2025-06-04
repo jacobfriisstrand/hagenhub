@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 import { updatedUserSessionData } from "@/app/(auth)/core/sessions";
 import { getCurrentUser } from "@/app/(auth)/current-user";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function toggleRole() {
   const user = await getCurrentUser({
