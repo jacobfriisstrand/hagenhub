@@ -3,6 +3,7 @@ import Link from "next/link";
 import prisma from "@/lib/prisma";
 
 import SearchBar from "./header/search-bar";
+import PageTitle from "./page-title";
 
 export default async function HeroSection() {
   const listingTypes = await prisma.listingType.findMany();
@@ -58,6 +59,9 @@ export default async function HeroSection() {
 
       {/* Featured Areas */}
       <section className="mx-auto w-full max-w-3xl px-4">
+        <PageTitle as="h2" className="text-md font-bold tracking-tight sm:text-lg md:text-xl mb-4 flex justify-center">
+          Trending Areas
+        </PageTitle>
         <div className="grid grid-cols-1 gap-3 rounded-lg bg-gray-50 p-3 shadow-sm sm:grid-cols-3">
           {topAreas.map(area => (
             <Link

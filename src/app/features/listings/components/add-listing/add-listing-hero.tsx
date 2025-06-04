@@ -9,7 +9,7 @@ import AddListingHeroImage from "@/public/listings/add-listing-hero.jpg";
 export default function AddListingHero() {
   return (
     <section className="flex justify-center items-center h-full">
-      <Card className="p-0 overflow-hidden xl:flex-row xl:h-[80%] xl:gap-10">
+      <Card className="p-0 overflow-hidden xl:flex-row xl:h-[80%] xl:gap-10 xl:min-h-[60dvh]">
         <ResponsiveImage
           src={AddListingHeroImage}
           alt="Add Listing Hero"
