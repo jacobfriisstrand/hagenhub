@@ -33,6 +33,7 @@ export default async function getListingBySearch(search: string) {
           },
         },
       ],
+      listing_deleted_at: null,
     },
     include: {
       listing_images: true,

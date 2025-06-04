@@ -14,7 +14,7 @@ export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCo
 
 export const UserScalarFieldEnumSchema = z.enum(['user_pk','user_first_name','user_last_name','user_email','user_password','salt','user_dob','user_phone_number','user_zip_code','user_street_name','user_street_number','user_description','user_avatar_url','user_role','user_created_at','user_updated_at']);
 
-export const ListingScalarFieldEnumSchema = z.enum(['listing_pk','listing_title','listing_description','listing_zip_code','listing_street_name','listing_street_number','listing_night_price','listing_area_fk','listing_type_fk','listing_latitude','listing_longitude','listing_guest_count','listing_bedrooms','listing_user_fk','listing_created_at','listing_updated_at','listing_deleted_at','listing_guests']);
+export const ListingScalarFieldEnumSchema = z.enum(['listing_pk','listing_title','listing_description','listing_zip_code','listing_street_name','listing_street_number','listing_night_price','listing_area_fk','listing_type_fk','listing_latitude','listing_longitude','listing_guest_count','listing_bedrooms','listing_user_fk','listing_created_at','listing_updated_at','listing_deleted_at']);
 
 export const ListingAreaScalarFieldEnumSchema = z.enum(['listing_area_pk','listing_area_name']);
 
@@ -94,7 +94,6 @@ export const ListingSchema = z.object({
   listing_created_at: z.coerce.date(),
   listing_updated_at: z.coerce.date(),
   listing_deleted_at: z.coerce.date().nullable(),
-  listing_guests: z.number().min(1, { message: "Minimum 1 guest spot is required" }),
 })
 
 export type Listing = z.infer<typeof ListingSchema>

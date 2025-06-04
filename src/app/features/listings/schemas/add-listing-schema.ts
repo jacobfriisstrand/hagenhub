@@ -9,7 +9,7 @@ export const AddListingSchema = ListingSchema.pick({
   listing_night_price: true,
   listing_area_fk: true,
   listing_bedrooms: true,
-  listing_guests: true,
+  listing_guest_count: true,
   listing_zip_code: true,
   listing_street_name: true,
   listing_street_number: true,

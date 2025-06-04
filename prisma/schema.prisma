@@ -79,8 +79,6 @@ model Listing {
   listing_created_at    DateTime       @default(now())
   listing_updated_at    DateTime       @updatedAt
   listing_deleted_at    DateTime?
-  /// @zod.number.min(1, { message: "Minimum 1 guest spot is required" })
-  listing_guests        Int
   listing_bookings      Booking[]
   listing_images        ListingImage[]
   listing_area          ListingArea    @relation(fields: [listing_area_fk], references: [listing_area_pk])

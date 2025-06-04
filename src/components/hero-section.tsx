@@ -25,7 +25,7 @@ export default async function HeroSection() {
   });
 
   return (
-    <div className="w-full mb-24 mt-12">
+    <div className="w-full mb-24 md:mt-12">
       {/* Hero Content */}
       <section className="flex flex-col items-center justify-center px-4 pb-12 text-center">
         <header className="mb-8">

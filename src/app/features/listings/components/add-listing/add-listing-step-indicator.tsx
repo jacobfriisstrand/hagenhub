@@ -32,7 +32,7 @@ export default function AddListingStepIndicator({ currentStep, className }: AddL
         const isUpcoming = index > currentStepIndex;
 
         return (
-          <div key={step.path} className="flex flex-col items-center gap-4 divide-gray-200">
+          <div key={step.path} className="flex flex-col items-center gap-4">
             <div
               className={cn(
                 "flex items-center justify-center size-7 rounded-full border-2",
