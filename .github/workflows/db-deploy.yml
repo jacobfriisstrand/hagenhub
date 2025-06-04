@@ -39,3 +39,4 @@ jobs:
             npx prisma db push --$DB_FLAG
           else
             npx prisma db push 
+          fi 
