@@ -55,7 +55,7 @@ export default function EditDescription({ user_description, user_pk }: EditDescr
             <FormItem
               className="py-4"
             >
-              <FormLabel>Description</FormLabel>
+              <FormLabel className="sr-only">Description</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Enter your description"
@@ -67,7 +67,7 @@ export default function EditDescription({ user_description, user_pk }: EditDescr
             </FormItem>
           )}
         />
-        <Button type="submit">Save</Button>
+        <Button type="submit" isLoading={form.formState.isSubmitting}>Save</Button>
       </form>
     </Form>
   );

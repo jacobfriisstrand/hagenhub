@@ -1,13 +1,12 @@
 import type { FullUser } from "@/app/(auth)/current-user";
 
+import EditDescription from "@/app/features/users/components/edit-account/edit-description";
+import EditEmailForm from "@/app/features/users/components/edit-account/edit-email-form";
+import FirstLastNameForm from "@/app/features/users/components/edit-account/edit-first-last-name-form";
+import EditPhoneForm from "@/app/features/users/components/edit-account/edit-phone";
+import EditProfilePicture from "@/app/features/users/components/edit-account/edit-profile-picture";
+import EditUserAddress from "@/app/features/users/components/edit-account/edit-user-address";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
-import EditDescription from "./edit-description";
-import EditEmailForm from "./edit-email-form";
-import FirstLastNameForm from "./edit-first-last-name-form";
-import EditPhoneForm from "./edit-phone";
-import EditProfilePicture from "./edit-profile-picture";
-import EditUserAddress from "./edit-user-address";
 
 export default function EditAccountAccordion({ fullUser }: { fullUser: FullUser }) {
   return (
