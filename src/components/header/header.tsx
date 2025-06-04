@@ -15,6 +15,7 @@ export default async function Header() {
     redirectIfNotFound: false,
   });
   return (
+
     <header className="flex flex-col gap-4 py-4 px-8 md:flex-row md:items-center md:justify-between sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
       <div className="flex items-center justify-between">
         <Logo />

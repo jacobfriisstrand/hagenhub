@@ -1,5 +1,5 @@
 import { DynamicIcon } from "@/components/dynamic-icon";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge/badge";
 import { cn } from "@/lib/utils";
 
 type BagdeProps = {

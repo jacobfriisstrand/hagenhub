@@ -16,7 +16,7 @@ import { FormGroup } from "@/components/ui/form/form-group";
 import { NumberInput } from "@/components/ui/number-input";
 
 const addListingGuestsSchema = AddListingSchema.pick({
-  listing_guests: true,
+  listing_guest_count: true,
 });
 
 type AddListingGuestsFormValues = z.infer<typeof addListingGuestsSchema>;
@@ -29,7 +29,7 @@ export default function AddListingGuestsForm() {
   const form = useForm<AddListingGuestsFormValues>({
     resolver: zodResolver(addListingGuestsSchema),
     defaultValues: {
-      listing_guests: formData.listing_guests || 1,
+      listing_guest_count: formData.listing_guest_count || 1,
     },
     mode: "onTouched",
   });
@@ -46,7 +46,7 @@ export default function AddListingGuestsForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col justify-between h-full gap-10">
           <FormField
             control={form.control}
-            name="listing_guests"
+            name="listing_guest_count"
             render={({ field }) => (
               <FormGroup title="Guest Capacity" description="How many guests can sleep in your place?">
                 <FormItem className="gap-10">

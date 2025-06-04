@@ -25,7 +25,7 @@ export default function SuccessPage() {
       <p className="text-sm text-muted-foreground">You can now view your listing on the listings page.</p>
 
       <Button asChild>
-        <Link href="/listings">Go to your listings</Link>
+        <Link href="/private/my-listings">Go to your listings</Link>
       </Button>
     </div>
   );

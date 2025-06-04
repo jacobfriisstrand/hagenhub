@@ -1,11 +1,13 @@
 import type { User } from "@/app/(auth)/current-user";
 
+import { hasListings } from "@/app/features/users/actions/has-listings";
+import LinkWithIcon from "@/components/link-with-icon";
 import LogoutButton from "@/components/logout-button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-import LinkWithIcon from "../link-with-icon";
+export default async function Menu({ user }: { user: User | null }) {
+  const userHasListings = user ? await hasListings(user.user_pk) : false;
 
-export default function Menu({ user }: { user: User | null }) {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -20,7 +22,7 @@ export default function Menu({ user }: { user: User | null }) {
       <DropdownMenuContent align="end">
         <DropdownMenuItem>
           <LinkWithIcon href="/" icon="house">
-            Listings
+            See all listings
           </LinkWithIcon>
         </DropdownMenuItem>
         {user
@@ -28,9 +30,16 @@ export default function Menu({ user }: { user: User | null }) {
               <>
                 <DropdownMenuItem>
                   <LinkWithIcon href="/add-listing" icon="plus">
-                    Add Listing
+                    Create listing
                   </LinkWithIcon>
                 </DropdownMenuItem>
+                {userHasListings && (
+                  <DropdownMenuItem>
+                    <LinkWithIcon href="/private/my-listings" icon="list">
+                      My listings
+                    </LinkWithIcon>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem>
                   <LinkWithIcon href={`/bookings/${user.user_pk}`} icon="calendar">
                     Bookings
@@ -38,12 +47,11 @@ export default function Menu({ user }: { user: User | null }) {
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <LinkWithIcon href="/edit-account" icon="user">
-                    Edit Account
+                    Edit account
                   </LinkWithIcon>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <LogoutButton />
-
               </>
             )
           : (
