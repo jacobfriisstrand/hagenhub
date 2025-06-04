@@ -7,6 +7,7 @@ import { useState } from "react";
 import type { User } from "@/app/(auth)/current-user";
 import type { FullListing } from "@/app/features/listings/types/full-listing-type";
 
+import DeleteListingDialog from "@/app/features/listings/components/delete-listing-dialog";
 import EditListingModal from "@/app/features/listings/components/edit-listing/edit-listing-modal";
 import ListingBadgeList from "@/app/features/listings/components/listing-badge-list";
 import ListingImageCarousel from "@/app/features/listings/components/listing-image-carousel";
@@ -47,18 +48,30 @@ export default function ListingCard({ listing, user }: ListingCardProps) {
           </p>
           <div className="flex gap-2">
             {isOwner && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="icon" size="icon" onClick={() => setIsEditModalOpen(true)}>
-                      <Pencil className="text-primary" size={20} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Edit listing</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="icon" size="icon" onClick={() => setIsEditModalOpen(true)}>
+                        <Pencil className="text-primary" size={20} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Edit listing</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <DeleteListingDialog listingId={listing.listing_pk} />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Delete listing</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </>
             )}
             <TooltipProvider>
               <Tooltip>

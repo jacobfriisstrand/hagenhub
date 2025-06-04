@@ -11,7 +11,7 @@ export default async function Home() {
   });
 
   return (
-    <div className="my-20">
+    <div className="md:my-20">
       <HeroSection />
       <ListingList listings={listings} user={user} />
     </div>

@@ -158,7 +158,7 @@ export default function BookListingForm({ price, guestCount, listingId }: Bookin
                           </Button>
                         </div>
                       </DialogTrigger>
-                      <DialogContent className="max-w-fit gap-0">
+                      <DialogContent className="max-w-fit gap-0 rounded-lg">
                         <DialogHeader>
                           <DialogTitle>Pick your dates</DialogTitle>
                           <DialogDescription className="sr-only">
@@ -169,7 +169,7 @@ export default function BookListingForm({ price, guestCount, listingId }: Bookin
                           mode="range"
                           selected={dateRange}
                           onSelect={handleDateSelect}
-                          numberOfMonths={2}
+                          numberOfMonths={1}
                           className="rounded-md"
                           disabled={(date) => {
                             const today = new Date();

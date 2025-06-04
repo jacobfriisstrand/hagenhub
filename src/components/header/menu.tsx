@@ -22,7 +22,7 @@ export default async function Menu({ user }: { user: User | null }) {
       <DropdownMenuContent align="end">
         <DropdownMenuItem>
           <LinkWithIcon href="/" icon="house">
-            Listings
+            See all listings
           </LinkWithIcon>
         </DropdownMenuItem>
         {user
