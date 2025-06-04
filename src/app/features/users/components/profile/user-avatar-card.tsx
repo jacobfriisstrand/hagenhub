@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button/button";
 import { Card, CardContent } from "@/components/ui/card";
 import prisma from "@/lib/prisma";
 
@@ -20,34 +21,41 @@ export default async function UserAvatarCard({ user_pk }: UserAvatarCardProps) {
 
   return (
     <>
-      <Card className="mx-auto md:sticky md:top-10 py-4 px-2">
+      <Card className="mx-auto md:sticky md:top-24 py-4 px-2">
         <CardContent>
-          <div className="flex flex-row items-center gap-10 justify-start">
-            <div className="flex flex-col items-center gap-2">
-              <Avatar className="size-24">
-                <AvatarImage className="object-cover" src={user.user_avatar_url ?? ""} alt="User Avatar" width={300} height={300} />
-                <AvatarFallback>
-                  {user.user_first_name.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <p className="text-lg">
-                {user.user_first_name}
-                {" "}
-                {user.user_last_name}
-              </p>
-              <p className="text-sm text-gray-500">
-                Host
-              </p>
-            </div>
-            <div className="flex flex-col items-start justify-start gap-2">
 
-              <p className="text-sm flex flex-col items-center gap-2 text-gray-500">
-                Listings
-                <span className="font-bold text-md text-black">
+          {/* Profile Sidebar */}
+          <div className="md:col-span-3">
+            <div className="sticky top-24">
+              <div className="flex flex-col items-center p-6 bg-white rounded-lg ">
+                <Avatar className="w-24 h-24 mb-4 border-2 border-blue-100">
+                  <AvatarFallback className="bg-blue-50 text-blue-600 text-2xl">
+                    {user.user_first_name.charAt(0)}
+                  </AvatarFallback>
+                  <AvatarImage src={user.user_avatar_url || ""} />
+                </Avatar>
+                <h2 className="text-2xl font-bold">
+                  {user.user_first_name}
                   {" "}
-                  {user.user_listings.length}
-                </span>
-              </p>
+                  {user.user_last_name}
+                </h2>
+                <p className="px-3 py-1 mt-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-full">
+                  {user.user_listings.length > 0 ? "Host" : "Guest"}
+                </p>
+
+                <div className="w-full mt-6 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500">Listings</span>
+                    <span className="font-medium">{user.user_listings.length}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500">Member since</span>
+                    <span className="font-medium">{user.user_created_at?.toLocaleDateString()}</span>
+                  </div>
+                </div>
+
+                <Button className="w-full mt-6">Contact Host</Button>
+              </div>
             </div>
           </div>
         </CardContent>
