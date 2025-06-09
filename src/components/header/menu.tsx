@@ -41,8 +41,8 @@ export default async function Menu({ user }: { user: User | null }) {
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem>
-                  <LinkWithIcon href={`/bookings/${user.user_pk}`} icon="calendar" className="py-1.5 px-2">
-                    Bookings
+                  <LinkWithIcon href="/private/my-bookings" icon="calendar" className="py-1.5 px-2">
+                    My Bookings
                   </LinkWithIcon>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
