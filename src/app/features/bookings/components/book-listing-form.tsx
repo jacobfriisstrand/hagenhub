@@ -125,7 +125,7 @@ export default function BookListingForm({ price, guestCount, listingId }: Bookin
     <Card className="w-full gap-2 shadow-lg p-5">
       <CardHeader className="p-0">
         <CardTitle className="text-md md:text-2xl font-semibold text-right flex justify-end items-baseline-last gap-1">
-          {price.toLocaleString()}
+          {price.toLocaleString("en-US")}
           {" "}
           kr DKK
           {" "}
@@ -249,7 +249,7 @@ export default function BookListingForm({ price, guestCount, listingId }: Bookin
           <div className="space-y-3 pt-4">
             <div className="flex justify-end">
               <span className="underline">
-                {price.toLocaleString()}
+                {price.toLocaleString("en-US")}
                 {" "}
                 kr DKK x
                 {nights}
@@ -263,7 +263,7 @@ export default function BookListingForm({ price, guestCount, listingId }: Bookin
             <div className="flex justify-between font-semibold text-lg">
               <span>Total</span>
               <span>
-                {total.toLocaleString()}
+                {total.toLocaleString("en-US")}
                 {" "}
                 kr DKK
               </span>
