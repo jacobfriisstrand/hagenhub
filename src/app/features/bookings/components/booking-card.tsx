@@ -3,13 +3,12 @@ import { format } from "date-fns";
 import { useState } from "react";
 
 import type { BookingWithListing } from "@/app/features/bookings/types/booking-with-listing";
+import type { ReviewType } from "@/app/features/reviews/types/review-type";
 
 import ListingImageCarousel from "@/app/features/listings/components/listing-image-carousel";
 import ReviewDialog from "@/app/features/reviews/components/review-dialog";
 import { DynamicIcon } from "@/components/dynamic-icon";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-
-import type { ReviewType } from "../../reviews/types/review-type";
 
 type BookingProps = {
   booking: BookingWithListing;

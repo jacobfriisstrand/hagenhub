@@ -6,12 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { editAddress } from "@/app/features/users/actions/edit-account";
 import { Button } from "@/components/ui/button/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
 import { UserSchema } from "@/prisma/generated/zod";
-
-import { editAddress } from "../../actions/edit-account";
 
 type EditUserAddressProps = {
   user_zip_code: string | null;

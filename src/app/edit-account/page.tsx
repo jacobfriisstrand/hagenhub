@@ -1,7 +1,7 @@
 "use server";
 
-import { getCurrentUser } from "../(auth)/current-user";
-import EditAccountAccordion from "../features/users/components/edit-account/edit-account-accordion";
+import { getCurrentUser } from "@/app/(auth)/current-user";
+import EditAccountAccordion from "@/app/features/users/components/edit-account/edit-account-accordion";
 
 export default async function EditAccount() {
   const fullUser = await getCurrentUser({
