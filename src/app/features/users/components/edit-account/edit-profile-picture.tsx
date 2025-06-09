@@ -5,11 +5,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { uploadUserAvatar } from "@/app/features/users/actions/upload-user-avatar";
 import { Button } from "@/components/ui/button/button";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
-
-import { uploadUserAvatar } from "../../actions/upload-user-avatar";
 
 export type EditProfilePictureProps = {
   user_avatar_url: string | null;

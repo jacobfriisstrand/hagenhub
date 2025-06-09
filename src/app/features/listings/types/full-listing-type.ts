@@ -1,6 +1,6 @@
 import type { Listing, ListingArea, ListingImage, ListingType } from "@prisma/client";
 
-import type { ReviewType } from "../../reviews/types/review-type";
+import type { ReviewType } from "@/app/features/reviews/types/review-type";
 
 export type FullListing = Listing & {
   listing_images: ListingImage[];

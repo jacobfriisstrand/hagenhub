@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import type { BookingWithListing } from "@/app/features/bookings/types/booking-with-listing";
+import type { ReviewType } from "@/app/features/reviews/types/review-type";
 
 import { addReview } from "@/app/features/reviews/actions/add-review";
 import { DynamicIcon } from "@/components/dynamic-icon";
@@ -16,8 +17,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form/form";
 import { Textarea } from "@/components/ui/textarea";
 import { ReviewSchema } from "@/prisma/generated/zod";
-
-import type { ReviewType } from "../types/review-type";
 
 type ReviewDialogProps = {
   hasReviewed: boolean;
@@ -143,7 +142,7 @@ export default function ReviewDialog({
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">Submit Review</Button>
+            <Button type="submit" className="w-full" onClick={() => setIsOpen(false)}>Submit Review</Button>
           </form>
         </Form>
 

@@ -86,8 +86,13 @@ export default async function Footer() {
                     </LinkWithIcon>
                   </li>
                   <li>
-                    <LinkWithIcon href={`/bookings/${user.user_pk}`} icon="calendar">
-                      Bookings
+                    <LinkWithIcon href="/private/my-bookings" icon="calendar">
+                      MyBookings
+                    </LinkWithIcon>
+                  </li>
+                  <li>
+                    <LinkWithIcon href="/private/my-listings" icon="list">
+                      My Listings
                     </LinkWithIcon>
                   </li>
                   <li>

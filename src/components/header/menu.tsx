@@ -1,5 +1,6 @@
 import type { User } from "@/app/(auth)/current-user";
 
+import { hasBookings } from "@/app/features/users/actions/has-bookings";
 import { hasListings } from "@/app/features/users/actions/has-listings";
 import LinkWithIcon from "@/components/link-with-icon";
 import LogoutButton from "@/components/logout-button";
@@ -7,6 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 
 export default async function Menu({ user }: { user: User | null }) {
   const userHasListings = user ? await hasListings(user.user_pk) : false;
+  const userHasBookings = user ? await hasBookings(user.user_pk) : false;
 
   return (
     <DropdownMenu modal={false}>
@@ -40,11 +42,13 @@ export default async function Menu({ user }: { user: User | null }) {
                     </LinkWithIcon>
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem>
-                  <LinkWithIcon href="/private/my-bookings" icon="calendar" className="py-1.5 px-2">
-                    My Bookings
-                  </LinkWithIcon>
-                </DropdownMenuItem>
+                {userHasBookings && (
+                  <DropdownMenuItem>
+                    <LinkWithIcon href="/private/my-bookings" icon="calendar" className="py-1.5 px-2">
+                      My Bookings
+                    </LinkWithIcon>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem>
                   <LinkWithIcon href="/edit-account" icon="user" className="py-1.5 px-2">
                     Edit Account
