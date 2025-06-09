@@ -1,7 +1,6 @@
+import getListingBySearch from "@/app/features/listings/actions/get-listing-by-search";
 import ListingList from "@/app/features/listings/components/listing-list";
 import PageTitle from "@/components/page-title";
-
-import getListingBySearch from "../features/listings/actions/get-listing-by-search";
 
 type SearchPageProps = {
   searchParams: Promise<{ search: string }>;

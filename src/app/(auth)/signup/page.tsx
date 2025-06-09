@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { signup } from "@/app/(auth)/actions";
 import { Button } from "@/components/ui/button/button";
 import {
   Card,
@@ -25,8 +26,6 @@ import {
 } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
 import { UserSchema } from "@/prisma/generated/zod";
-
-import { signup } from "../actions";
 
 const signupSchema = UserSchema.pick({
   user_first_name: true,

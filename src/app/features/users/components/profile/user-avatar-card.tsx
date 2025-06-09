@@ -28,11 +28,11 @@ export default async function UserAvatarCard({ user_pk }: UserAvatarCardProps) {
           <div className="md:col-span-3">
             <div className="sticky top-24">
               <div className="flex flex-col items-center p-6 bg-white rounded-lg ">
-                <Avatar className="w-24 h-24 mb-4 border-2 border-blue-100">
+                <Avatar className=" w-24 h-24 mb-4 border-2 border-blue-100">
                   <AvatarFallback className="bg-blue-50 text-blue-600 text-2xl">
                     {user.user_first_name.charAt(0)}
                   </AvatarFallback>
-                  <AvatarImage src={user.user_avatar_url || ""} />
+                  <AvatarImage className="object-cover" src={user.user_avatar_url || ""} />
                 </Avatar>
                 <h2 className="text-2xl font-bold">
                   {user.user_first_name}

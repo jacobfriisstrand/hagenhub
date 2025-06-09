@@ -1,9 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
+import { redisClient } from "@/app/(auth)/redis/redis";
 import { UserSchema } from "@/prisma/generated/zod";
-
-import { redisClient } from "../redis/redis";
 
 // Seven days in scounds
 const SESSION_EXPIRATION_SECONDS = 7 * 24 * 60 * 60;

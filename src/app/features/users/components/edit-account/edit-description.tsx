@@ -6,12 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { editDescription } from "@/app/features/users/actions/edit-account";
 import { Button } from "@/components/ui/button/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form/form";
 import { Textarea } from "@/components/ui/textarea";
 import { UserSchema } from "@/prisma/generated/zod";
-
-import { editDescription } from "../../actions/edit-account";
 
 type EditDescriptionProps = {
   user_description: string | null;
