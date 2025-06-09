@@ -24,9 +24,9 @@ export default function BookingsList({ bookings }: BookingsListProps) {
                     review_rating: booking.review.rating,
                     review_comment: booking.review.comment || "",
                     review_created_at: new Date(),
-                    review_updated_at: new Date(),
                     review_listing_fk: booking.booking.booking_listing.listing_pk,
                     review_user_fk: booking.booking.booking_guest.user_pk,
+                    review_booking_fk: booking.booking.booking_pk,
                   }
                 : null}
             />
