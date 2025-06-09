@@ -11,6 +11,7 @@ export async function getListingByPk(listing_pk: string): Promise<FullListing | 
       listing_images: true,
       listing_area: true,
       listing_type: true,
+      listing_reviews: true,
     },
   });
 
