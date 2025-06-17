@@ -65,24 +65,9 @@ export default function ReviewDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        {!hasReviewed
-          ? (
-              <Button
-                variant="outline"
-                className="bg-primary text-primary-foreground hover:bg-primary/90"
-              >
-                Leave a Review
-              </Button>
-            )
-          : (
-              <Button
-                variant="ghost"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={true}
-              >
-                Reviewed
-              </Button>
-            )}
+        <Button {...hasReviewed ? { disabled: true } : {}}>
+          {hasReviewed ? "Reviewed" : "Leave a Review"}
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

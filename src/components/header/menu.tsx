@@ -45,7 +45,7 @@ export default async function Menu({ user }: { user: User | null }) {
                 {userHasBookings && (
                   <DropdownMenuItem>
                     <LinkWithIcon href="/private/my-bookings" icon="calendar" className="py-1.5 px-2">
-                      My Bookings
+                      My bookings
                     </LinkWithIcon>
                   </DropdownMenuItem>
                 )}

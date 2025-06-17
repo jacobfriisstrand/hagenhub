@@ -32,9 +32,9 @@ export default function ListingCard({ listing, user }: ListingCardProps) {
   return (
     <>
       <Card as="article" className="p-0 pb-4 gap-2 grid-rows-subgrid justify-between shadow-sm">
-        <div>
-          <ListingImageCarousel className="h-48 w-full overflow-hidden rounded-t-xl" images={listing.listing_images} />
-          <CardHeader className="gap-3 px-4 pt-6">
+        <div className="">
+          <ListingImageCarousel className="h-48 w-full overflow-hidden rounded-t-xl mb-2" images={listing.listing_images} />
+          <CardHeader className="gap-3 px-4">
             <ListingBadgeList listing={listing} />
             <div>
               <h3 className="text-base md:text-lg font-bold">{listing.listing_title}</h3>

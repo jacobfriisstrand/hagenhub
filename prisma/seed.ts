@@ -3,6 +3,18 @@ import crypto from "node:crypto"
 
 const prisma = new PrismaClient()
 
+// Helper function for password hashing (matching the application's method)
+async function hashPassword(password: string, salt: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    crypto.scrypt(password.normalize(), salt, 64, (error, hash) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(hash.toString("hex").normalize());
+    });
+  });
+}
+
 // Shared data
 const streetNames = ["Gothersgade", "Frederiksberg Allé", "Østerbrogade", "Nørrebrogade", "Vesterbrogade", "Amagerbrogade", "Store Kongensgade", "Bredgade", "Strøget", "Nyhavn"]
 const streetNumbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]
@@ -38,7 +50,8 @@ function generateRandomUser(index: number, zipCodes: { code: string }[]) {
     user_zip_code: getRandomElement(zipCodes).code,
     user_street_name: getRandomElement(streetNames),
     user_street_number: getRandomElement(streetNumbers),
-    user_description: Math.random() > 0.5 ? `Experienced host with ${getRandomNumber(1, 10)} years of experience in hospitality.` : null
+    user_description: Math.random() > 0.5 ? `Experienced host with ${getRandomNumber(1, 10)} years of experience in hospitality.` : null,
+    user_avatar_url: null as string | null // Allow both string and null values
   }
 }
 
@@ -242,12 +255,124 @@ async function main() {
     )
   )
 
-  // Create users (50 users)
+  // Create specific test users who are both hosts and guests
+  console.log('Creating specific test users...')
+  const password = "Password123!"
+  const salt1 = crypto.randomBytes(16).toString("hex").normalize()
+  const salt2 = crypto.randomBytes(16).toString("hex").normalize()
+  const hashedPassword1 = await hashPassword(password, salt1)
+  const hashedPassword2 = await hashPassword(password, salt2)
+
+  const testUser1 = await prisma.user.create({
+    data: {
+      user_first_name: "Test",
+      user_last_name: "Host1",
+      user_email: "test.host1@example.com",
+      user_password: hashedPassword1,
+      salt: salt1,
+      user_role: "user",
+      user_phone_number: "12345678",
+      user_zip_code: "1050",
+      user_street_name: "Gothersgade",
+      user_street_number: "1",
+      user_description: "Experienced host with 5 years of experience in hospitality."
+    }
+  })
+
+  const testUser2 = await prisma.user.create({
+    data: {
+      user_first_name: "Test",
+      user_last_name: "Host2",
+      user_email: "test.host2@example.com",
+      user_password: hashedPassword2,
+      salt: salt2,
+      user_role: "user",
+      user_phone_number: "87654321",
+      user_zip_code: "1051",
+      user_street_name: "Frederiksberg Allé",
+      user_street_number: "2",
+      user_description: "Professional host with 3 years of experience."
+    }
+  })
+
+  // Create listings for test users
+  console.log('Creating listings for test users...')
+  const testListing1 = await prisma.listing.create({
+    data: {
+      listing_title: "Luxury Apartment in City Center",
+      listing_description: "Beautiful apartment with amazing views and modern amenities.",
+      listing_zip_code: "1050",
+      listing_street_name: "Gothersgade",
+      listing_street_number: "1",
+      listing_night_price: 1500,
+      listing_type_fk: createdTypes[0].listing_type_pk, // Apartment
+      listing_area_fk: createdAreas[0].listing_area_pk, // Copenhagen K
+      listing_bedrooms: 2,
+      listing_guest_count: 4,
+      listing_latitude: 55.68,
+      listing_longitude: 12.57,
+      listing_user_fk: testUser1.user_pk
+    }
+  })
+
+  const testListing2 = await prisma.listing.create({
+    data: {
+      listing_title: "Cozy House in Frederiksberg",
+      listing_description: "Charming house perfect for families.",
+      listing_zip_code: "1051",
+      listing_street_name: "Frederiksberg Allé",
+      listing_street_number: "2",
+      listing_night_price: 2000,
+      listing_type_fk: createdTypes[1].listing_type_pk, // House
+      listing_area_fk: createdAreas[7].listing_area_pk, // Frederiksberg C
+      listing_bedrooms: 3,
+      listing_guest_count: 6,
+      listing_latitude: 55.67,
+      listing_longitude: 12.53,
+      listing_user_fk: testUser2.user_pk
+    }
+  })
+
+  // Add images to test listings
+  await Promise.all([
+    prisma.listingImage.create({
+      data: {
+        listing_image_url: "https://picsum.photos/id/101/800/600",
+        listing_image_listing_fk: testListing1.listing_pk
+      }
+    }),
+    prisma.listingImage.create({
+      data: {
+        listing_image_url: "https://picsum.photos/id/102/800/600",
+        listing_image_listing_fk: testListing1.listing_pk
+      }
+    }),
+    prisma.listingImage.create({
+      data: {
+        listing_image_url: "https://picsum.photos/id/103/800/600",
+        listing_image_listing_fk: testListing2.listing_pk
+      }
+    }),
+    prisma.listingImage.create({
+      data: {
+        listing_image_url: "https://picsum.photos/id/104/800/600",
+        listing_image_listing_fk: testListing2.listing_pk
+      }
+    })
+  ])
+
+  // Create users
   console.log('Creating users...')
+  const users = []
+  for (let i = 0; i < 20; i++) {
+    const userData = generateRandomUser(i, createdZipCodes.map(z => ({ code: z.zip_code })))
+    const randomNumber = getRandomNumber(1, 100)
+    userData.user_avatar_url = `https://randomuser.me/api/portraits/men/${randomNumber}.jpg`
+    users.push(userData)
+  }
+
   const createdUsers = await Promise.all(
-    Array.from({ length: 50 }, (_, i) => generateRandomUser(i, createdZipCodes.map(z => ({ code: z.zip_code })))).map(userData =>
-      prisma.user.create({ data: userData })
-    )
+    users.map(user => prisma.user.create({ data: user }))
   )
 
   // Create listings (100 listings)
@@ -280,8 +405,8 @@ async function main() {
     )
   }
 
-  // Create bookings (2-10 per listing)
-  console.log('Creating bookings...')
+  // Create random bookings
+  console.log('Creating random bookings...')
   const createdBookings = []
   
   for (const listing of createdListings) {
@@ -297,22 +422,242 @@ async function main() {
     createdBookings.push(...listingBookings)
   }
 
+  // Create bookings for test users on random listings
+  console.log('Creating bookings for test users...')
+  const now = new Date()
+  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+  const twoMonthsLater = new Date(now.getFullYear(), now.getMonth() + 2, 1)
+  const threeMonthsLater = new Date(now.getFullYear(), now.getMonth() + 3, 1)
+
+  // Get 4 random listings for Test Host1 to book (excluding Test Host2's listings)
+  const testHost1RandomListings = getRandomElements(
+    createdListings.filter(listing => listing.listing_user_fk !== testUser2.user_pk),
+    5
+  )
+  
+  // Test Host1 as guest booking random listings (all statuses)
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser1.user_pk,
+      booking_listing_fk: testHost1RandomListings[0].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 3,
+      booking_check_in: nextMonth,
+      booking_check_out: new Date(nextMonth.getTime() + 3 * 24 * 60 * 60 * 1000),
+      booking_status: "Pending"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser1.user_pk,
+      booking_listing_fk: testHost1RandomListings[1].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 5,
+      booking_check_in: twoMonthsLater,
+      booking_check_out: new Date(twoMonthsLater.getTime() + 5 * 24 * 60 * 60 * 1000),
+      booking_status: "Confirmed"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser1.user_pk,
+      booking_listing_fk: testHost1RandomListings[2].listing_pk,
+      booking_guest_count: 3,
+      booking_night_count: 4,
+      booking_check_in: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+      booking_check_out: new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000), // 6 days ago
+      booking_status: "Completed"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser1.user_pk,
+      booking_listing_fk: testHost1RandomListings[3].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 2,
+      booking_check_in: new Date(now.getTime() - 20 * 24 * 60 * 60 * 1000), // 20 days ago
+      booking_check_out: new Date(now.getTime() - 18 * 24 * 60 * 60 * 1000), // 18 days ago
+      booking_status: "Cancelled"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser1.user_pk,
+      booking_listing_fk: testHost1RandomListings[4].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 3,
+      booking_check_in: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+      booking_check_out: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+      booking_status: "Completed"
+    }
+  })
+
+  // Get 4 different random listings for Test Host2 to book (excluding Test Host1's listings)
+  const testHost2RandomListings = getRandomElements(
+    createdListings.filter(listing => listing.listing_user_fk !== testUser1.user_pk),
+    5
+  )
+  
+  // Test Host2 as guest booking random listings (all statuses)
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser2.user_pk,
+      booking_listing_fk: testHost2RandomListings[0].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 3,
+      booking_check_in: nextMonth,
+      booking_check_out: new Date(nextMonth.getTime() + 3 * 24 * 60 * 60 * 1000),
+      booking_status: "Pending"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser2.user_pk,
+      booking_listing_fk: testHost2RandomListings[1].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 5,
+      booking_check_in: twoMonthsLater,
+      booking_check_out: new Date(twoMonthsLater.getTime() + 5 * 24 * 60 * 60 * 1000),
+      booking_status: "Confirmed"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser2.user_pk,
+      booking_listing_fk: testHost2RandomListings[2].listing_pk,
+      booking_guest_count: 3,
+      booking_night_count: 4,
+      booking_check_in: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+      booking_check_out: new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000), // 6 days ago
+      booking_status: "Completed"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser2.user_pk,
+      booking_listing_fk: testHost2RandomListings[3].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 2,
+      booking_check_in: new Date(now.getTime() - 20 * 24 * 60 * 60 * 1000), // 20 days ago
+      booking_check_out: new Date(now.getTime() - 18 * 24 * 60 * 60 * 1000), // 18 days ago
+      booking_status: "Cancelled"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser2.user_pk,
+      booking_listing_fk: testHost2RandomListings[4].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 3,
+      booking_check_in: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+      booking_check_out: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+      booking_status: "Completed"
+    }
+  })
+
   // Create reviews for completed bookings
   console.log('Creating reviews...')
-  const completedBookings = createdBookings.filter(b => b.booking_status === "Completed")
-  await Promise.all(
-    completedBookings.map(booking => {
-      const guest = createdUsers.find(u => u.user_pk === booking.booking_guest_fk)
-      const listing = createdListings.find(l => l.listing_pk === booking.booking_listing_fk)
-      if (!guest || !listing) return null
-      
-      return prisma.review.create({
-        data: generateRandomReview(booking.booking_pk, guest.user_pk, listing.listing_pk)
+  const randomCompletedBookings = createdBookings.filter(b => b.booking_status === "Completed")
+  
+  // Group bookings by listing to ensure we don't have multiple reviews from the same user for the same listing
+  const bookingsByListing = randomCompletedBookings.reduce((acc, booking) => {
+    if (!acc[booking.booking_listing_fk]) {
+      acc[booking.booking_listing_fk] = []
+    }
+    acc[booking.booking_listing_fk].push(booking)
+    return acc
+  }, {} as Record<string, typeof randomCompletedBookings>)
+
+  // Create reviews ensuring different users for each listing
+  for (const [listingId, bookings] of Object.entries(bookingsByListing)) {
+    // Get unique guests who have completed bookings for this listing
+    const uniqueGuests = [...new Set(bookings.map(b => b.booking_guest_fk))]
+    
+    // For each unique guest, create a review if they haven't already reviewed
+    for (const guestId of uniqueGuests) {
+      const booking = bookings.find(b => b.booking_guest_fk === guestId)
+      if (!booking) continue
+
+      // Check if this guest has already reviewed this listing
+      const existingReview = await prisma.review.findFirst({
+        where: {
+          review_user_fk: guestId,
+          review_listing_fk: listingId
+        }
       })
+
+      if (!existingReview) {
+        await prisma.review.create({
+          data: generateRandomReview(booking.booking_pk, guestId, listingId)
+        })
+      }
+    }
+  }
+
+  // Create reviews for test users' completed bookings
+  const testCompletedBookings = await prisma.booking.findMany({
+    where: {
+      booking_status: "Completed",
+      booking_guest_fk: {
+        in: [testUser1.user_pk, testUser2.user_pk]
+      },
+      booking_check_out: {
+        lt: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000) // Only review bookings that ended more than 5 days ago
+      }
+    }
+  })
+
+  // Create reviews for test users ensuring they don't review their own listings
+  for (const booking of testCompletedBookings) {
+    const listing = await prisma.listing.findUnique({
+      where: { listing_pk: booking.booking_listing_fk }
     })
-  )
+
+    // Skip if the user is reviewing their own listing
+    if (listing && listing.listing_user_fk === booking.booking_guest_fk) continue
+
+    // Check if this user has already reviewed this listing
+    const existingReview = await prisma.review.findFirst({
+      where: {
+        review_user_fk: booking.booking_guest_fk,
+        review_listing_fk: booking.booking_listing_fk
+      }
+    })
+
+    if (!existingReview) {
+      await prisma.review.create({
+        data: {
+          review_rating: getRandomElement([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]),
+          review_comment: getRandomElement([
+            "Great stay! The property was exactly as described.",
+            "Excellent location and very comfortable.",
+            "Perfect for our needs, very clean and well-maintained.",
+            "Amazing experience, the host was very accommodating.",
+            "Beautiful property with all the amenities we needed."
+          ]),
+          review_user_fk: booking.booking_guest_fk,
+          review_listing_fk: booking.booking_listing_fk,
+          review_booking_fk: booking.booking_pk
+        }
+      })
+    }
+  }
 
   console.log('Seeding completed successfully!')
+}
+
+// Helper function to get random elements from an array
+function getRandomElements<T>(array: T[], count: number): T[] {
+  const shuffled = [...array].sort(() => 0.5 - Math.random())
+  return shuffled.slice(0, count)
 }
 
 main()

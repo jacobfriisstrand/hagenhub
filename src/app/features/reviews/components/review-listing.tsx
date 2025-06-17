@@ -24,8 +24,6 @@ export default async function ListingReviews({ reviews }: ListingReviewsProps) {
     },
   });
 
-  console.log("user", user?.user_last_name);
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
       {reviews.map(review => (

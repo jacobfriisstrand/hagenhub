@@ -2,15 +2,23 @@ import type { BookingWithListing } from "@/app/features/bookings/types/booking-w
 
 import BookingCard from "@/app/features/bookings/components/booking-card";
 
+type HostInfo = {
+  user_pk: string;
+  user_first_name: string;
+  user_avatar_url: string | null;
+};
+
 type BookingsListProps = {
   bookings: {
     booking: BookingWithListing;
     hasReviewed: boolean;
     review: { rating: number; comment: string | null } | null;
+    host: HostInfo;
   }[];
+  viewType?: "guest" | "host";
 };
 
-export default function BookingsList({ bookings }: BookingsListProps) {
+export default function BookingsList({ bookings, viewType = "guest" }: BookingsListProps) {
   return (
     <>
       <ul className="responsive-grid gap-6">
@@ -29,6 +37,8 @@ export default function BookingsList({ bookings }: BookingsListProps) {
                     review_booking_fk: booking.booking.booking_pk,
                   }
                 : null}
+              host={viewType === "guest" ? booking.host : booking.booking.booking_guest}
+              viewType={viewType}
             />
           </li>
         ))}
