@@ -1,13 +1,11 @@
 import Link from "next/link";
 
+import SearchBar from "@/components/header/search-bar";
+import PageTitle from "@/components/page-title";
+import QuickFilters from "@/components/quick-filters";
 import prisma from "@/lib/prisma";
 
-import SearchBar from "./header/search-bar";
-import PageTitle from "./page-title";
-
 export default async function HeroSection() {
-  const listingTypes = await prisma.listingType.findMany();
-
   // Get top 3 listing areas with their listing counts
   const topAreas = await prisma.listingArea.findMany({
     include: {
@@ -43,18 +41,7 @@ export default async function HeroSection() {
         {/* Search Bar */}
         <SearchBar className="w-full max-w-3xl" />
 
-        {/* Quick Filters */}
-        <nav className="mt-8 flex flex-wrap justify-center gap-3">
-          {listingTypes.map(filter => (
-            <Link
-              href={`/search?search=${filter.listing_type_name}`}
-              key={filter.listing_type_pk}
-              className="rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-800 shadow-sm transition-colors hover:bg-gray-200"
-            >
-              {filter.listing_type_name}
-            </Link>
-          ))}
-        </nav>
+        <QuickFilters />
       </section>
 
       {/* Featured Areas */}

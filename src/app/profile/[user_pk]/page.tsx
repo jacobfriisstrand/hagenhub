@@ -40,6 +40,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             <section className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
               <h3 className="text-2xl font-semibold text-gray-900">
                 About
+                {" "}
+
                 {user.user_first_name}
               </h3>
               <p className="mt-4 text-gray-600 leading-relaxed">
