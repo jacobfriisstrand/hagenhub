@@ -307,8 +307,8 @@ async function main() {
 
   const hagenHubUser = await prisma.user.create({
     data: {
-      user_first_name: "Hagen",
-      user_last_name: "Hub",
+      user_first_name: "Jacob Friis",
+      user_last_name: "Strand",
       user_email: "test@hagenhub.com",
       user_password: hagenHubHashedPassword,
       salt: hagenHubSalt,
@@ -628,6 +628,147 @@ async function main() {
     )
     createdBookings.push(...listingBookings)
   }
+
+  // Create bookings for test users on random listings
+  console.log('Creating bookings for test users...')
+  const now = new Date()
+  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+  const twoMonthsLater = new Date(now.getFullYear(), now.getMonth() + 2, 1)
+  const threeMonthsLater = new Date(now.getFullYear(), now.getMonth() + 3, 1)
+
+  // Get 4 random listings for Test Host1 to book (excluding Test Host2's listings)
+  const testHost1RandomListings = getRandomElements(
+    createdListings.filter(listing => listing.listing_user_fk !== testUser2.user_pk),
+    5
+  )
+  
+  // Test Host1 as guest booking random listings (all statuses)
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser1.user_pk,
+      booking_listing_fk: testHost1RandomListings[0].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 3,
+      booking_check_in: nextMonth,
+      booking_check_out: new Date(nextMonth.getTime() + 3 * 24 * 60 * 60 * 1000),
+      booking_status: "Pending"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser1.user_pk,
+      booking_listing_fk: testHost1RandomListings[1].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 5,
+      booking_check_in: twoMonthsLater,
+      booking_check_out: new Date(twoMonthsLater.getTime() + 5 * 24 * 60 * 60 * 1000),
+      booking_status: "Confirmed"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser1.user_pk,
+      booking_listing_fk: testHost1RandomListings[2].listing_pk,
+      booking_guest_count: 3,
+      booking_night_count: 4,
+      booking_check_in: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+      booking_check_out: new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000), // 6 days ago
+      booking_status: "Completed"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser1.user_pk,
+      booking_listing_fk: testHost1RandomListings[3].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 2,
+      booking_check_in: new Date(now.getTime() - 20 * 24 * 60 * 60 * 1000), // 20 days ago
+      booking_check_out: new Date(now.getTime() - 18 * 24 * 60 * 60 * 1000), // 18 days ago
+      booking_status: "Cancelled"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser1.user_pk,
+      booking_listing_fk: testHost1RandomListings[4].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 3,
+      booking_check_in: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+      booking_check_out: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+      booking_status: "Completed"
+    }
+  })
+
+  // Get 4 different random listings for Test Host2 to book (excluding Test Host1's listings)
+  const testHost2RandomListings = getRandomElements(
+    createdListings.filter(listing => listing.listing_user_fk !== testUser1.user_pk),
+    5
+  )
+  
+  // Test Host2 as guest booking random listings (all statuses)
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser2.user_pk,
+      booking_listing_fk: testHost2RandomListings[0].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 3,
+      booking_check_in: nextMonth,
+      booking_check_out: new Date(nextMonth.getTime() + 3 * 24 * 60 * 60 * 1000),
+      booking_status: "Pending"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser2.user_pk,
+      booking_listing_fk: testHost2RandomListings[1].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 5,
+      booking_check_in: twoMonthsLater,
+      booking_check_out: new Date(twoMonthsLater.getTime() + 5 * 24 * 60 * 60 * 1000),
+      booking_status: "Confirmed"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser2.user_pk,
+      booking_listing_fk: testHost2RandomListings[2].listing_pk,
+      booking_guest_count: 3,
+      booking_night_count: 4,
+      booking_check_in: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+      booking_check_out: new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000), // 6 days ago
+      booking_status: "Completed"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser2.user_pk,
+      booking_listing_fk: testHost2RandomListings[3].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 2,
+      booking_check_in: new Date(now.getTime() - 20 * 24 * 60 * 60 * 1000), // 20 days ago
+      booking_check_out: new Date(now.getTime() - 18 * 24 * 60 * 60 * 1000), // 18 days ago
+      booking_status: "Cancelled"
+    }
+  })
+
+  await prisma.booking.create({
+    data: {
+      booking_guest_fk: testUser2.user_pk,
+      booking_listing_fk: testHost2RandomListings[4].listing_pk,
+      booking_guest_count: 2,
+      booking_night_count: 3,
+      booking_check_in: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+      booking_check_out: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+      booking_status: "Completed"
+    }
+  })
 
   // Create reviews for completed bookings
   console.log('Creating reviews...')
