@@ -1,19 +1,19 @@
 generator client {
   provider = "prisma-client-js"
 }
-
+ 
 generator zod {
   provider                = "zod-prisma-types"
   createInputTypes        = "false"
   useInstanceOfForDecimal = "false"
 }
-
+ 
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-
+ 
 model User {
   user_pk           String    @id @default(uuid()) @db.Uuid
   /// @zod.string.regex(/^[A-Za-zÆØÅæøå]+$/, { message: "Name can only contain letters (A-Z, a-z, ÆØÅ, æøå)" }).min(3, { message: "Name must be at least 3 characters long" }).max(256, { message: "Name must be less than 256 characters long" })
@@ -23,8 +23,8 @@ model User {
   /// @zod.string.email({ message: "Please enter a valid email address" })
   user_email        String    @unique
   /// @zod.string.min(8, { message: "Password must be at least 8 characters long" })
-  /// .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).*$/, { 
-  /// message: "Password must contain at least one uppercase letter, one number, and one special character" 
+  /// .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).*$/, {
+  /// message: "Password must contain at least one uppercase letter, one number, and one special character"
   /// })
   user_password     String
   salt              String
@@ -50,10 +50,10 @@ model User {
   user_bookings     Booking[] @relation("BookingGuest")
   user_listings     Listing[]
   user_reviews      Review[]
-
+ 
   @@map("users")
 }
-
+ 
 model Listing {
   listing_pk            String         @id @default(uuid()) @db.Uuid
   /// @zod.string.min(2, { message: "Title must be at least 2 characters long" }).max(100, { message: "Title must be less than 100 characters long" })
@@ -86,27 +86,27 @@ model Listing {
   listing_user          User           @relation(fields: [listing_user_fk], references: [user_pk])
   zip_code_relation     ZipCode        @relation(fields: [listing_zip_code], references: [zip_code])
   listing_reviews       Review[]
-
+ 
   @@map("listings")
 }
-
+ 
 model ListingArea {
   listing_area_pk   String    @id @default(uuid()) @db.Uuid
   listing_area_name String
   listings          Listing[]
-
+ 
   @@map("listing_areas")
 }
-
+ 
 model ListingType {
   listing_type_pk   String    @id @default(uuid()) @db.Uuid
   listing_type_name String
   listing_type_icon String
   listings          Listing[]
-
+ 
   @@map("listing_types")
 }
-
+ 
 model Review {
   review_pk         String   @id @default(uuid()) @db.Uuid
   /// @zod.custom.use(z.number().min(1).max(5).step(0.5).refine(val => [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].includes(val), { message: "Rating must be one of: 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5" }))
@@ -120,10 +120,10 @@ model Review {
   review_booking    Booking  @relation(fields: [review_booking_fk], references: [booking_pk])
   review_listing    Listing  @relation(fields: [review_listing_fk], references: [listing_pk])
   review_user       User     @relation(fields: [review_user_fk], references: [user_pk])
-
+ 
   @@map("reviews")
 }
-
+ 
 model Booking {
   booking_pk          String   @id @default(uuid()) @db.Uuid
   booking_guest_fk    String   @db.Uuid
@@ -141,19 +141,19 @@ model Booking {
   booking_guest       User     @relation("BookingGuest", fields: [booking_guest_fk], references: [user_pk])
   booking_listing     Listing  @relation(fields: [booking_listing_fk], references: [listing_pk])
   booking_review      Review?
-
+ 
   @@map("bookings")
 }
-
+ 
 model ListingImage {
   listing_image_pk         String  @id @default(uuid()) @db.Uuid
   listing_image_url        String
   listing_image_listing_fk String  @db.Uuid
   listing_image_listing    Listing @relation(fields: [listing_image_listing_fk], references: [listing_pk])
-
+ 
   @@map("listing_images")
 }
-
+ 
 model ZipCode {
   zip_code_pk            String    @id @default(uuid()) @db.Uuid
   /// @zod.string.regex(/^\d{4}$/, { message: "Zip code must be exactly 4 digits" })
@@ -163,6 +163,6 @@ model ZipCode {
   /// @zod.string.min(2, { message: "District name must be at least 2 characters long" }).max(100, { message: "District name must be less than 100 characters long" })
   zip_code_district_name String
   listings               Listing[]
-
+ 
   @@map("zip_codes")
 }

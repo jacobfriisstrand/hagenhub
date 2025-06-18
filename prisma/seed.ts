@@ -1,36 +1,24 @@
 import { PrismaClient } from '@prisma/client'
 import crypto from "node:crypto"
-
+ 
 const prisma = new PrismaClient()
-
-// Helper function for password hashing (matching the application's method)
-async function hashPassword(password: string, salt: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    crypto.scrypt(password.normalize(), salt, 64, (error, hash) => {
-      if (error) {
-        reject(error);
-      }
-      resolve(hash.toString("hex").normalize());
-    });
-  });
-}
-
+ 
 // Shared data
 const streetNames = ["Gothersgade", "Frederiksberg Allé", "Østerbrogade", "Nørrebrogade", "Vesterbrogade", "Amagerbrogade", "Store Kongensgade", "Bredgade", "Strøget", "Nyhavn"]
 const streetNumbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]
 const firstNames = ["John", "Jane", "Maria", "Peter", "Anna", "Michael", "Sarah", "David", "Emma", "Lucas", "Sophie", "Oliver", "Isabella", "William", "Mia"]
 const lastNames = ["Doe", "Smith", "Jensen", "Nielsen", "Hansen", "Andersen", "Pedersen", "Christensen", "Larsen", "Sørensen", "Rasmussen", "Jørgensen", "Madsen", "Kristensen", "Olsen"]
 const domains = ["gmail.com", "hotmail.com", "outlook.com", "yahoo.com", "icloud.com"]
-
+ 
 // Helper functions for generating random data
 function getRandomElement<T>(array: T[]): T {
   return array[Math.floor(Math.random() * array.length)]
 }
-
+ 
 function getRandomNumber(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
-
+ 
 function generateRandomUser(index: number, zipCodes: { code: string }[]) {
   const firstName = getRandomElement(firstNames)
   const lastName = getRandomElement(lastNames)
@@ -38,7 +26,7 @@ function generateRandomUser(index: number, zipCodes: { code: string }[]) {
   const password = "Password123!"
   const salt = crypto.randomBytes(16).toString('hex')
   const hashedPassword = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
-  
+ 
   return {
     user_first_name: firstName,
     user_last_name: lastName,
@@ -54,7 +42,7 @@ function generateRandomUser(index: number, zipCodes: { code: string }[]) {
     user_avatar_url: null as string | null // Allow both string and null values
   }
 }
-
+ 
 function generateRandomListing(userId: string, typeId: string, areaId: string, zipCodes: { code: string }[]) {
   const titles = [
     "Luxury", "Cozy", "Modern", "Charming", "Spacious", "Stylish", "Elegant", "Beautiful", "Stunning", "Amazing",
@@ -67,13 +55,13 @@ function generateRandomListing(userId: string, typeId: string, areaId: string, z
     "City Center", "Downtown", "Historic District", "Waterfront", "Business District", "Residential Area",
     "Shopping District", "Cultural Quarter", "University Area", "Park View"
   ]
-  
+ 
   const title = `${getRandomElement(titles)} ${getRandomElement(types)} in ${getRandomElement(areas)}`
   const description = `Beautiful ${getRandomElement(types).toLowerCase()} with amazing views and modern amenities. Perfect for ${getRandomElement(["couples", "families", "business travelers", "groups", "solo travelers"])}.`
-  
+ 
   const bedrooms = getRandomNumber(1, 6)
   const guestCount = bedrooms * 2
-  
+ 
   return {
     listing_title: title,
     listing_description: description,
@@ -90,25 +78,25 @@ function generateRandomListing(userId: string, typeId: string, areaId: string, z
     listing_user_fk: userId
   }
 }
-
+ 
 function generateRandomBooking(guestId: string, listingId: string) {
   // Get current date
   const now = new Date()
   const currentMonth = now.getMonth()
   const currentYear = now.getFullYear()
-  
+ 
   // Create start date within current month
   const startDate = new Date(currentYear, currentMonth, getRandomNumber(1, 28))
-  
+ 
   // Create end date within current month (max 14 days from start)
   const endDate = new Date(startDate)
   const maxDaysUntilEndOfMonth = 28 - startDate.getDate() // Using 28 to be safe
   const stayDuration = getRandomNumber(1, Math.min(14, maxDaysUntilEndOfMonth))
   endDate.setDate(startDate.getDate() + stayDuration)
-  
+ 
   const statuses = ["Pending", "Confirmed", "Completed", "Cancelled"]
   const status = getRandomElement(statuses) as "Pending" | "Confirmed" | "Completed" | "Cancelled"
-  
+ 
   return {
     booking_guest_fk: guestId,
     booking_listing_fk: listingId,
@@ -119,7 +107,7 @@ function generateRandomBooking(guestId: string, listingId: string) {
     booking_status: status
   }
 }
-
+ 
 function generateRandomReview(bookingId: string, userId: string, listingId: string) {
   const ratings = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
   const comments = [
@@ -134,7 +122,7 @@ function generateRandomReview(bookingId: string, userId: string, listingId: stri
     "Comfortable and convenient location.",
     "Nice property with good facilities."
   ]
-  
+ 
   return {
     review_rating: getRandomElement(ratings) as number,
     review_comment: getRandomElement(comments),
@@ -143,10 +131,10 @@ function generateRandomReview(bookingId: string, userId: string, listingId: stri
     review_booking_fk: bookingId
   }
 }
-
+ 
 async function main() {
   console.log('Starting database seeding...')
-  
+ 
   // Clear existing records
   console.log('Clearing existing records...')
   await prisma.review.deleteMany()
@@ -157,7 +145,7 @@ async function main() {
   await prisma.listingType.deleteMany()
   await prisma.zipCode.deleteMany()
   await prisma.listingArea.deleteMany()
-
+ 
   // Create listing types
   console.log('Creating listing types...')
   const listingTypes = [
@@ -167,9 +155,9 @@ async function main() {
     { name: "Villa", icon: "castle" },
     { name: "Studio", icon: "door-closed" }
   ]
-
+ 
   const createdTypes = await Promise.all(
-    listingTypes.map(type => 
+    listingTypes.map(type =>
       prisma.listingType.create({
         data: {
           listing_type_name: type.name,
@@ -178,7 +166,7 @@ async function main() {
       })
     )
   )
-
+ 
   // Create listing areas
   console.log('Creating listing areas...')
   const areas = [
@@ -197,9 +185,9 @@ async function main() {
     "Nørrebro",
     "Østerbro"
   ]
-
+ 
   const createdAreas = await Promise.all(
-    areas.map(areaName => 
+    areas.map(areaName =>
       prisma.listingArea.create({
         data: {
           listing_area_name: areaName,
@@ -207,7 +195,7 @@ async function main() {
       })
     )
   )
-
+ 
   // Create zip codes
   console.log('Creating zip codes...')
   const zipCodes = [
@@ -243,9 +231,9 @@ async function main() {
     { code: "2700", city: "Copenhagen", district: "Brønshøj" },
     { code: "2800", city: "Copenhagen", district: "Kongens Lyngby" }
   ]
-
+ 
   const createdZipCodes = await Promise.all(
-    zipCodes.map(zipCode => 
+    zipCodes.map(zipCode =>
       prisma.zipCode.create({
         data: {
           zip_code: zipCode.code,
@@ -255,8 +243,8 @@ async function main() {
       })
     )
   )
-
-  // Create users
+ 
+  // Create users (50 users)
   console.log('Creating users...')
   const users = []
   for (let i = 0; i < 20; i++) {
@@ -269,7 +257,7 @@ async function main() {
   const createdUsers = await Promise.all(
     users.map(user => prisma.user.create({ data: user }))
   )
-
+ 
   // Create listings (100 listings)
   console.log('Creating listings...')
   const createdListings = await Promise.all(
@@ -282,7 +270,7 @@ async function main() {
       prisma.listing.create({ data: listingData })
     )
   )
-
+ 
   // Add images to listings (3-5 images per listing)
   console.log('Adding images to listings...')
   for (const listing of createdListings) {
@@ -299,323 +287,11 @@ async function main() {
       })
     )
   }
-
-  // Create HagenHub test user
-  console.log('Creating HagenHub test user...')
-  const hagenHubSalt = crypto.randomBytes(16).toString("hex").normalize()
-  const hagenHubHashedPassword = await hashPassword("password", hagenHubSalt)
-
-  const hagenHubUser = await prisma.user.create({
-    data: {
-      user_first_name: "Jacob Friis",
-      user_last_name: "Strand",
-      user_email: "test@hagenhub.com",
-      user_password: hagenHubHashedPassword,
-      salt: hagenHubSalt,
-      user_role: "user",
-      user_phone_number: "12345678",
-      user_zip_code: "1050",
-      user_street_name: "Gothersgade",
-      user_street_number: "1",
-      user_description: "Experienced host with 5 years of experience in hospitality.",
-      user_avatar_url: "https://randomuser.me/api/portraits/men/1.jpg"
-    }
-  })
-
-  // Create listings for HagenHub user
-  console.log('Creating listings for HagenHub user...')
-  const hagenHubListings = await Promise.all([
-    prisma.listing.create({
-      data: {
-        listing_title: "Luxury Apartment in City Center",
-        listing_description: "Beautiful modern apartment in the heart of Copenhagen. Perfect for couples or small families. Features high-end amenities and stunning city views.",
-        listing_zip_code: "1050",
-        listing_street_name: "Gothersgade",
-        listing_street_number: "1",
-        listing_night_price: 2500,
-        listing_type_fk: createdTypes[0].listing_type_pk, // Apartment
-        listing_area_fk: createdAreas[0].listing_area_pk, // Copenhagen K
-        listing_bedrooms: 2,
-        listing_guest_count: 4,
-        listing_latitude: 55.68,
-        listing_longitude: 12.57,
-        listing_user_fk: hagenHubUser.user_pk
-      }
-    }),
-    prisma.listing.create({
-      data: {
-        listing_title: "Cozy Studio in Vesterbro",
-        listing_description: "Charming studio apartment in the trendy Vesterbro district. Perfect for solo travelers or couples. Close to cafes, restaurants, and public transport.",
-        listing_zip_code: "1620",
-        listing_street_name: "Vesterbrogade",
-        listing_street_number: "42",
-        listing_night_price: 1200,
-        listing_type_fk: createdTypes[4].listing_type_pk, // Studio
-        listing_area_fk: createdAreas[5].listing_area_pk, // Vesterbro
-        listing_bedrooms: 1,
-        listing_guest_count: 2,
-        listing_latitude: 55.67,
-        listing_longitude: 12.55,
-        listing_user_fk: hagenHubUser.user_pk
-      }
-    }),
-    prisma.listing.create({
-      data: {
-        listing_title: "Spacious House in Frederiksberg",
-        listing_description: "Large family house in the beautiful Frederiksberg area. Perfect for families or groups. Features a garden and modern amenities.",
-        listing_zip_code: "2000",
-        listing_street_name: "Frederiksberg Allé",
-        listing_street_number: "15",
-        listing_night_price: 3500,
-        listing_type_fk: createdTypes[1].listing_type_pk, // House
-        listing_area_fk: createdAreas[7].listing_area_pk, // Frederiksberg C
-        listing_bedrooms: 4,
-        listing_guest_count: 8,
-        listing_latitude: 55.67,
-        listing_longitude: 12.53,
-        listing_user_fk: hagenHubUser.user_pk
-      }
-    })
-  ])
-
-  // Add images to HagenHub listings
-  await Promise.all([
-    // Images for first listing
-    prisma.listingImage.create({
-      data: {
-        listing_image_url: "https://picsum.photos/id/201/800/600?random=1?random=1?random=1",
-        listing_image_listing_fk: hagenHubListings[0].listing_pk
-      }
-    }),
-    prisma.listingImage.create({
-      data: {
-        listing_image_url: "https://picsum.photos/id/202/800/600?random=1?random=1?random=1",
-        listing_image_listing_fk: hagenHubListings[0].listing_pk
-      }
-    }),
-    // Images for second listing
-    prisma.listingImage.create({
-      data: {
-        listing_image_url: "https://picsum.photos/id/203/800/600?random=1?random=1?random=1",
-        listing_image_listing_fk: hagenHubListings[1].listing_pk
-      }
-    }),
-    prisma.listingImage.create({
-      data: {
-        listing_image_url: "https://picsum.photos/id/204/800/600?random=1?random=1?random=1",
-        listing_image_listing_fk: hagenHubListings[1].listing_pk
-      }
-    }),
-    // Images for third listing
-    prisma.listingImage.create({
-      data: {
-        listing_image_url: "https://picsum.photos/id/205/800/600?random=1?random=1",
-        listing_image_listing_fk: hagenHubListings[2].listing_pk
-      }
-    }),
-    prisma.listingImage.create({
-      data: {
-        listing_image_url: "https://picsum.photos/id/206/800/600?random=1",
-        listing_image_listing_fk: hagenHubListings[2].listing_pk
-      }
-    })
-  ])
-
-  // Create bookings for HagenHub user's listings
-  console.log('Creating bookings for HagenHub listings...')
-  const hagenHubNow = new Date()
-  const hagenHubNextMonth = new Date(hagenHubNow.getFullYear(), hagenHubNow.getMonth() + 1, 1)
-  const hagenHubTwoMonthsLater = new Date(hagenHubNow.getFullYear(), hagenHubNow.getMonth() + 2, 1)
-
-  // Get some random users to book HagenHub's listings
-  const randomGuests = getRandomElements(createdUsers, 6)
-
-  // Create bookings for each listing with different statuses
-  const hagenHubHostBookings = await Promise.all([
-    // First listing bookings
-    prisma.booking.create({
-      data: {
-        booking_guest_fk: randomGuests[0].user_pk,
-        booking_listing_fk: hagenHubListings[0].listing_pk,
-        booking_guest_count: 2,
-        booking_night_count: 3,
-        booking_check_in: hagenHubNextMonth,
-        booking_check_out: new Date(hagenHubNextMonth.getTime() + 3 * 24 * 60 * 60 * 1000),
-        booking_status: "Pending"
-      }
-    }),
-    prisma.booking.create({
-      data: {
-        booking_guest_fk: randomGuests[1].user_pk,
-        booking_listing_fk: hagenHubListings[0].listing_pk,
-        booking_guest_count: 2,
-        booking_night_count: 5,
-        booking_check_in: hagenHubTwoMonthsLater,
-        booking_check_out: new Date(hagenHubTwoMonthsLater.getTime() + 5 * 24 * 60 * 60 * 1000),
-        booking_status: "Confirmed"
-      }
-    }),
-    // Second listing bookings
-    prisma.booking.create({
-      data: {
-        booking_guest_fk: randomGuests[2].user_pk,
-        booking_listing_fk: hagenHubListings[1].listing_pk,
-        booking_guest_count: 1,
-        booking_night_count: 4,
-        booking_check_in: new Date(hagenHubNow.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
-        booking_check_out: new Date(hagenHubNow.getTime() - 6 * 24 * 60 * 60 * 1000), // 6 days ago
-        booking_status: "Completed"
-      }
-    }),
-    prisma.booking.create({
-      data: {
-        booking_guest_fk: randomGuests[3].user_pk,
-        booking_listing_fk: hagenHubListings[1].listing_pk,
-        booking_guest_count: 2,
-        booking_night_count: 2,
-        booking_check_in: new Date(hagenHubNow.getTime() - 20 * 24 * 60 * 60 * 1000), // 20 days ago
-        booking_check_out: new Date(hagenHubNow.getTime() - 18 * 24 * 60 * 60 * 1000), // 18 days ago
-        booking_status: "Cancelled"
-      }
-    }),
-    // Third listing bookings
-    prisma.booking.create({
-      data: {
-        booking_guest_fk: randomGuests[4].user_pk,
-        booking_listing_fk: hagenHubListings[2].listing_pk,
-        booking_guest_count: 4,
-        booking_night_count: 7,
-        booking_check_in: new Date(hagenHubNow.getTime() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-        booking_check_out: new Date(hagenHubNow.getTime() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
-        booking_status: "Completed"
-      }
-    }),
-    prisma.booking.create({
-      data: {
-        booking_guest_fk: randomGuests[5].user_pk,
-        booking_listing_fk: hagenHubListings[2].listing_pk,
-        booking_guest_count: 6,
-        booking_night_count: 3,
-        booking_check_in: hagenHubNextMonth,
-        booking_check_out: new Date(hagenHubNextMonth.getTime() + 3 * 24 * 60 * 60 * 1000),
-        booking_status: "Confirmed"
-      }
-    })
-  ])
-
-  // Create reviews for completed bookings
-  await Promise.all([
-    prisma.review.create({
-      data: {
-        review_rating: 4.5,
-        review_comment: "Great stay! The apartment was exactly as described and the location was perfect.",
-        review_user_fk: randomGuests[2].user_pk,
-        review_listing_fk: hagenHubListings[1].listing_pk,
-        review_booking_fk: hagenHubHostBookings[2].booking_pk
-      }
-    }),
-    prisma.review.create({
-      data: {
-        review_rating: 5,
-        review_comment: "Amazing house! Perfect for our family gathering. The host was very accommodating.",
-        review_user_fk: randomGuests[4].user_pk,
-        review_listing_fk: hagenHubListings[2].listing_pk,
-        review_booking_fk: hagenHubHostBookings[4].booking_pk
-      }
-    })
-  ])
-
-  // Create bookings for HagenHub user as a guest
-  console.log('Creating bookings for HagenHub user as guest...')
-  const randomListings = getRandomElements(
-    createdListings.filter(listing => listing.listing_user_fk !== hagenHubUser.user_pk),
-    5
-  )
-
-  const hagenHubGuestBookings = await Promise.all([
-    prisma.booking.create({
-      data: {
-        booking_guest_fk: hagenHubUser.user_pk,
-        booking_listing_fk: randomListings[0].listing_pk,
-        booking_guest_count: 2,
-        booking_night_count: 3,
-        booking_check_in: hagenHubNextMonth,
-        booking_check_out: new Date(hagenHubNextMonth.getTime() + 3 * 24 * 60 * 60 * 1000),
-        booking_status: "Pending"
-      }
-    }),
-    prisma.booking.create({
-      data: {
-        booking_guest_fk: hagenHubUser.user_pk,
-        booking_listing_fk: randomListings[1].listing_pk,
-        booking_guest_count: 2,
-        booking_night_count: 5,
-        booking_check_in: hagenHubTwoMonthsLater,
-        booking_check_out: new Date(hagenHubTwoMonthsLater.getTime() + 5 * 24 * 60 * 60 * 1000),
-        booking_status: "Confirmed"
-      }
-    }),
-    prisma.booking.create({
-      data: {
-        booking_guest_fk: hagenHubUser.user_pk,
-        booking_listing_fk: randomListings[2].listing_pk,
-        booking_guest_count: 3,
-        booking_night_count: 4,
-        booking_check_in: new Date(hagenHubNow.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
-        booking_check_out: new Date(hagenHubNow.getTime() - 6 * 24 * 60 * 60 * 1000), // 6 days ago
-        booking_status: "Completed"
-      }
-    }),
-    prisma.booking.create({
-      data: {
-        booking_guest_fk: hagenHubUser.user_pk,
-        booking_listing_fk: randomListings[3].listing_pk,
-        booking_guest_count: 2,
-        booking_night_count: 2,
-        booking_check_in: new Date(hagenHubNow.getTime() - 20 * 24 * 60 * 60 * 1000), // 20 days ago
-        booking_check_out: new Date(hagenHubNow.getTime() - 18 * 24 * 60 * 60 * 1000), // 18 days ago
-        booking_status: "Cancelled"
-      }
-    }),
-    prisma.booking.create({
-      data: {
-        booking_guest_fk: hagenHubUser.user_pk,
-        booking_listing_fk: randomListings[4].listing_pk,
-        booking_guest_count: 2,
-        booking_night_count: 3,
-        booking_check_in: new Date(hagenHubNow.getTime() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-        booking_check_out: new Date(hagenHubNow.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-        booking_status: "Completed"
-      }
-    })
-  ])
-
-  // Create reviews for HagenHub's completed guest bookings
-  await Promise.all([
-    prisma.review.create({
-      data: {
-        review_rating: 4,
-        review_comment: "Very nice apartment in a great location. The host was very helpful and responsive.",
-        review_user_fk: hagenHubUser.user_pk,
-        review_listing_fk: randomListings[2].listing_pk,
-        review_booking_fk: hagenHubGuestBookings[2].booking_pk
-      }
-    }),
-    prisma.review.create({
-      data: {
-        review_rating: 5,
-        review_comment: "Excellent stay! The property was beautiful and the host was extremely accommodating.",
-        review_user_fk: hagenHubUser.user_pk,
-        review_listing_fk: randomListings[4].listing_pk,
-        review_booking_fk: hagenHubGuestBookings[4].booking_pk
-      }
-    })
-  ])
-
-  // Create random bookings
-  console.log('Creating random bookings...')
+ 
+  // Create bookings (2-10 per listing)
+  console.log('Creating bookings...')
   const createdBookings = []
-  
+ 
   for (const listing of createdListings) {
     const numBookings = getRandomNumber(2, 10)
     const listingBookings = await Promise.all(
@@ -628,57 +304,25 @@ async function main() {
     )
     createdBookings.push(...listingBookings)
   }
-
-
-
+ 
   // Create reviews for completed bookings
   console.log('Creating reviews...')
-  const randomCompletedBookings = createdBookings.filter(b => b.booking_status === "Completed")
-  
-  // Group bookings by listing to ensure we don't have multiple reviews from the same user for the same listing
-  const bookingsByListing = randomCompletedBookings.reduce((acc, booking) => {
-    if (!acc[booking.booking_listing_fk]) {
-      acc[booking.booking_listing_fk] = []
-    }
-    acc[booking.booking_listing_fk].push(booking)
-    return acc
-  }, {} as Record<string, typeof randomCompletedBookings>)
-
-  // Create reviews ensuring different users for each listing
-  for (const [listingId, bookings] of Object.entries(bookingsByListing)) {
-    // Get unique guests who have completed bookings for this listing
-    const uniqueGuests = [...new Set(bookings.map(b => b.booking_guest_fk))]
-    
-    // For each unique guest, create a review if they haven't already reviewed
-    for (const guestId of uniqueGuests) {
-      const booking = bookings.find(b => b.booking_guest_fk === guestId)
-      if (!booking) continue
-
-      // Check if this guest has already reviewed this listing
-      const existingReview = await prisma.review.findFirst({
-        where: {
-          review_user_fk: guestId,
-          review_listing_fk: listingId
-        }
+  const completedBookings = createdBookings.filter(b => b.booking_status === "Completed")
+  await Promise.all(
+    completedBookings.map(booking => {
+      const guest = createdUsers.find(u => u.user_pk === booking.booking_guest_fk)
+      const listing = createdListings.find(l => l.listing_pk === booking.booking_listing_fk)
+      if (!guest || !listing) return null
+     
+      return prisma.review.create({
+        data: generateRandomReview(booking.booking_pk, guest.user_pk, listing.listing_pk)
       })
-
-      if (!existingReview) {
-        await prisma.review.create({
-          data: generateRandomReview(booking.booking_pk, guestId, listingId)
-        })
-      }
-    }
-  }
-
+    })
+  )
+ 
   console.log('Seeding completed successfully!')
 }
-
-// Helper function to get random elements from an array
-function getRandomElements<T>(array: T[], count: number): T[] {
-  const shuffled = [...array].sort(() => 0.5 - Math.random())
-  return shuffled.slice(0, count)
-}
-
+ 
 main()
   .then(async () => {
     await prisma.$disconnect()
