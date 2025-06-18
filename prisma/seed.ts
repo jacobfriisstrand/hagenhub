@@ -363,13 +363,6 @@ async function main() {
 
   // Create users
   console.log('Creating users...')
-  const users = []
-  for (let i = 0; i < 20; i++) {
-    const userData = generateRandomUser(i, createdZipCodes.map(z => ({ code: z.zip_code })))
-    const randomNumber = getRandomNumber(1, 100)
-    userData.user_avatar_url = `https://randomuser.me/api/portraits/men/${randomNumber}.jpg`
-    users.push(userData)
-  }
 
   const createdUsers = await Promise.all(
     users.map(user => prisma.user.create({ data: user }))
@@ -652,12 +645,6 @@ async function main() {
   }
 
   console.log('Seeding completed successfully!')
-}
-
-// Helper function to get random elements from an array
-function getRandomElements<T>(array: T[], count: number): T[] {
-  const shuffled = [...array].sort(() => 0.5 - Math.random())
-  return shuffled.slice(0, count)
 }
 
 main()
